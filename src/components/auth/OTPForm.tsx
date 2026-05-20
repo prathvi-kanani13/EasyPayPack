@@ -19,7 +19,6 @@ interface OTPFormProps {
   onBack: () => void;
   onResend: () => void;
   isLoading?: boolean;
-  userEmailOrPhone?: string;
 }
 
 export default function OTPForm({
@@ -27,7 +26,6 @@ export default function OTPForm({
   onBack,
   onResend,
   isLoading = false,
-  userEmailOrPhone = "your registered email/phone",
 }: OTPFormProps) {
   const [timeLeft, setTimeLeft] = useState(60);
 
@@ -67,18 +65,8 @@ export default function OTPForm({
             Back to Login
           </button>
 
-          {/* Description */}
-          <div className="flex flex-col gap-1 pl-1">
-            <h4 className="scroll-m-20 text-lg sm:text-xl font-semibold tracking-tight text-gray-800">
-              2-Factor Authentication
-            </h4>
-            <p className="text-xs sm:text-sm text-gray-500 leading-snug">
-              Enter the 6-digit security code sent to <span className="font-semibold text-gray-700">{userEmailOrPhone}</span>.
-            </p>
-          </div>
-
           {/* OTP Input container */}
-          <div className="py-2 flex justify-center">
+          <div className="w-full py-2 flex justify-center">
             <InputOTP
               maxLength={6}
               value={values.otp}
@@ -92,13 +80,14 @@ export default function OTPForm({
                 }
               }}
               pattern={REGEXP_ONLY_DIGITS}
+              containerClassName="w-full"
             >
-              <InputOTPGroup className="flex justify-between w-full gap-1.5 sm:gap-2.5 max-w-sm">
+              <InputOTPGroup className="flex justify-center w-full gap-1.5 sm:gap-2.5">
                 {[0, 1, 2, 3, 4, 5].map((index) => (
                   <InputOTPSlot
                     key={index}
                     index={index}
-                    className="flex-1 h-12 w-10 sm:h-14 sm:w-12 border border-gray-300 rounded-lg text-center text-lg font-semibold bg-white/70 shadow-sm focus:border-[#FF6600] focus:ring-1 focus:ring-[#FF6600]"
+                    className="flex-1 h-12 max-w-12 sm:h-14 sm:max-w-14 border border-gray-300 rounded-lg text-lg font-semibold bg-white/70 shadow-sm text-center [text-security:disc] [-webkit-text-security:disc]"
                   />
                 ))}
               </InputOTPGroup>
@@ -122,7 +111,7 @@ export default function OTPForm({
               <Button
                 type="button"
                 variant="link"
-                className="text-xs sm:text-sm font-semibold text-[#FF6600] hover:text-[#e65c00] p-0 h-auto cursor-pointer decoration-[#FF6600]"
+                className="text-xs sm:text-sm font-semibold text-theme hover:text-theme/80 p-0 h-auto cursor-pointer decoration-theme"
                 onClick={handleResend}
               >
                 Resend OTP
@@ -133,7 +122,7 @@ export default function OTPForm({
           {/* Fallback Submit Button */}
           <Button
             type="submit"
-            className="h-10 md:h-12 w-full text-sm sm:text-base bg-[#FF6600] hover:bg-[#e65c00] text-white font-medium rounded-md transition-all duration-200 cursor-pointer shadow-md hover:shadow-lg active:scale-[0.98]"
+            className="h-10 md:h-12 w-full text-sm sm:text-base bg-theme hover:bg-theme/90 text-white font-medium rounded-md transition-all duration-200 cursor-pointer shadow-md hover:shadow-lg active:scale-[0.98]"
             disabled={isSubmitting || isLoading}
           >
             {isSubmitting || isLoading ? "VERIFYING..." : "CONFIRM"}
