@@ -91,7 +91,7 @@ export default function Login(props: { component: 'login' | 'otp' | 'forgotPassw
 
                         {/* Form */}
                         <CardContent className="flex-1 px-0">
-                            <AuthComponent />
+                                <AuthComponent />
                         </CardContent>
                     </Card>
                 </div>

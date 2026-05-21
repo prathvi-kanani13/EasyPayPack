@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 // Formik Validation Schema using Yup
 const OTPSchema = Yup.object().shape({
@@ -15,9 +16,9 @@ const OTPSchema = Yup.object().shape({
 });
 
 interface OTPFormProps {
-  onSubmit: (values: { otp: string }) => void;
-  onBack: () => void;
-  onResend: () => void;
+  onSubmit?: (values: { otp: string }) => void;
+  onBack?: () => void;
+  onResend?: () => void;
   isLoading?: boolean;
 }
 
@@ -27,6 +28,7 @@ export default function OTPForm({
   onResend,
   isLoading = false,
 }: OTPFormProps) {
+  const navigate = useNavigate();
   const [timeLeft, setTimeLeft] = useState(60);
 
   // Timer countdown hook for Resend OTP
@@ -40,7 +42,11 @@ export default function OTPForm({
 
   const handleResend = () => {
     setTimeLeft(60);
-    onResend();
+    if (onResend) {
+      onResend();
+    } else {
+      console.log("OTP Resent");
+    }
   };
 
   return (
@@ -48,7 +54,11 @@ export default function OTPForm({
       initialValues={{ otp: "" }}
       validationSchema={OTPSchema}
       onSubmit={(values, { setSubmitting }) => {
-        onSubmit(values);
+        if (onSubmit) {
+          onSubmit(values);
+        }
+        
+        navigate("/dashboard");
         setSubmitting(false);
       }}
     >
@@ -58,7 +68,7 @@ export default function OTPForm({
           {/* Back button to Login */}
           <button
             type="button"
-            onClick={onBack}
+            onClick={() => onBack ? onBack() : navigate("/login")}
             className="flex items-center gap-1.5 text-xs sm:text-sm font-medium text-gray-500 hover:text-gray-800 transition-colors w-fit group cursor-pointer"
           >
             <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
