@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 // Formik Validation Schema using Yup
 const OTPSchema = Yup.object().shape({
@@ -23,6 +24,7 @@ export default function OTPForm({
   onSubmit,
   onResend
 }: OTPFormProps) {
+  const navigate = useNavigate();
   const [timeLeft, setTimeLeft] = useState(60);
 
   // Timer countdown hook for Resend OTP
@@ -36,7 +38,11 @@ export default function OTPForm({
 
   const handleResend = () => {
     setTimeLeft(60);
-    onResend();
+    if (onResend) {
+      onResend();
+    } else {
+      console.log("OTP Resent");
+    }
   };
 
   return (
@@ -44,7 +50,11 @@ export default function OTPForm({
       initialValues={{ otp: "" }}
       validationSchema={OTPSchema}
       onSubmit={(values, { setSubmitting }) => {
-        onSubmit(values);
+        if (onSubmit) {
+          onSubmit(values);
+        }
+
+        navigate("/dashboard");
         setSubmitting(false);
       }}
     >
