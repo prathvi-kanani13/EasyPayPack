@@ -2,11 +2,11 @@ import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useState, useRef } from "react";
 import { Checkbox } from "../ui/checkbox";
-import { Eye, EyeOff } from "lucide-react";
+import { ArrowRight, Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { Label } from "../ui/label";
+import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupButton } from "../ui/input-group";
 
 // import { useLogin } from "../../hook/UseLogin";
 // import { useAuth } from "../../context/AuthProvider";
@@ -17,7 +17,7 @@ import { Label } from "../ui/label";
 // LoginSchema defines validation rules for User ID and Password using Yup
 const LoginSchema = Yup.object().shape({
   employeeId: Yup.string().required("User ID is required"),
-  password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+  password: Yup.string().min(1, "Password must be at least 1 character").required("Password is required"),
 });
 
 // Login Component manages the authentication interface, credentials verification, and recovery request
@@ -62,117 +62,83 @@ const Login = () => {
 
           {/* Username/User ID Input Section */}
           <div>
-            <label className="text-[#696969] text-sm sm:text-md md:text-lg font-medium mb-1 sm:mb-2 block">
-              Email
-            </label>
+            <Label className="text-[#8f94ac] text-sm sm:text-md lg:text-lg font-medium mb-1 sm:mb-2 block">
+              Email Address
+            </Label>
 
             <div className="relative w-full">
-              <Input
-                autoFocus
-                name="employeeId"
-                type="text"
-                placeholder="Enter your User ID"
-                value={values.employeeId}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    passwordRef.current?.focus();
-                  }
-                }}
-                className="
-                  peer
-                  w-full h-10 md:h-12 px-2
-                  text-sm md:text-base placeholder:text-[#B2B2B2]
-                  border-0 border-b border-gray-300
-                  rounded-none bg-transparent
-                  shadow-none
-                  focus-visible:outline-none
-                  focus-visible:ring-0
-                  transition-all duration-100
-                "
-              />
-              <span
-                className="
-                  absolute bottom-0 left-0
-                  h-[2px] w-full
-                  bg-theme
-                  scale-x-0 origin-left
-                  transition-transform duration-300 ease-out
-                  peer-focus-visible:scale-x-100
-                "
-              />
+              <InputGroup
+                className="h-12 gap-2 p-1 rounded-sm"
+              >
+                <InputGroupAddon>
+                  <Mail />
+                </InputGroupAddon>
+                <InputGroupInput
+                  autoFocus
+                  name="employeeId"
+                  type="text"
+                  placeholder="Enter your User ID"
+                  value={values.employeeId}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      passwordRef.current?.focus();
+                    }
+                  }}
+                  className="w-full placeholder:text-[#B2B2B2]"
+                />
+              </InputGroup>
             </div>
-            {errors.employeeId && touched.employeeId && (
-              <span className="text-xs text-red-600 mt-1 block font-semibold">{errors.employeeId}</span>
-            )}
+
           </div>
 
           {/* Password Input Section */}
           <div>
-            <Label className="text-[#696969] text-sm sm:text-md md:text-lg font-medium mb-1 sm:mb-2 block">
+            <Label className="text-[#8f94ac] text-sm sm:text-md lg:text-lg font-medium mb-1 sm:mb-2 block">
               Password
             </Label>
 
             <div className="relative w-full">
-              <Input
-                name="password"
-                type={showPassword ? "text" : "password"}
-                placeholder="Enter your password"
-                value={values.password}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                ref={passwordRef}
-                className="
-                  peer
-                  w-full h-10 md:h-12 px-2 pr-10
-                  text-sm md:text-base placeholder:text-[#B2B2B2]
-                  border-0 border-b border-gray-300
-                  rounded-none bg-transparent
-                  shadow-none
-                  focus-visible:outline-none
-                  focus-visible:ring-0
-                  transition-all duration-100
-                "
-              />
+              {/* InputGroup wraps the input and accessory components like Lock icon and Eye toggle */}
+              <InputGroup className="h-12 gap-2 p-1 rounded-sm">
+                {/* InputGroupAddon for the leading Lock icon */}
+                <InputGroupAddon align="inline-start">
+                  <Lock />
+                </InputGroupAddon>
 
-              {/* Eye toggle button */}
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                onClick={() => setShowPassword((prev) => !prev)}
-                className="
-                  absolute right-0 top-1/2 -translate-y-1/2
-                  h-8 w-8
-                  text-gray-400 hover:text-gray-600
-                  hover:bg-transparent
-                  focus-visible:ring-0
-                "
-                aria-label={showPassword ? "Hide password" : "Show password"}
-              >
-                {showPassword ? (
-                  <EyeOff style={{ height: '18px', width: '18px' }} />
-                ) : (
-                  <Eye style={{ height: '18px', width: '18px' }} />
-                )}
-              </Button>
+                {/* InputGroupInput handles password text input */}
+                <InputGroupInput
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  value={values.password}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  ref={passwordRef}
+                  className="w-full placeholder:text-[#B2B2B2]"
+                />
 
-              <span
-                className="
-                  absolute bottom-0 left-0
-                  h-[2px] w-full
-                  bg-theme
-                  scale-x-0 origin-left
-                  transition-transform duration-300 ease-out
-                  peer-focus-visible:scale-x-100
-                "
-              />
+                {/* InputGroupAddon for the trailing Eye toggle button */}
+                <InputGroupAddon align="inline-end">
+                  {/* InputGroupButton handles toggling password visibility */}
+                  <InputGroupButton
+                    size="icon-sm"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    className="pl-0"
+                  >
+                    {showPassword ? (
+                      <EyeOff />
+                    ) : (
+                      <Eye />
+                    )}
+                  </InputGroupButton>
+                </InputGroupAddon>
+              </InputGroup>
             </div>
-            {errors.password && touched.password && (
-              <span className="text-xs text-red-600 mt-1 block font-semibold">{errors.password}</span>
-            )}
+
           </div>
 
           {/* Remember Me and Forgot Password Action Buttons */}
@@ -213,6 +179,13 @@ const Login = () => {
             </Button>
           </div>
 
+          {/* Formik Error display - only one at a time */}
+          {((touched.employeeId && errors.employeeId) || (touched.password && errors.password)) && (
+            <p className="text-xs text-red-600 font-semibold text-center">
+              {touched.employeeId && errors.employeeId ? errors.employeeId : errors.password}
+            </p>
+          )}
+
           {Error && (
             <p className="text-red-600 text-sm text-center">
               {Error}
@@ -222,9 +195,10 @@ const Login = () => {
           {/* Login Submission Button */}
           <Button
             type="submit"
-            className="h-10 w-full px-8 py-2 sm:py-3 text-sm sm:text-base bg-[linear-gradient(90deg,rgba(66,78,250)_20%,rgba(115,80,231,1)_100%)] hover:bg-theme/90 text-white font-medium rounded-md transition-all duration-200"
+            size="lg"
+            className="h-12 w-full px-8 text-sm sm:text-base bg-[linear-gradient(90deg,rgba(66,78,250)_20%,rgba(115,80,231,1)_100%)] hover:bg-theme text-white font-medium rounded-md transition-all duration-200 gap-2"
           >
-            LOGIN
+            Sign In <ArrowRight />
           </Button>
 
         </Form>

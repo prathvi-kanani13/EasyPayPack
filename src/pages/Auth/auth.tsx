@@ -5,7 +5,7 @@ import OTPComponent from "@/components/auth/OTPForm";
 import ForgotPasswordComponent from "@/components/auth/ForgotPassword";
 import type React from "react";
 import animationData from "../../animation/Data Visualization.json";
-import otpAnimation from "../../animation/Pin code Password Protection, Secure Login animation.json";
+import otpAnimation from "../../animation/OTP.json";
 import forgotQAnimation from "../../animation/Forgot Password.json";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -78,15 +78,12 @@ export default function Login(props: { component: 'login' | 'otp' | 'forgotPassw
             </div>
 
             {/* right side */}
-            <div className="flex flex-1 items-center justify-center px-4 md:px-10 lg:px-20 py-10 md:py-0">
-                <div className="w-full ">
-
-                    <Card className="w-full rounded-xl shadow-4xl border border-gray-200 flex flex-col gap-6 p-4 md:p-6 lg:p-8">
-
-                        {/* Logo */}
-                        <div>
-                            <h1 className="text-2xl lg:text-3xl font-semibold text-[#242664]">{pageContent[props.component].title}</h1>
-                            <p className="text-sm lg:text-lg text-gray-600">{pageContent[props.component].description}</p>
+            <div className="flex flex-1 items-center justify-center px-4 md:px-10 lg:px-15 py-10 md:py-0">
+                <div className="w-full flex justify-center">
+                    <Card className="w-full max-w-125 rounded-xl shadow-4xl border border-gray-200 flex flex-col gap-6 p-4 md:p-6 lg:px-[7vh] lg:py-[6vh]">
+                        <div className="w-full">
+                            <h1 className="text-2xl lg:text-[2vw] font-semibold text-[#242664]">{pageContent[props.component].title}</h1>
+                            <p className="text-sm lg:text-[1.1vw] text-[#8f94ac]">{pageContent[props.component].description}</p>
                         </div>
 
                         {/* Form */}

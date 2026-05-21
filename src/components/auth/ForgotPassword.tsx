@@ -1,10 +1,25 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useRef, useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
-import type React from "react";
+import { Eye, EyeOff, Lock, Mail, RectangleEllipsis } from "lucide-react";
 import { Label } from "../ui/label";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
+import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "../ui/input-group";
+
+// ForgotPasswordSchema defines validation rules for the OTP and password reset fields using Yup
+const ForgotPasswordSchema = Yup.object().shape({
+    email: Yup.string().required("Email is required"),
+    otp: Yup.string()
+        .matches(/^\d{6}$/, "OTP must be exactly 6 digits")
+        .required("OTP is required"),
+    password: Yup.string()
+        .min(6, "Password must be at least 6 characters")
+        .required("Password is required"),
+    confirmPassword: Yup.string()
+        .oneOf([Yup.ref("password")], "Passwords must match")
+        .required("Confirm Password is required"),
+});
 
 // ForgotPassword component handles OTP verification and password resetting
 const ForgotPassword = () => {
@@ -22,258 +37,252 @@ const ForgotPassword = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    const handleResetPassword = () => {
+    const handleResetPassword = (values: { otp: string; password: string }) => {
         setError(null);
+        console.log("Form values submitted:", values);
         // Reset password API handler logic to be implemented here
     };
 
     return (
-        <form
-            className="flex flex-col gap-4"
-            onSubmit={(e) => e.preventDefault()}
+        // Formik component initialized with initialValues, validationSchema and onSubmit handler
+        <Formik
+            initialValues={{
+                email: userName || "",
+                otp: "",
+                password: "",
+                confirmPassword: "",
+            }}
+            validationSchema={ForgotPasswordSchema}
+            onSubmit={(values, { setSubmitting }) => {
+                handleResetPassword(values);
+                setSubmitting(false);
+            }}
         >
-            {/* USER ID */}
-            <div>
-                <Label className="text-[#696969] text-sm sm:text-md md:text-lg font-medium mb-1 block">
-                    Email
-                </Label>
+            {({ values, errors, touched, handleChange, handleBlur, setFieldValue }) => {
+                // Determine the first active Formik error to display
+                const firstError = (touched.email && errors.email)
+                    ? errors.email
+                    : (touched.otp && errors.otp)
+                        ? errors.otp
+                        : (touched.password && errors.password)
+                            ? errors.password
+                            : (touched.confirmPassword && errors.confirmPassword)
+                                ? errors.confirmPassword
+                                : null;
 
-                <div className="relative w-full">
-                    <Input
-                        value={userName || ""}
-                        disabled
-                        className="
-                            peer
-                            w-full h-10 md:h-12 px-2
-                            text-sm md:text-base placeholder:text-[#B2B2B2]
-                            border-0 border-b border-gray-300
-                            rounded-none bg-transparent
-                            shadow-none
-                            focus-visible:outline-none
-                            focus-visible:ring-0
-                            transition-all duration-100
-                        "
-                    />
-                    <span
-                        className="
-                            absolute bottom-0 left-0
-                            h-[2px] w-full
-                            bg-theme
-                            scale-x-0 origin-left
-                            transition-transform duration-300 ease-out
-                            peer-focus-visible:scale-x-100
-                        "
-                    />
-                </div>
-            </div>
+                return (
+                    // Form wrapper component handles the form validation and submit events
+                    <Form className="flex flex-col gap-4">
+                    {/* USER ID Field Section */}
+                    <div>
+                        {/* Label component to describe the Email field */}
+                        <Label className="text-[#696969] text-sm sm:text-md lg:text-lg font-medium mb-1 block">
+                            Email
+                        </Label>
 
-            {/* OTP */}
-            <div>
-                <Label className="text-[#696969] text-sm sm:text-md md:text-lg font-medium mb-1 block">
-                    OTP
-                </Label>
+                        <div className="relative w-full">
+                            {/* Input component for displaying the read-only/disabled email */}
+                            <InputGroup className="h-12 gap-2 p-1 rounded-sm">
+                                {/* InputGroupAddon for the leading Lock icon */}
+                                <InputGroupAddon align="inline-start">
+                                    <Mail />
+                                </InputGroupAddon>
 
-                <div className="relative w-full">
-                    <Input
-                        ref={otpRef}
-                        autoFocus
-                        placeholder="Enter 6 digit OTP"
-                        maxLength={6}
-                        onInput={(e: React.FormEvent<HTMLInputElement>) => {
-                            const target = e.target as HTMLInputElement;
-                            target.value = target.value.replace(/[^0-9]/g, "");
-                        }}
-                        onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                                e.preventDefault();
-                                passwordRef.current?.focus();
-                            }
-                        }}
-                        className="
-                            peer
-                            w-full h-10 md:h-12 px-2
-                            text-sm md:text-base placeholder:text-[#B2B2B2]
-                            border-0 border-b border-gray-300
-                            rounded-none bg-transparent
-                            shadow-none
-                            focus-visible:outline-none
-                            focus-visible:ring-0
-                            transition-all duration-100
-                        "
-                    />
-                    <span
-                        className="
-                            absolute bottom-0 left-0
-                            h-[2px] w-full
-                            bg-theme
-                            scale-x-0 origin-left
-                            transition-transform duration-300 ease-out
-                            peer-focus-visible:scale-x-100
-                        "
-                    />
-                </div>
-            </div>
+                                {/* InputGroupInput handles password text input */}
+                                <InputGroupInput
+                                    name="email"
+                                    type={"text"}
+                                    value={values.email}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    className="w-full placeholder:text-[#B2B2B2]"
+                                    disabled
+                                />
+                            </InputGroup>
+                        </div>
 
-            {/* PASSWORD */}
-            <div>
-                <Label className="text-[#696969] text-sm sm:text-md md:text-lg font-medium mb-1 block">
-                    Password
-                </Label>
+                    </div>
 
-                <div className="relative w-full">
-                    <Input
-                        type={showPassword ? "text" : "password"}
-                        ref={passwordRef}
-                        placeholder="Enter New Password"
-                        onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                                e.preventDefault();
-                                confirmPasswordRef.current?.focus();
-                            }
-                        }}
-                        className="
-                            peer
-                            w-full h-10 md:h-12 px-2 pr-10
-                            text-sm md:text-base placeholder:text-[#B2B2B2]
-                            border-0 border-b border-gray-300
-                            rounded-none bg-transparent
-                            shadow-none
-                            focus-visible:outline-none
-                            focus-visible:ring-0
-                            transition-all duration-100
-                        "
-                    />
+                    {/* OTP Field Section */}
+                    <div>
+                        {/* Label component for the OTP input */}
+                        <Label className="text-[#696969] text-sm sm:text-md lg:text-lg font-medium mb-1 block">
+                            OTP
+                        </Label>
 
-                    {/* Eye toggle button */}
-                    <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setShowPassword((prev) => !prev)}
-                        className="
-                            absolute right-0 top-1/2 -translate-y-1/2
-                            h-8 w-8
-                            text-gray-400 hover:text-gray-600
-                            hover:bg-transparent
-                            focus-visible:ring-0
-                        "
-                        aria-Label={showPassword ? "Hide password" : "Show password"}
-                    >
-                        {showPassword ? (
-                            <EyeOff style={{ height: '18px', width: '18px' }} />
-                        ) : (
-                            <Eye style={{ height: '18px', width: '18px' }} />
-                        )}
-                    </Button>
+                        <div className="relative w-full">
+                            {/* Input component for the 6-digit OTP code */}
+                            <InputGroup className="h-12 gap-2 p-1 rounded-sm">
+                                {/* InputGroupAddon for the leading Lock icon */}
+                                <InputGroupAddon align="inline-start">
+                                    <RectangleEllipsis />
+                                </InputGroupAddon>
 
-                    <span
-                        className="
-                            absolute bottom-0 left-0
-                            h-[2px] w-full
-                            bg-theme
-                            scale-x-0 origin-left
-                            transition-transform duration-300 ease-out
-                            peer-focus-visible:scale-x-100
-                        "
-                    />
-                </div>
-            </div>
+                                {/* InputGroupInput handles password text input */}
+                                <InputGroupInput
+                                    ref={otpRef}
+                                    name="otp"
+                                    value={values.otp}
+                                    onChange={(e) => {
+                                        const val = e.target.value.replace(/[^0-9]/g, "");
+                                        setFieldValue("otp", val);
+                                    }}
+                                    onBlur={handleBlur}
+                                    autoFocus
+                                    placeholder="Enter 6 digit OTP"
+                                    maxLength={6}
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter") {
+                                            e.preventDefault();
+                                            passwordRef.current?.focus();
+                                        }
+                                    }}
+                                    className="w-full placeholder:text-[#B2B2B2]"
+                                />
+                            </InputGroup>
+                        </div>
 
-            {/* CONFIRM PASSWORD */}
-            <div>
-                <Label className="text-[#696969] text-sm sm:text-md md:text-lg font-medium mb-1 block">
-                    Confirm Password
-                </Label>
+                    </div>
 
-                <div className="relative w-full">
-                    <Input
-                        type={showConfirmPassword ? "text" : "password"}
-                        ref={confirmPasswordRef}
-                        placeholder="Enter Confirm Password"
-                        onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                                e.preventDefault();
-                                handleResetPassword();
-                            }
-                        }}
-                        className="
-                            peer
-                            w-full h-10 md:h-12 px-2 pr-10
-                            text-sm md:text-base placeholder:text-[#B2B2B2]
-                            border-0 border-b border-gray-300
-                            rounded-none bg-transparent
-                            shadow-none
-                            focus-visible:outline-none
-                            focus-visible:ring-0
-                            transition-all duration-100
-                        "
-                    />
+                    {/* PASSWORD Field Section */}
+                    <div>
+                        {/* Label component for the new password */}
+                        <Label className="text-[#696969] text-sm sm:text-md lg:text-lg font-medium mb-1 block">
+                            Password
+                        </Label>
 
-                    {/* Eye toggle button */}
-                    <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setShowConfirmPassword((prev) => !prev)}
-                        className="
-                            absolute right-0 top-1/2 -translate-y-1/2
-                            h-8 w-8
-                            text-gray-400 hover:text-gray-600
-                            hover:bg-transparent
-                            focus-visible:ring-0
-                        "
-                        aria-Label={showConfirmPassword ? "Hide password" : "Show password"}
-                    >
-                        {showConfirmPassword ? (
-                            <EyeOff style={{ height: '18px', width: '18px' }} />
-                        ) : (
-                            <Eye style={{ height: '18px', width: '18px' }} />
-                        )}
-                    </Button>
+                        <div className="relative w-full">
+                            {/* Input component for entering new password */}
+                            <InputGroup className="h-12 gap-2 p-1 rounded-sm">
+                                {/* InputGroupAddon for the leading Lock icon */}
+                                <InputGroupAddon align="inline-start">
+                                    <Lock />
+                                </InputGroupAddon>
 
-                    <span
-                        className="
-                            absolute bottom-0 left-0
-                            h-[2px] w-full
-                            bg-theme
-                            scale-x-0 origin-left
-                            transition-transform duration-300 ease-out
-                            peer-focus-visible:scale-x-100
-                        "
-                    />
-                </div>
-            </div>
+                                {/* InputGroupInput handles password text input */}
+                                <InputGroupInput
+                                    name="password"
+                                    value={values.password}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    type={showPassword ? "text" : "password"}
+                                    ref={passwordRef}
+                                    placeholder="Enter New Password"
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter") {
+                                            e.preventDefault();
+                                            confirmPasswordRef.current?.focus();
+                                        }
+                                    }}
+                                    className="w-full placeholder:text-[#B2B2B2]"
+                                />
 
-            {/* ERROR */}
-            {error && (
-                <p className="text-red-600 text-sm text-center">
-                    {error}
-                </p>
-            )}
+                                {/* InputGroupAddon for the trailing Eye toggle button */}
+                                <InputGroupAddon align="inline-end">
+                                    {/* InputGroupButton handles toggling password visibility */}
+                                    <InputGroupButton
+                                        size="icon-sm"
+                                        onClick={() => setShowPassword((prev) => !prev)}
+                                        aria-label={showPassword ? "Hide password" : "Show password"}
+                                        className="pl-0"
+                                    >
+                                        {showPassword ? (
+                                            <EyeOff />
+                                        ) : (
+                                            <Eye />
+                                        )}
+                                    </InputGroupButton>
+                                </InputGroupAddon>
+                            </InputGroup>
+                        </div>
 
-            <div className="flex gap-3 mt-2">
+                    </div>
 
-                {/* OK BUTTON */}
-                <Button
-                    type="button"
-                    onClick={handleResetPassword}
-                    className="h-10 flex-1 bg-theme hover:bg-theme/90 text-white"
-                >
-                    OK
-                </Button>
+                    {/* CONFIRM PASSWORD Field Section */}
+                    <div>
+                        {/* Label component for confirming the new password */}
+                        <Label className="text-[#696969] text-sm sm:text-md lg:text-lg font-medium mb-1 block">
+                            Confirm Password
+                        </Label>
 
-                {/* CANCEL BUTTON */}
-                <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => navigate("/login")}
-                    className="h-10 flex-1"
-                >
-                    Cancel
-                </Button>
+                        <div className="relative w-full">
+                            {/* Input component for confirming the new password */}
+                            <InputGroup className="h-12 gap-2 p-1 rounded-sm">
+                                {/* InputGroupAddon for the leading Lock icon */}
+                                <InputGroupAddon align="inline-start">
+                                    <Lock />
+                                </InputGroupAddon>
 
-            </div>
-        </form>
+                                {/* InputGroupInput handles password text input */}
+                                <InputGroupInput
+                                    name="confirmPassword"
+                                    type={showConfirmPassword ? "text" : "password"}
+                                    placeholder="Enter Confirm Password"
+                                    value={values.confirmPassword}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    ref={confirmPasswordRef}
+                                    className="w-full placeholder:text-[#B2B2B2]"
+                                />
+
+                                {/* InputGroupAddon for the trailing Eye toggle button */}
+                                <InputGroupAddon align="inline-end">
+                                    {/* InputGroupButton handles toggling password visibility */}
+                                    <InputGroupButton
+                                        size="icon-sm"
+                                        onClick={() => setShowConfirmPassword((prev) => !prev)}
+                                        aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                                        className="pl-0"
+                                    >
+                                        {showConfirmPassword ? (
+                                            <EyeOff />
+                                        ) : (
+                                            <Eye />
+                                        )}
+                                    </InputGroupButton>
+                                </InputGroupAddon>
+                            </InputGroup>
+                        </div>
+
+                    </div>
+
+                    {/* Formik Error display - only one at a time */}
+                    {firstError && typeof firstError === "string" && (
+                        <p className="text-xs text-red-600 font-semibold text-center">
+                            {firstError}
+                        </p>
+                    )}
+
+                    {/* Error display */}
+                    {error && (
+                        <p className="text-red-600 text-sm text-center">
+                            {error}
+                        </p>
+                    )}
+
+                    <div className="flex gap-3 mt-2">
+                        {/* Button component to submit the password reset form */}
+                        <Button
+                            type="submit"
+                            className="h-10 flex-1 bg-theme hover:bg-theme/90 text-white"
+                        >
+                            OK
+                        </Button>
+
+                        {/* Button component to cancel/return to login */}
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => navigate("/login")}
+                            className="h-10 flex-1"
+                        >
+                            Cancel
+                        </Button>
+                    </div>
+                </Form>
+                );
+            }}
+        </Formik>
     );
 };
 

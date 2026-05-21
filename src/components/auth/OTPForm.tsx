@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { Button } from "@/components/ui/button";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
-import { ArrowLeft } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 // Formik Validation Schema using Yup
 const OTPSchema = Yup.object().shape({
@@ -16,16 +16,12 @@ const OTPSchema = Yup.object().shape({
 
 interface OTPFormProps {
   onSubmit: (values: { otp: string }) => void;
-  onBack: () => void;
   onResend: () => void;
-  isLoading?: boolean;
 }
 
 export default function OTPForm({
   onSubmit,
-  onBack,
-  onResend,
-  isLoading = false,
+  onResend
 }: OTPFormProps) {
   const [timeLeft, setTimeLeft] = useState(60);
 
@@ -52,19 +48,8 @@ export default function OTPForm({
         setSubmitting(false);
       }}
     >
-      {({ values, errors, touched, setFieldValue, submitForm, isSubmitting }) => (
+      {({ values, errors, touched, setFieldValue, submitForm }) => (
         <Form className="space-y-6 flex flex-col justify-between">
-
-          {/* Back button to Login */}
-          <button
-            type="button"
-            onClick={onBack}
-            className="flex items-center gap-1.5 text-xs sm:text-sm font-medium text-gray-500 hover:text-gray-800 transition-colors w-fit group cursor-pointer"
-          >
-            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
-            Back to Login
-          </button>
-
           {/* OTP Input container */}
           <div className="w-full py-2 flex justify-center">
             <InputOTP
@@ -122,10 +107,10 @@ export default function OTPForm({
           {/* Fallback Submit Button */}
           <Button
             type="submit"
-            className="h-10 md:h-12 w-full text-sm sm:text-base bg-theme hover:bg-theme/90 text-white font-medium rounded-md transition-all duration-200 cursor-pointer shadow-md hover:shadow-lg active:scale-[0.98]"
-            disabled={isSubmitting || isLoading}
+            size="lg"
+            className="h-12 w-full px-8 text-sm sm:text-base bg-[linear-gradient(90deg,rgba(66,78,250)_20%,rgba(115,80,231,1)_100%)] hover:bg-none hover:bg-theme text-white font-medium rounded-md transition-all duration-200 gap-2"
           >
-            {isSubmitting || isLoading ? "VERIFYING..." : "CONFIRM"}
+            Submit <ArrowRight />
           </Button>
 
         </Form>
