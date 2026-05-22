@@ -2,20 +2,44 @@ import "./App.css";
 import Auth from "./pages/Auth/auth";
 import Layout from "./layout/Layout";
 import Dashboard from "./pages/Dashboard";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { useTheme } from "./providers/ThemeProvider";
+import { useEffect } from "react";
+
+function ThemeController() {
+  const location = useLocation()
+  const { setTheme } = useTheme()
+
+  useEffect(() => {
+    const lightRoutes = ["/login", "/otp", "/forgot-password"]
+    const root = window.document.documentElement
+
+    if (lightRoutes.includes(location.pathname)) {
+      root.classList.remove("dark")
+      root.classList.add("light")
+    } else {
+      const savedTheme = localStorage.getItem("vite-ui-theme") || "light"
+      setTheme(savedTheme as "dark" | "light")
+    }
+  }, [location.pathname, setTheme])
+
+  return null
+}
 
 function App() {
+
   return (
     <Router>
+      <ThemeController />
       <Routes>
         {/* Redirect base URL to login page or dashboard */}
         <Route path="/" element={<Navigate to="/login" replace />} />
-        
+
         {/* Auth routes */}
         <Route path="/login" element={<Auth component="login" />} />
         <Route path="/otp" element={<Auth component="otp" />} />
         <Route path="/forgot-password" element={<Auth component="forgotPassword" />} />
-        
+
         {/* Protected Dashboard and Sidebar routes in Layout */}
         <Route element={<Layout />}>
           <Route path="/dashboard" element={<Dashboard />} />

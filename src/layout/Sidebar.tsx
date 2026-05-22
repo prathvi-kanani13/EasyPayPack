@@ -1,140 +1,250 @@
-import { Link, useLocation } from "react-router-dom";
-import WhiteLogo from "../assets/WhiteLogo.png";
-import {
-    LayoutDashboard,
-    Database,
-    ArrowRightLeft,
-    BarChart3,
-    MoreHorizontal,
-    Wallet,
-    Calendar,
-    TrendingUp,
-    Gift,
-    Lock,
-    Calculator,
-    UserPlus,
-    MapPin,
-    Clock,
-    Mail,
-    X,
-    LogOut
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+import { useEffect, useState, useRef } from "react"
+import { LogOut, Menu } from "lucide-react"
+import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar"
+import { Link, useNavigate } from "react-router-dom"
+import { FaRegBell } from "react-icons/fa";
+import { SlCalender } from "react-icons/sl";
+import { IoCalendarOutline, IoDocumentTextOutline } from "react-icons/io5";
+import { LuLayoutGrid, LuGraduationCap, LuUserRoundCog } from "react-icons/lu";
+import type { IconType } from "react-icons";
+import { IoMdTime } from "react-icons/io"
+import { RxPeople } from "react-icons/rx";
+import { GrDocumentUser } from "react-icons/gr";
+import { GoPersonAdd, GoGear } from "react-icons/go";
+import { HiOutlineClipboardDocumentList } from "react-icons/hi2";
+import { BsSpeedometer2, BsBarChart } from "react-icons/bs";
 
-interface SidebarProps {
-    isOpen: boolean;
-    onClose: () => void;
+import logo from "../assets/WhiteLogo.png"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Button } from "@/components/ui/button";
+import RenderWithTooltip from "@/utils/RenderWithTooltip";
+
+type TSidebarItems = {
+	label: string,
+	href: string,
+	icon: IconType
+	subRoutes?: string[]
 }
 
-export default function Sidebar({ isOpen, onClose }: SidebarProps) {
-    const location = useLocation();
+export default function SidebarComponent() {
+	const isMobile = window.innerWidth < 768;
 
-    const menuItems = [
-        { title: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
-        { title: "Master", icon: Database, path: "/master" },
-        { title: "Transaction", icon: ArrowRightLeft, path: "/transaction" },
-        { title: "Report", icon: BarChart3, path: "/report" },
-        { title: "Other", icon: MoreHorizontal, path: "/other" },
-        { title: "Salary Process", icon: Wallet, path: "/salary-process" },
-        { title: "Leave Management", icon: Calendar, path: "/leave-management" },
-        { title: "DA Increment Process", icon: TrendingUp, path: "/da-increment" },
-        { title: "Bonus Process", icon: Gift, path: "/bonus-process" },
-        { title: "Closing Process", icon: Lock, path: "/closing-process" },
-        { title: "Income Tax", icon: Calculator, path: "/income-tax" },
-        { title: "Pre-onboarding", icon: UserPlus, path: "/pre-onboarding" },
-        { title: "Conveyance", icon: MapPin, path: "/conveyance" },
-        { title: "Probation Management", icon: Clock, path: "/probation-management" },
-        { title: "Resignation Management", icon: LogOut, path: "/resignation-management" },
-        { title: "Letter Management", icon: Mail, path: "/letter-management" },
-    ];
+	const navigate = useNavigate();
+	const { open, setOpen, openMobile, setOpenMobile, toggleSidebar } = useSidebar()
 
-    const handleLogout = () => {
-        sessionStorage.clear();
-        window.location.href = "/login";
-    };
+	useEffect(() => {
+		const handleResize = () => {
+			if (window.innerWidth >= 768) {
+				setOpenMobile(false);
+			} else {
+				setOpen(false);
+			}
+		};
+		handleResize();
 
-    return (
-        <>
-            {/* Mobile Overlay */}
-            {isOpen && (
-                <div
-                    className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-300 md:hidden"
-                    onClick={onClose}
-                />
-            )}
+		window.addEventListener('resize', handleResize);
+		return () => window.removeEventListener('resize', handleResize);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
-            {/* Sidebar Container */}
-            <aside
-                className={cn(
-                    "fixed top-0 bottom-0 left-0 z-50 flex w-68 flex-col border-r border-white/10 bg-[linear-gradient(90deg,rgba(66,78,250)_20%,rgba(115,80,231,1)_100%)] text-white/90 transition-transform duration-300 ease-in-out md:translate-x-0",
-                    isOpen ? "translate-x-0" : "-translate-x-full"
-                )}
-            >
-                {/* Brand/Logo Section */}
-                <div className="flex h-25 items-center justify-between p-0">
-                    <Link to="/employee-dashboard" className="flex items-center" onClick={onClose}>
-                        <img src={WhiteLogo}
-                            alt="EasyPayPack Logo"
-                            className="h-55 w-auto object-contain" />
-                    </Link>
-                    {/* Close button for mobile */}
-                    <button
-                        onClick={onClose}
-                        className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/20 text-white/80 hover:bg-white/10 md:hidden"
-                    >
-                        <X className="h-4 w-4" />
-                    </button>
-                </div>
+	const scrollAreaRef = useRef<HTMLDivElement>(null);
+	const [showTopShadow, setShowTopShadow] = useState(false);
+	const [showBottomShadow, setShowBottomShadow] = useState(false);
 
-                {/* Navigation Menu */}
-                <nav className="flex-1 border border-t border-white/10 overflow-y-auto p-4 space-y-1.5 scrollbar-thin">
-                    {menuItems.map((item) => {
-                        const isActive = location.pathname === item.path;
-                        const Icon = item.icon;
+	useEffect(() => {
+		const viewport = scrollAreaRef.current?.querySelector('[data-slot="scroll-area-viewport"]');
+		if (!viewport) return;
 
-                        return (
-                            <Link
-                                key={item.title}
-                                to={item.path}
-                                onClick={onClose}
-                                className={cn(
-                                    "flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 group relative text-white",
-                                    isActive
-                                        ? "bg-gradient-to-r from-[#424efa] to-[#7350e7] shadow-md shadow-blue-500/10"
-                                        : "hover:bg-white hover:text-gray-700 dark:hover:text-gray-300"
-                                )}
-                            >
-                                <Icon
-                                    className={cn(
-                                        "h-5 w-5 transition-transform duration-200 group-hover:scale-110",
-                                        isActive
-                                            ? "text-white"
-                                            : "text-white group-hover:text-gray-700 dark:group-hover:text-gray-300"
-                                    )}
-                                />
+		const handleScroll = () => {
+			const { scrollTop, scrollHeight, clientHeight } = viewport as HTMLElement;
+			setShowTopShadow(scrollTop > 10);
+			setShowBottomShadow(scrollTop + clientHeight < scrollHeight - 10);
+		};
 
-                                <span>{item.title}</span>
+		viewport.addEventListener("scroll", handleScroll);
+		// Initial check
+		handleScroll();
 
-                                {isActive && (
-                                    <span className="absolute right-3 top-1/2 -translate-y-1/2 flex h-2 w-2 rounded-full bg-white animate-pulse" />
-                                )}
-                            </Link>
-                        );
-                    })}
-                </nav>
+		const resizeObserver = new ResizeObserver(handleScroll);
+		resizeObserver.observe(viewport);
 
-                {/* Sidebar Footer */}
-                <div className="p-4 space-y-2">
-                    {/* Logout */}
-                    <button
-                        onClick={handleLogout}
-                        className="flex w-full items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-white hover:bg-white hover:text-gray-700 transition-all duration-200 cursor-pointer"
-                    >
-                        <LogOut className="h-4 w-4" />
-                        <span>Log Out</span>
-                    </button>
-                </div>
-            </aside>
-        </>
-    );
+		const content = viewport.firstElementChild;
+		if (content) {
+			resizeObserver.observe(content);
+		}
+
+		return () => {
+			viewport.removeEventListener("scroll", handleScroll);
+			resizeObserver.disconnect();
+		};
+	}, [open, openMobile]);
+
+	const dashboardItems: TSidebarItems[] = [
+		{
+			label: "Dashboard",
+			href: "/dashboard",
+			icon: LuLayoutGrid
+		}
+	];
+
+	const mainItems: TSidebarItems[] = [
+		{ label: "Employees", href: "/employees", icon: RxPeople },
+		{ label: "Payroll", href: "/payroll", icon: GrDocumentUser },
+		{ label: "Attendance", href: "/attendance", icon: SlCalender },
+		{ label: "Leave Management", href: "/leave/management", icon: IoCalendarOutline },
+		{ label: "Time Tracking", href: "/time-tracking", icon: IoMdTime },
+		{ label: "Performance", href: "/performance", icon: BsSpeedometer2 },
+		{ label: "Recruitment", href: "/recruitment", icon: GoPersonAdd },
+		{ label: "Onboarding", href: "/onboarding", icon: HiOutlineClipboardDocumentList },
+		{ label: "Training", href: "/training", icon: LuGraduationCap },
+	];
+
+	const otherItems: TSidebarItems[] = [
+		{ label: "Reports & Analytics", href: "/reports", icon: BsBarChart },
+		{ label: "Documents", href: "/documents", icon: IoDocumentTextOutline },
+		{ label: "Notifications", href: "/notifications", icon: FaRegBell },
+		{ label: "Settings", href: "/settings", icon: GoGear },
+		{ label: "User Management", href: "/user/management", icon: LuUserRoundCog },
+	];
+
+	const sidebarItems = [
+		{
+			label: "dashboard",
+			items: dashboardItems
+		},
+		{
+			label: "main",
+			items: mainItems
+		},
+		{
+			label: "other",
+			items: otherItems
+		}
+	]
+
+	const renderSidebarItems = () => {
+		return sidebarItems.map((sidebarItem, idx) => {
+			return (
+				<SidebarGroup key={idx} className="p-0">
+					{(open || openMobile) ? (
+						<SidebarGroupLabel className="text-grey-200 text-xs uppercase">{sidebarItem.label}</SidebarGroupLabel>
+					) : (
+						idx > 0 && <div className="my-1 border-t border-white/20 mr-2" />
+					)}
+					<SidebarMenu className={`${open || openMobile ? 'gap-1' : ''}`}>
+						{sidebarItem.items.map((item, subIdx) => {
+							const isActive = [item.href, ...(item?.subRoutes ?? [])].includes(location.pathname);
+							return (
+								<SidebarMenuItem key={subIdx}>
+									{
+										(open || openMobile) ? (
+											<SidebarMenuButton
+												className={`text-md font-medium text-white active:bg-black/20 active:text-white transition-all duration-200 ease-in-out cursor-pointer ${isActive
+													? "bg-white text-theme rounded-sm pointer-events-none active:bg-white active:text-theme"
+													: `my-0 ${(open || openMobile) ? '' : 'hover:my-1.5'} hover:bg-black/20 hover:text-white hover:rounded-sm`
+													}`}
+											>
+												<Link
+													key={item.href}
+													to={item.href}
+													className={`flex w-full items-center gap-3 text-sm font-medium py-1.5 ${open ? 'px-1' : ''} leading-relaxed transition-colors`}
+												>
+													{/* Indicator bar */}
+													<item.icon style={{ ...(open && { height: '20px', width: '20px' }) }} />
+
+													{item.label}
+												</Link>
+											</SidebarMenuButton>
+										) : (
+											<RenderWithTooltip
+												side="right"
+												onlyOnOverflow={false}
+												content={item.label}
+												trigger={
+													<SidebarMenuButton
+														className={`text-md font-medium text-white active:bg-black/20 active:text-white transition-all duration-200 ease-in-out cursor-pointer ${isActive
+															? "bg-white text-theme rounded-sm pointer-events-none active:bg-white active:text-theme my-1"
+															: `my-0 ${(open || openMobile) ? '' : 'hover:my-1.5'} hover:bg-black/20 hover:text-white hover:rounded-sm`
+															}`}
+													>
+														<Link
+															key={item.href}
+															to={item.href}
+															className="flex w-full items-center justify-center text-sm font-medium py-1.5 leading-relaxed transition-colors"
+														>
+															{/* Indicator bar */}
+															<item.icon />
+														</Link>
+													</SidebarMenuButton>
+												}
+											/>
+										)
+									}
+								</SidebarMenuItem>
+							)
+						})}
+					</SidebarMenu>
+				</SidebarGroup>
+			)
+		})
+	}
+
+	return (
+		<Sidebar collapsible="icon" className="cursor-pointer h-full flex shrink-0 border-r-0 z-41 selection:bg-white selection:text-theme">
+			<div className="flex flex-col h-full bg-linear-to-r from-theme to-[rgba(115,80,231)]">
+				<SidebarHeader className={`flex flex-row items-center ${isMobile ? 'justify-between' : 'justify-center'} p-2`}>
+					{(open || openMobile) ? (
+						<img
+							src={logo}
+							alt="EasyPayPack Logo"
+							className={`w-60 h-auto cursor-pointer -mt-8 -mb-10 ${isMobile ? '-ml-7' : '-ml-10'}`}
+							onClick={() => navigate("/dashboard")}
+						/>
+					) : (
+						<Button
+							variant="ghost"
+							size="icon"
+							onClick={toggleSidebar}
+							className="rounded-sm cursor-pointer text-white hover:bg-white! hover:text-theme!"
+						>
+							<Menu />
+						</Button>
+					)}
+					{(isMobile && openMobile) && (
+						<Button
+							variant="ghost"
+							size="icon"
+							onClick={toggleSidebar}
+							className="rounded-sm cursor-pointer text-white hover:bg-white! hover:text-theme!"
+						>
+							<Menu />
+						</Button>
+					)}
+				</SidebarHeader>
+				<SidebarContent className={`pl-2 cursor-default transition-all ease-in-out duration-200 overflow-hidden relative`}>
+					{/* Top Shadow - shown when content is scrollable above */}
+					<div className={`absolute top-0 left-0 right-0 h-10 z-20 pointer-events-none transition-opacity duration-300 ${showTopShadow ? 'opacity-100' : 'opacity-0'} bg-linear-to-b from-black/15 to-transparent`} />
+
+					<ScrollArea ref={scrollAreaRef} className={`h-full flex ${open || openMobile ? 'pr-3' : ''}`}>
+						<div className={`flex flex-col ${open || openMobile ? 'gap-3' : 'gap-0'}`}>
+							{renderSidebarItems()}
+						</div>
+					</ScrollArea>
+
+					{/* Bottom Shadow - shown when content is scrollable below */}
+					<div className={`absolute bottom-0 left-0 right-0 h-10 z-20 pointer-events-none transition-opacity duration-300 ${showBottomShadow ? 'opacity-100' : 'opacity-0'} bg-linear-to-t from-black/15 to-transparent`} />
+				</SidebarContent>
+				<SidebarFooter>
+					<SidebarMenu>
+						{/* This is what shows in icon-collapsed mode */}
+						<SidebarMenuItem className="flex flex-col gap-1">
+							<SidebarMenuButton tooltip="Log out" className="cursor-pointer text-md font-medium text-white hover:bg-black/20! hover:text-white! gap-3">
+								<LogOut /> Log out
+							</SidebarMenuButton>
+						</SidebarMenuItem>
+					</SidebarMenu>
+				</SidebarFooter>
+			</div>
+		</Sidebar>
+	)
 }

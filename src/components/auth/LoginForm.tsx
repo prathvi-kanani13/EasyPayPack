@@ -16,7 +16,7 @@ import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupButton } from "
 
 // LoginSchema defines validation rules for User ID and Password using Yup
 const LoginSchema = Yup.object().shape({
-  employeeId: Yup.string().required("Email is required"),
+  email: Yup.string().required("Email is required"),
   password: Yup.string().min(1, "Password must be at least 1 character").required("Password is required"),
 });
 
@@ -32,12 +32,12 @@ const Login = () => {
 
   const passwordRef = useRef<HTMLInputElement>(null);
 
-  const onSubmit = async (values: { employeeId: string; password: string; rememberMe: boolean }) => {
+  const onSubmit = async (values: { email: string; password: string; rememberMe: boolean }) => {
     setError(null);
 
     navigate("/otp", {
       state: {
-        userName: values.employeeId,
+        email: values.email,
         password: values.password,
         tranCD: "",
         validFor: "",
@@ -50,7 +50,7 @@ const Login = () => {
 
   return (
     <Formik
-      initialValues={{ employeeId: "", password: "", rememberMe: false }}
+      initialValues={{ email: "", password: "", rememberMe: false }}
       validationSchema={LoginSchema}
       onSubmit={(values, { setSubmitting }) => {
         onSubmit(values);
@@ -78,7 +78,7 @@ const Login = () => {
                   name="email"
                   type="text"
                   placeholder="Enter your Email Address"
-                  value={values.employeeId}
+                  value={values.email}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   onKeyDown={(e) => {
@@ -172,10 +172,10 @@ const Login = () => {
           </div>
 
           {/* Error display - show Formik validation error or API/custom error */}
-          {((touched.employeeId && errors.employeeId) || (touched.password && errors.password) || Error) && (
+          {((touched.email && errors.email) || (touched.password && errors.password) || Error) && (
             <p className="text-xs text-red-600 font-semibold">
-              {touched.employeeId && errors.employeeId
-                ? errors.employeeId
+              {touched.email && errors.email
+                ? errors.email
                 : touched.password && errors.password
                   ? errors.password
                   : Error}
