@@ -78,7 +78,7 @@ export default function Login(props: { component: 'login' | 'otp' | 'forgotPassw
             </div>
 
             {/* right side */}
-            <div className="flex flex-1 items-center justify-center px-4 md:px-10 lg:px-15 py-10 md:py-0">
+            <div className="flex flex-1 items-center justify-center px-4 md:pr-6 lg:px-15 py-10 md:py-0">
                 <div className="w-full flex justify-center">
                     <Card className="w-full max-w-125 rounded-xl shadow-4xl border border-gray-200 flex flex-col gap-6 p-4 md:p-6 lg:px-[7vh] lg:py-[6vh]">
                         <div className="w-full">
@@ -88,7 +88,7 @@ export default function Login(props: { component: 'login' | 'otp' | 'forgotPassw
 
                         {/* Form */}
                         <CardContent className="flex-1 px-0">
-                                <AuthComponent />
+                            <AuthComponent />
                         </CardContent>
                     </Card>
                 </div>

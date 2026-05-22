@@ -118,7 +118,7 @@ export default function OTPForm({
           <Button
             type="submit"
             size="lg"
-            className="h-12 w-full px-8 text-sm sm:text-base bg-[linear-gradient(90deg,rgba(66,78,250)_20%,rgba(115,80,231,1)_100%)] hover:bg-none hover:bg-theme text-white font-medium rounded-md transition-all duration-200 gap-2"
+            className="h-12 w-full px-8 text-sm sm:text-base bg-[linear-gradient(90deg,rgba(66,78,250)_20%,rgba(115,80,231,1)_100%)] hover:brightness-110 text-white font-medium rounded-md transition-all duration-200 gap-2"
           >
             Submit <ArrowRight />
           </Button>

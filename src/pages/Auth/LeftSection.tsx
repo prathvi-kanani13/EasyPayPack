@@ -14,7 +14,7 @@ interface LeftSectionProps {
 export default function LeftSection({ selectedAnimation, componentName }: LeftSectionProps) {
     const animationWidth = componentName === 'login' ? '87vh' : componentName === 'otp' ? '50vh' : '60vh';
     return (
-        <div className="relative flex flex-col w-full h-full max-h-screen p-4 pl-20 lg:pt-[5vh] justify-between bg-transparent items-center">
+        <div className="relative flex flex-col w-full h-full max-h-screen p-4 pl-[5vw] lg:pt-[5vh] justify-between bg-transparent items-center">
             {/* Top-left decorative curved shape */}
             <svg
                 className="absolute top-0 left-0 w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 pointer-events-none"

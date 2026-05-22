@@ -16,7 +16,7 @@ import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupButton } from "
 
 // LoginSchema defines validation rules for User ID and Password using Yup
 const LoginSchema = Yup.object().shape({
-  employeeId: Yup.string().required("User ID is required"),
+  employeeId: Yup.string().required("Email is required"),
   password: Yup.string().min(1, "Password must be at least 1 character").required("Password is required"),
 });
 
@@ -68,16 +68,16 @@ const Login = () => {
 
             <div className="relative w-full">
               <InputGroup
-                className="h-12 gap-2 p-1 rounded-sm"
+                className="h-10 sm:h-12 max-md:gap-1 gap-0 lg:gap-1 p-1 rounded-sm has-[[data-slot=input-group-control]:focus-visible]:border-theme has-[[data-slot=input-group-control]:focus-visible]:ring-3 has-[[data-slot=input-group-control]:focus-visible]:ring-theme/50"
               >
-                <InputGroupAddon>
+                <InputGroupAddon className="h-full">
                   <Mail />
                 </InputGroupAddon>
                 <InputGroupInput
                   autoFocus
-                  name="employeeId"
+                  name="email"
                   type="text"
-                  placeholder="Enter your User ID"
+                  placeholder="Enter your Email Address"
                   value={values.employeeId}
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -87,7 +87,7 @@ const Login = () => {
                       passwordRef.current?.focus();
                     }
                   }}
-                  className="w-full placeholder:text-[#B2B2B2]"
+                  className="w-full h-10 sm:h-12 placeholder:text-[#B2B2B2] focus-visible:placeholder:text-theme"
                 />
               </InputGroup>
             </div>
@@ -102,9 +102,9 @@ const Login = () => {
 
             <div className="relative w-full">
               {/* InputGroup wraps the input and accessory components like Lock icon and Eye toggle */}
-              <InputGroup className="h-12 gap-2 p-1 rounded-sm">
+              <InputGroup className="h-10 sm:h-12 max-md:gap-1 gap-0 lg:gap-1 p-1 rounded-sm has-[[data-slot=input-group-control]:focus-visible]:border-theme has-[[data-slot=input-group-control]:focus-visible]:ring-3 has-[[data-slot=input-group-control]:focus-visible]:ring-theme/50">
                 {/* InputGroupAddon for the leading Lock icon */}
-                <InputGroupAddon align="inline-start">
+                <InputGroupAddon align="inline-start" className="h-full">
                   <Lock />
                 </InputGroupAddon>
 
@@ -117,11 +117,11 @@ const Login = () => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   ref={passwordRef}
-                  className="w-full placeholder:text-[#B2B2B2]"
+                  className="w-full h-10 sm:h-12 placeholder:text-[#B2B2B2] focus-visible:placeholder:text-theme"
                 />
 
                 {/* InputGroupAddon for the trailing Eye toggle button */}
-                <InputGroupAddon align="inline-end">
+                <InputGroupAddon align="inline-end" className="h-full">
                   {/* InputGroupButton handles toggling password visibility */}
                   <InputGroupButton
                     size="icon-sm"
@@ -162,14 +162,6 @@ const Login = () => {
               type="button"
               onClick={(e) => {
                 e.preventDefault();
-
-                const userName = values.employeeId;
-
-                if (!userName) {
-                  setError("Please enter User ID first");
-                  return;
-                }
-
                 setError(null);
 
                 navigate("/forgot-password");
@@ -179,16 +171,14 @@ const Login = () => {
             </Button>
           </div>
 
-          {/* Formik Error display - only one at a time */}
-          {((touched.employeeId && errors.employeeId) || (touched.password && errors.password)) && (
-            <p className="text-xs text-red-600 font-semibold text-center">
-              {touched.employeeId && errors.employeeId ? errors.employeeId : errors.password}
-            </p>
-          )}
-
-          {Error && (
-            <p className="text-red-600 text-sm text-center">
-              {Error}
+          {/* Error display - show Formik validation error or API/custom error */}
+          {((touched.employeeId && errors.employeeId) || (touched.password && errors.password) || Error) && (
+            <p className="text-xs text-red-600 font-semibold">
+              {touched.employeeId && errors.employeeId
+                ? errors.employeeId
+                : touched.password && errors.password
+                  ? errors.password
+                  : Error}
             </p>
           )}
 
@@ -196,7 +186,7 @@ const Login = () => {
           <Button
             type="submit"
             size="lg"
-            className="h-12 w-full px-8 text-sm sm:text-base bg-[linear-gradient(90deg,rgba(66,78,250)_20%,rgba(115,80,231,1)_100%)] hover:bg-theme text-white font-medium rounded-md transition-all duration-200 gap-2"
+            className="h-10 sm:h-12 w-full px-8 text-sm sm:text-base bg-[linear-gradient(90deg,rgba(66,78,250)_20%,rgba(115,80,231,1)_100%)] hover:brightness-110 text-white font-medium rounded-md transition-all duration-200 gap-2"
           >
             Sign In <ArrowRight />
           </Button>
