@@ -1,7 +1,7 @@
 import "./App.css";
-import Auth from "./pages/auth/auth";
+import Auth from "./pages/Auth/auth";
 import Layout from "./layout/Layout";
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./pages/Dashboard/Dashboard";
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useTheme } from "./providers/ThemeProvider";
 import { useEffect } from "react";
