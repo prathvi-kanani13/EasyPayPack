@@ -169,7 +169,7 @@ export default function SidebarComponent() {
 
 	return (
 		<Sidebar collapsible="icon" className="cursor-pointer h-full flex shrink-0 border-r-0 z-41 selection:bg-white selection:text-theme">
-			<div className="flex flex-col h-full bg-linear-to-r from-theme to-[rgba(115,80,231)]">
+			<div className="flex flex-col h-full bg-linear-to-r from-theme to-theme-secondary">
 				<SidebarHeader className={`flex flex-row items-center ${isMobile ? 'justify-between' : 'justify-center'} p-2`}>
 					{(open || openMobile) ? (
 						<img

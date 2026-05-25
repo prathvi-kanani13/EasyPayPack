@@ -54,6 +54,7 @@ input:-webkit-autofill:active{
     --radius-3xl: calc(var(--radius) * 2.2);
     --radius-4xl: calc(var(--radius) * 2.6);
     --color-theme: var(--theme);
+    --color-theme-secondary: var(--theme-secondary);
 }
 
 :root {
@@ -90,6 +91,7 @@ input:-webkit-autofill:active{
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.708 0 0);
     --theme: oklch(0.5343 0.25 271.36);
+    --theme-secondary: oklch(0.5551 0.2162 287.86);
 }
 
 .dark {
@@ -125,6 +127,7 @@ input:-webkit-autofill:active{
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.556 0 0);
     --theme: oklch(0.5343 0.25 271.36);
+    --theme-secondary: oklch(0.5551 0.2162 287.86);
 }
 
 /* Hide scrollbar for Chrome, Safari and Edge */
