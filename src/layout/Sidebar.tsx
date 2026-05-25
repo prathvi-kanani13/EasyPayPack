@@ -1,18 +1,27 @@
 import { useEffect, useState, useRef } from "react"
-import { LogOut, Menu } from "lucide-react"
-import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar"
+import { Menu } from "lucide-react"
+import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar"
 import { Link, useNavigate } from "react-router-dom"
-import { FaRegBell } from "react-icons/fa";
-import { SlCalender } from "react-icons/sl";
-import { IoCalendarOutline, IoDocumentTextOutline } from "react-icons/io5";
-import { LuLayoutGrid, LuGraduationCap, LuUserRoundCog } from "react-icons/lu";
-import type { IconType } from "react-icons";
-import { IoMdTime } from "react-icons/io"
-import { RxPeople } from "react-icons/rx";
-import { GrDocumentUser } from "react-icons/gr";
-import { GoPersonAdd, GoGear } from "react-icons/go";
-import { HiOutlineClipboardDocumentList } from "react-icons/hi2";
-import { BsSpeedometer2, BsBarChart } from "react-icons/bs";
+
+import {
+	LayoutDashboard,
+	Database,
+	ArrowRightLeft,
+	BarChart3,
+	MoreHorizontal,
+	Wallet,
+	Calendar,
+	TrendingUp,
+	Gift,
+	Lock,
+	Calculator,
+	UserPlus,
+	MapPin,
+	Clock,
+	Mail,
+	LogOut,
+	type LucideIcon
+} from "lucide-react";
 
 import logo from "../assets/WhiteLogo.png"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -22,7 +31,7 @@ import RenderWithTooltip from "@/utils/RenderWithTooltip";
 type TSidebarItems = {
 	label: string,
 	href: string,
-	icon: IconType
+	icon: LucideIcon
 	subRoutes?: string[]
 }
 
@@ -79,114 +88,83 @@ export default function SidebarComponent() {
 		};
 	}, [open, openMobile]);
 
-	const dashboardItems: TSidebarItems[] = [
-		{
-			label: "Dashboard",
-			href: "/dashboard",
-			icon: LuLayoutGrid
-		}
+	const sidebarItems: TSidebarItems[] = [
+		{ label: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
+		{ label: "Master", icon: Database, href: "/master" },
+		{ label: "Transaction", icon: ArrowRightLeft, href: "/transaction" },
+		{ label: "Report", icon: BarChart3, href: "/report" },
+		{ label: "Other", icon: MoreHorizontal, href: "/other" },
+		{ label: "Salary Process", icon: Wallet, href: "/salary-process" },
+		{ label: "Leave Management", icon: Calendar, href: "/leave-management" },
+		{ label: "DA Increment Process", icon: TrendingUp, href: "/da-increment" },
+		{ label: "Bonus Process", icon: Gift, href: "/bonus-process" },
+		{ label: "Closing Process", icon: Lock, href: "/closing-process" },
+		{ label: "Income Tax", icon: Calculator, href: "/income-tax" },
+		{ label: "Pre-onboarding", icon: UserPlus, href: "/pre-onboarding" },
+		{ label: "Conveyance", icon: MapPin, href: "/conveyance" },
+		{ label: "Probation Management", icon: Clock, href: "/probation-management" },
+		{ label: "Resignation Management", icon: LogOut, href: "/resignation-management" },
+		{ label: "Letter Management", icon: Mail, href: "/letter-management" },
 	];
-
-	const mainItems: TSidebarItems[] = [
-		{ label: "Employees", href: "/employees", icon: RxPeople },
-		{ label: "Payroll", href: "/payroll", icon: GrDocumentUser },
-		{ label: "Attendance", href: "/attendance", icon: SlCalender },
-		{ label: "Leave Management", href: "/leave/management", icon: IoCalendarOutline },
-		{ label: "Time Tracking", href: "/time-tracking", icon: IoMdTime },
-		{ label: "Performance", href: "/performance", icon: BsSpeedometer2 },
-		{ label: "Recruitment", href: "/recruitment", icon: GoPersonAdd },
-		{ label: "Onboarding", href: "/onboarding", icon: HiOutlineClipboardDocumentList },
-		{ label: "Training", href: "/training", icon: LuGraduationCap },
-	];
-
-	const otherItems: TSidebarItems[] = [
-		{ label: "Reports & Analytics", href: "/reports", icon: BsBarChart },
-		{ label: "Documents", href: "/documents", icon: IoDocumentTextOutline },
-		{ label: "Notifications", href: "/notifications", icon: FaRegBell },
-		{ label: "Settings", href: "/settings", icon: GoGear },
-		{ label: "User Management", href: "/user/management", icon: LuUserRoundCog },
-	];
-
-	const sidebarItems = [
-		{
-			label: "dashboard",
-			items: dashboardItems
-		},
-		{
-			label: "main",
-			items: mainItems
-		},
-		{
-			label: "other",
-			items: otherItems
-		}
-	]
 
 	const renderSidebarItems = () => {
-		return sidebarItems.map((sidebarItem, idx) => {
-			return (
-				<SidebarGroup key={idx} className="p-0">
-					{(open || openMobile) ? (
-						<SidebarGroupLabel className="text-grey-200 text-xs uppercase">{sidebarItem.label}</SidebarGroupLabel>
-					) : (
-						idx > 0 && <div className="my-1 border-t border-white/20 mr-2" />
-					)}
-					<SidebarMenu className={`${open || openMobile ? 'gap-1' : ''}`}>
-						{sidebarItem.items.map((item, subIdx) => {
-							const isActive = [item.href, ...(item?.subRoutes ?? [])].includes(location.pathname);
-							return (
-								<SidebarMenuItem key={subIdx}>
-									{
-										(open || openMobile) ? (
-											<SidebarMenuButton
-												className={`text-md font-medium text-white active:bg-black/20 active:text-white transition-all duration-200 ease-in-out cursor-pointer ${isActive
-													? "bg-white text-theme rounded-sm pointer-events-none active:bg-white active:text-theme"
-													: `my-0 ${(open || openMobile) ? '' : 'hover:my-1.5'} hover:bg-black/20 hover:text-white hover:rounded-sm`
-													}`}
+		return (
+			<SidebarGroup className="p-0">
+				<SidebarMenu className={open || openMobile ? 'gap-1' : 'gap-0'}>
+					{sidebarItems.map((item, subIdx) => {
+						const isActive = [item.href, ...(item?.subRoutes ?? [])].includes(location.pathname);
+						return (
+							<SidebarMenuItem key={subIdx}>
+								{
+									(open || openMobile) ? (
+										<SidebarMenuButton
+											className={`text-md font-medium text-white active:bg-black/20 active:text-white transition-all duration-200 ease-in-out cursor-pointer ${isActive
+												? "bg-white text-theme rounded-sm pointer-events-none active:bg-white active:text-theme"
+												: `my-0 ${(open || openMobile) ? '' : 'hover:my-1.5'} hover:bg-black/20 hover:text-white hover:rounded-sm`
+												}`}
+										>
+											<Link
+												key={item.href}
+												to={item.href}
+												className={`flex w-full items-center gap-3 text-sm font-medium py-1.5 ${open ? 'px-1' : ''} leading-relaxed transition-colors`}
 											>
-												<Link
-													key={item.href}
-													to={item.href}
-													className={`flex w-full items-center gap-3 text-sm font-medium py-1.5 ${open ? 'px-1' : ''} leading-relaxed transition-colors`}
-												>
-													{/* Indicator bar */}
-													<item.icon style={{ ...(open && { height: '20px', width: '20px' }) }} />
+												{/* Indicator bar */}
+												<item.icon style={{ ...(open && { height: '20px', width: '20px' }) }} />
 
-													{item.label}
-												</Link>
-											</SidebarMenuButton>
-										) : (
-											<RenderWithTooltip
-												side="right"
-												onlyOnOverflow={false}
-												content={item.label}
-												trigger={
-													<SidebarMenuButton
-														className={`text-md font-medium text-white active:bg-black/20 active:text-white transition-all duration-200 ease-in-out cursor-pointer ${isActive
-															? "bg-white text-theme rounded-sm pointer-events-none active:bg-white active:text-theme my-1"
-															: `my-0 ${(open || openMobile) ? '' : 'hover:my-1.5'} hover:bg-black/20 hover:text-white hover:rounded-sm`
-															}`}
+												{item.label}
+											</Link>
+										</SidebarMenuButton>
+									) : (
+										<RenderWithTooltip
+											side="right"
+											onlyOnOverflow={false}
+											content={item.label}
+											trigger={
+												<SidebarMenuButton
+													className={`text-md font-medium text-white active:bg-black/20 active:text-white transition-all duration-200 ease-in-out cursor-pointer ${isActive
+														? "bg-white text-theme rounded-sm pointer-events-none active:bg-white active:text-theme my-1"
+														: `my-0 ${(open || openMobile) ? '' : 'hover:my-1.5'} hover:bg-black/20 hover:text-white hover:rounded-sm`
+														}`}
+												>
+													<Link
+														key={item.href}
+														to={item.href}
+														className="flex w-full items-center justify-center text-sm font-medium py-1.5 leading-relaxed transition-colors"
 													>
-														<Link
-															key={item.href}
-															to={item.href}
-															className="flex w-full items-center justify-center text-sm font-medium py-1.5 leading-relaxed transition-colors"
-														>
-															{/* Indicator bar */}
-															<item.icon />
-														</Link>
-													</SidebarMenuButton>
-												}
-											/>
-										)
-									}
-								</SidebarMenuItem>
-							)
-						})}
-					</SidebarMenu>
-				</SidebarGroup>
-			)
-		})
+														{/* Indicator bar */}
+														<item.icon />
+													</Link>
+												</SidebarMenuButton>
+											}
+										/>
+									)
+								}
+							</SidebarMenuItem>
+						)
+					})}
+				</SidebarMenu>
+			</SidebarGroup >
+		)
 	}
 
 	return (
@@ -203,7 +181,7 @@ export default function SidebarComponent() {
 					) : (
 						<Button
 							variant="ghost"
-							size="icon"
+							size="icon-sm"
 							onClick={toggleSidebar}
 							className="rounded-sm cursor-pointer text-white hover:bg-white! hover:text-theme!"
 						>

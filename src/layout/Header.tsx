@@ -40,6 +40,12 @@ export default function Header() {
     return Object.keys(searchRoutes).filter((key) => regex.test(key));
   }, [query]);
 
+  const [searchEl, setSearchEl] = useState<'icon' | 'field'>(isMobile ? 'icon' : 'field');
+  const openSearch = () => {
+    setSearchEl('field');
+    inputRef.current?.focus();
+  };
+
   // ctrl + k listener
   const inputRef = useRef<HTMLInputElement | null>(null);
   useEffect(() => {
@@ -47,7 +53,7 @@ export default function Header() {
       // Ctrl + k
       if (e.ctrlKey && e.key === "k") {
         e.preventDefault();
-        // openSearch()
+        openSearch()
       }
     };
 
@@ -57,13 +63,6 @@ export default function Header() {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
-
-  const [searchEl, setSearchEl] = useState<'icon' | 'field'>(isMobile ? 'icon' : 'field');
-
-  const openSearch = () => {
-    setSearchEl('field');
-    inputRef.current?.focus();
-  };
 
   const closeSearch = () => {
     setQuery('');
