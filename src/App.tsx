@@ -1,5 +1,5 @@
 import "./App.css";
-import Auth from "./pages/Auth/auth";
+import Auth from "./pages/auth/auth";
 import Layout from "./layout/Layout";
 import Dashboard from "./pages/Dashboard";
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
@@ -25,6 +25,7 @@ function ThemeController() {
 
   return null
 }
+import Probation from "./pages/probation management/Probation";
 
 function App() {
 
@@ -43,6 +44,7 @@ function App() {
         {/* Protected Dashboard and Sidebar routes in Layout */}
         <Route element={<Layout />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/probation-management" element={<Probation />} />
         </Route>
 
         {/* Fallback route */}
