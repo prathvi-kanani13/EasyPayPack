@@ -48,7 +48,7 @@ export function DatePickerInput({
                 <Button
                     variant="outline"
                     disabled={disabled}
-                    className={`w-40 justify-start text-left font-normal ${!value ? "text-muted-foreground" : ""} ${className}`}
+                    className={`w-40 justify-start text-left font-normal border-input ${!value ? "text-muted-foreground" : ""} ${className}`}
                 >
                     {value && parsed && !isNaN(parsed.getTime()) ? format(parsed, DISPLAY_FORMAT) : <span>{placeholder}</span>}
                     <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />

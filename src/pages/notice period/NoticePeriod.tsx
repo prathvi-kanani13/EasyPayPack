@@ -9,82 +9,68 @@ import { getCoreRowModel, getFilteredRowModel, getPaginationRowModel, useReactTa
 import { format, parse } from "date-fns";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import { useAlert } from "../../context/AlertContext";
-import { DatePickerInput } from "../../components/DatePickerInput";
-import { DataTable } from "../../components/DataTable";
-import Pagination from "../../components/Pagination";
-import ProbationDialog from "./ProbationDailog";
+import { useAlert } from "@/context/AlertContext";
+import { DatePickerInput } from "@/components/DatePickerInput";
+import { DataTable } from "@/components/DataTable";
+import Pagination from "@/components/Pagination";
+import NoticePeriodDialog from "./NoticePeriodDailog";
 
-type ProbationRecord = {
+type NoticePeriodRecord = {
     id: string;
     empId: string;
-    employee: string,
+    employee: string;
     designation: string;
-    joiningDate: string;
-    probationEndDate: string;
-    reviewer: string;
+    startDate: string;
+    endDate: string;
+    totalDays: string;
+    completedDays: string;
+    remainingDays: string;
     status: string;
-    extensionFromDate?: string;
-    extensionToDate?: string;
 };
 
-const probationData: ProbationRecord[] = [
+const noticePeriodData: NoticePeriodRecord[] = [
     {
         id: "1",
         empId: "EMP001",
         employee: "Anthony Lewis",
         designation: "UI/UX Designer",
-        joiningDate: "10-10-2024",
-        probationEndDate: "10-01-2025",
-        reviewer: "Admin User",
-        status: "In Review",
+        startDate: "01-05-2026",
+        endDate: "01-08-2026",
+        totalDays: "92",
+        completedDays: "15",
+        remainingDays: "77",
+        status: "active",
     },
     {
         id: "2",
         empId: "EMP002",
         employee: "Brian Villalobos",
         designation: "Frontend Developer",
-        joiningDate: "15-08-2024",
-        probationEndDate: "15-11-2024",
-        reviewer: "HR Manager",
-        status: "Completed",
+        startDate: "15-06-2026",
+        endDate: "15-09-2026",
+        totalDays: "92",
+        completedDays: "89",
+        remainingDays: "92",
+        status: "closing soon",
     },
     {
         id: "3",
         empId: "EMP003",
         employee: "Harvey Smith",
         designation: "Product Manager",
-        joiningDate: "01-11-2024",
-        probationEndDate: "01-02-2025",
-        reviewer: "Director",
-        status: "Pending",
-    },
-    {
-        id: "4",
-        empId: "EMP004",
-        employee: "Steaven Smith",
-        designation: "IT Manager",
-        joiningDate: "05-11-2024",
-        probationEndDate: "05-02-2025",
-        reviewer: "Director",
-        status: "Failed",
-    },
-    {
-        id: "5",
-        empId: "EMP005",
-        employee: "Karthik",
-        designation: "Product Manager",
-        joiningDate: "01-11-2024",
-        probationEndDate: "01-02-2025",
-        reviewer: "Director",
-        status: "Extended",
+        startDate: "01-02-2026",
+        endDate: "01-05-2026",
+        totalDays: "89",
+        completedDays: "89",
+        remainingDays: "0",
+        status: "completed",
     },
 ];
 
-export default function Probation() {
+export default function NoticePeriod() {
     const { showAlert } = useAlert();
 
-    const [data] = useState(probationData);
+    const [data] = useState(noticePeriodData);
     const [statusFilter, setStatusFilter] = useState<string>("");
     const [fromDate, setFromDate] = useState<string>("");
     const [toDate, setToDate] = useState<string>("");
@@ -93,11 +79,11 @@ export default function Probation() {
 
     // Dialog state
     const [dialogOpen, setDialogOpen] = useState(false);
-    const [selectedRecord, setSelectedRecord] = useState<ProbationRecord | null>(null);
+    const [selectedRecord, setSelectedRecord] = useState<NoticePeriodRecord | null>(null);
 
     const isDateValid = Boolean(fromDate && toDate);
 
-    const columns = useMemo<ColumnDef<ProbationRecord>[]>(
+    const columns = useMemo<ColumnDef<NoticePeriodRecord>[]>(
         () => [
             {
                 accessorKey: "empId",
@@ -112,20 +98,28 @@ export default function Probation() {
                 header: "Designation",
             },
             {
-                accessorKey: "joiningDate",
-                header: "Joining Date",
+                accessorKey: "startDate",
+                header: "Start Date",
                 cell: (info) =>
                     format(parse(info.getValue() as string, "dd-MM-yyyy", new Date()), "dd-MM-yyyy"),
             },
             {
-                accessorKey: "probationEndDate",
-                header: "Probation End Date",
+                accessorKey: "endDate",
+                header: "End Date",
                 cell: (info) =>
                     format(parse(info.getValue() as string, "dd-MM-yyyy", new Date()), "dd-MM-yyyy"),
             },
             {
-                accessorKey: "reviewer",
-                header: "Reviewer",
+                accessorKey: "totalDays",
+                header: "Total Days",
+            },
+            {
+                accessorKey: "completedDays",
+                header: "Completed",
+            },
+            {
+                accessorKey: "remainingDays",
+                header: "Remaining",
             },
             {
                 accessorKey: "status",
@@ -133,14 +127,12 @@ export default function Probation() {
                 cell: (info) => {
                     const status = info.getValue() as string;
                     const variants: Record<string, string> = {
-                        'Completed': 'bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400 border-green-200 dark:border-green-500/30',
-                        'Pending': 'bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400 border-amber-200 dark:border-amber-500/30',
-                        'In Review': 'bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400 border-blue-200 dark:border-blue-500/30',
-                        'Failed': 'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400 border-red-200 dark:border-red-500/30',
-                        'Extended': 'bg-purple-100 text-purple-700 dark:bg-purple-500/20 dark:text-purple-400 border-purple-200 dark:border-purple-500/30',
+                        'active': 'bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400 border-blue-200 dark:border-blue-500/30',
+                        'completed': 'bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400 border-green-200 dark:border-green-500/30',
+                        'closing soon': 'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400 border-red-200 dark:border-red-500/30',
                     };
                     return (
-                        <Badge variant="outline" className={`${variants[status]} border font-bold text-[10px]`}>
+                        <Badge variant="outline" className={`${variants[status]} border font-bold text-[10px] capitalize`}>
                             {status}
                         </Badge>
                     );
@@ -148,7 +140,6 @@ export default function Probation() {
             },
             {
                 id: "actions",
-                // header: "Actions",
                 cell: ({ row }) => (
                     <Button
                         variant="ghost"
@@ -169,19 +160,16 @@ export default function Probation() {
 
     const filteredData = useMemo(() => {
         return data.filter((row) => {
-            // Search employee name or empId
             if (search && !row.employee.toLowerCase().includes(search.toLowerCase()) && !row.empId.toLowerCase().includes(search.toLowerCase())) {
                 return false;
             }
 
-            // Status filter
             if (statusFilter && statusFilter !== "all" && row.status !== statusFilter) {
                 return false;
             }
 
-            // Manual date range filter (based on probationEndDate)
             if (isDateFiltered && (fromDate || toDate)) {
-                const rowDate = parse(row.probationEndDate, "dd-MM-yyyy", new Date());
+                const rowDate = parse(row.endDate, "dd-MM-yyyy", new Date());
                 const from = fromDate ? parse(fromDate, "dd-MM-yyyy", new Date()) : null;
                 const to = toDate ? parse(toDate, "dd-MM-yyyy", new Date()) : null;
 
@@ -193,7 +181,7 @@ export default function Probation() {
 
             return true;
         });
-    }, [data, search, fromDate, toDate, isDateFiltered]);
+    }, [data, search, fromDate, toDate, isDateFiltered, statusFilter]);
 
     const table = useReactTable({
         data: filteredData,
@@ -215,29 +203,31 @@ export default function Probation() {
 
         const doc = new jsPDF();
         doc.setFontSize(14);
-        doc.text("Probation Management Report", 14, 15);
+        doc.text("Resignation / Notice Period Report", 14, 15);
 
         const tableData = filteredData.map((item) => [
             item.empId,
             item.employee,
             item.designation,
-            item.joiningDate,
-            item.probationEndDate,
-            item.reviewer,
+            item.startDate,
+            item.endDate,
+            item.totalDays,
+            item.completedDays,
+            item.remainingDays,
             item.status,
         ]);
 
         autoTable(doc, {
             startY: 25,
             head: [[
-                "Emp ID", "Employee", "Designation", "Joining Date",
-                "Probation End Date", "Reviewer", "Status"
+                "Emp ID", "Employee", "Designation", "Start Date",
+                "End Date", "Total Days", "Completed", "Remaining", "Status"
             ]],
             body: tableData,
             styles: { fontSize: 8 },
         });
 
-        doc.save("Probation_Report.pdf");
+        doc.save("Notice_Period_Report.pdf");
     };
 
     const handleDialogSubmit = (data: any) => {
@@ -245,14 +235,14 @@ export default function Probation() {
             console.log("Updating record:", data);
             showAlert({
                 title: "Success",
-                description: "Probation record updated successfully.",
+                description: "Notice period record updated successfully.",
                 variant: "success",
             });
         } else {
             console.log("Adding record:", data);
             showAlert({
                 title: "Success",
-                description: "Probation record added successfully.",
+                description: "Notice period record added successfully.",
                 variant: "success",
             });
         }
@@ -261,7 +251,7 @@ export default function Probation() {
     return (
         <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between flex-wrap gap-4">
-                <h1 className="text-2xl font-bold text-[#202C4B] dark:text-white">Probation Management</h1>
+                <h1 className="text-2xl font-bold text-[#202C4B] dark:text-white">Resignation / Notice Period Tracker</h1>
                 <div className="flex flex-1 justify-end gap-2 ml-2">
                     <Button
                         variant="outline"
@@ -278,26 +268,23 @@ export default function Probation() {
                             setDialogOpen(true);
                         }}
                     >
-                        Add Probation
+                        Add Notice Period
                     </Button>
                 </div>
             </div>
 
             <Card className="p-4 rounded-sm shadow-sm bg-white dark:bg-background border dark:border-gray-700">
                 <div className="flex items-center justify-between flex-wrap border-b dark:border-gray-700 gap-4 pb-4">
-                    <div className="text-lg font-semibold">Probation List</div>
+                    <div className="text-lg font-semibold">Employee List</div>
                 </div>
 
                 <div className="flex flex-wrap gap-4">
                     <div className="flex items-center gap-2 flex-wrap">
-                        {/* from date */}
                         <DatePickerInput
                             value={fromDate}
                             onChange={setFromDate}
                             placeholder="From Date"
                         />
-
-                        {/* to date */}
                         <DatePickerInput
                             value={toDate}
                             onChange={setToDate}
@@ -307,7 +294,7 @@ export default function Probation() {
                         <div className="flex items-center flex-wrap gap-2">
                             <div className="relative">
                                 <Input
-                                    placeholder="Search Employee Name"
+                                    placeholder="Search Employee"
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
                                     className=""
@@ -328,11 +315,9 @@ export default function Probation() {
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="all">All</SelectItem>
-                                    <SelectItem value="Pending">Pending</SelectItem>
-                                    <SelectItem value="Completed">Completed</SelectItem>
-                                    <SelectItem value="In Review">In Review</SelectItem>
-                                    <SelectItem value="Failed">Failed</SelectItem>
-                                    <SelectItem value="Extended">Extended</SelectItem>
+                                    <SelectItem value="active">Active</SelectItem>
+                                    <SelectItem value="closing soon">Closing Soon</SelectItem>
+                                    <SelectItem value="completed">Completed</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
@@ -344,14 +329,12 @@ export default function Probation() {
                                 if (fromDate && toDate) {
                                     const from = parse(fromDate, "dd-MM-yyyy", new Date());
                                     const to = parse(toDate, "dd-MM-yyyy", new Date());
-
                                     if (from > to) {
                                         showAlert({
                                             title: 'Invalid Date Range',
                                             description: "From Date cannot be greater than To Date",
                                             variant: 'error',
                                         })
-
                                         return;
                                     }
                                 }
@@ -399,7 +382,7 @@ export default function Probation() {
                 />
             </Card>
 
-            <ProbationDialog
+            <NoticePeriodDialog
                 open={dialogOpen}
                 onOpenChange={setDialogOpen}
                 initialData={selectedRecord}

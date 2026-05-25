@@ -4,12 +4,12 @@ import LoginComponent from "@/components/auth/LoginForm";
 import OTPComponent from "@/components/auth/OTPForm";
 import ForgotPasswordComponent from "@/components/auth/ForgotPassword";
 import type React from "react";
-import animationData from "../../animation/Data Visualization.json";
-import otpAnimation from "../../animation/OTP.json";
-import forgotQAnimation from "../../animation/Forgot Password.json";
+import animationData from "@/animation/lottie/Data Visualization.json";
+import otpAnimation from "@/animation/lottie/OTP.json";
+import forgotQAnimation from "@/animation/lottie/Forgot Password.json";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import LeftSection from "./LeftSection";
+import LeftSection from "../auth/LeftSection";
 
 type TPageContent = {
     title: string,
