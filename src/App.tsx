@@ -1,10 +1,12 @@
 import "./App.css";
-import Auth from "./pages/Auth/auth";
-import Layout from "./layout/Layout";
-import Dashboard from "./pages/Dashboard/Dashboard";
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useTheme } from "./providers/ThemeProvider";
 import { useEffect } from "react";
+import Auth from "./pages/auth/auth";
+import Layout from "./layout/Layout";
+import Dashboard from "./pages/Dashboard/Dashboard";
+import Probation from "./pages/probation management/Probation";
+import NoticePeriod from "./pages/notice period/NoticePeriod";
 
 function ThemeController() {
   const location = useLocation()
@@ -25,7 +27,6 @@ function ThemeController() {
 
   return null
 }
-import Probation from "./pages/probation management/Probation";
 
 function App() {
 
@@ -45,6 +46,7 @@ function App() {
         <Route element={<Layout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/probation-management" element={<Probation />} />
+          <Route path="/notice-period/resignation" element={<NoticePeriod />} />
         </Route>
 
         {/* Fallback route */}

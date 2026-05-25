@@ -1,5 +1,8 @@
-import Lottie from "lottie-react";
-import noDataAnimation from "./Not Found.json";
+import LottieComponent from "lottie-react";
+import noDataAnimation from "./lottie/Not Found.json";
+
+// Resolve CommonJS vs ESM default import mismatch for lottie-react
+const Lottie = (LottieComponent as unknown as { default?: typeof LottieComponent }).default || LottieComponent;
 
 type EmptyStateProps = {
     message?: string;

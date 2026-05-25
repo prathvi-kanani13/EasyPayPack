@@ -103,7 +103,7 @@ export default function SidebarComponent() {
 		{ label: "Pre-onboarding", icon: UserPlus, href: "/pre-onboarding" },
 		{ label: "Conveyance", icon: MapPin, href: "/conveyance" },
 		{ label: "Probation Management", icon: Clock, href: "/probation-management" },
-		{ label: "Resignation Management", icon: LogOut, href: "/resignation-management" },
+		{ label: "Resignation / Notice Period", icon: LogOut, href: "/notice-period/resignation" },
 		{ label: "Letter Management", icon: Mail, href: "/letter-management" },
 	];
 
@@ -118,7 +118,7 @@ export default function SidebarComponent() {
 								{
 									(open || openMobile) ? (
 										<SidebarMenuButton
-											className={`text-md font-medium text-white active:bg-black/20 active:text-white transition-all duration-200 ease-in-out cursor-pointer ${isActive
+											className={`text-md font-medium h-auto py-0 text-white active:bg-black/20 active:text-white transition-all duration-200 ease-in-out cursor-pointer ${isActive
 												? "bg-white text-theme rounded-sm pointer-events-none active:bg-white active:text-theme"
 												: `my-0 ${(open || openMobile) ? '' : 'hover:my-1.5'} hover:bg-black/20 hover:text-white hover:rounded-sm`
 												}`}

@@ -269,7 +269,7 @@ export default function ProbationDialog({ open, onOpenChange, initialData, onSub
                         <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                             Cancel
                         </Button>
-                        <Button type="submit" className="bg-[#f60] hover:bg-[#d85600] text-white">
+                        <Button type="submit" className="text-white">
                             {initialData ? "Update" : "Save"}
                         </Button>
                     </div>
