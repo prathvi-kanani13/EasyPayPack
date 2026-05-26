@@ -5,7 +5,7 @@ import ApexCharts from "apexcharts"
 
 const TOTAL_EMPLOYEES = 450;
 
-// getValues generates random mock data points for the sparkline.
+// getValues generates random mock data points for the spark-line.
 const getValues = (maxVal: number) => {
     const arr = []
     for (let i = 0; i < 30; i++) {
@@ -53,7 +53,7 @@ const cardData = [
     }
 ];
 
-// SparkLine renders a sparkline graph at the bottom of the card using ApexCharts.
+// SparkLine renders a spark-line graph at the bottom of the card using ApexCharts.
 function SparkLine({ data, seriesName, color }: { data: number[], seriesName: string, color: string }) {
     const chartRef = useRef<HTMLDivElement>(null);
     const chartInstance = useRef<ApexCharts | null>(null);
@@ -101,7 +101,7 @@ function SparkLine({ data, seriesName, color }: { data: number[], seriesName: st
                 type: 'gradient',
                 gradient: {
                     shadeIntensity: 1,
-                    opacityFrom: 0.25,
+                    opacityFrom: 0.35,
                     opacityTo: 0,
                     stops: [0, 100],
                 },
@@ -168,7 +168,7 @@ const getCardStyles = (color: string) => {
             return {
                 text: "text-theme",
                 bg: "bg-theme/10 dark:bg-theme/20",
-                chartColor: "#5c33f6"
+                chartColor: "#424efa"
             };
         case 'orange':
             return {
@@ -180,13 +180,13 @@ const getCardStyles = (color: string) => {
             return {
                 text: "text-theme",
                 bg: "bg-theme/10 dark:bg-theme/20",
-                chartColor: "#5c33f6"
+                chartColor: "#424efa"
             };
     }
 };
 
 // OverviewCards renders the dashboard statistics cards grid.
-// Each card displays a key HR metric, its change trend, and a custom SVG sparkline showing historical data.
+// Each card displays a key HR metric, its change trend, and a custom SVG spark-line showing historical data.
 export default function OverviewCards() {
     const formatValue = (value: number, title: string) => {
         if (title.toLowerCase().includes("payroll")) {
@@ -204,7 +204,7 @@ export default function OverviewCards() {
                 const styles = getCardStyles(item.color);
 
                 return (
-                    <Card key={idx} className="relative overflow-hidden pb-12 hover:shadow-md transition-all duration-300 border border-gray-200/50">
+                    <Card key={idx} className="relative overflow-hidden pb-10 hover:shadow-md transition-all duration-300 border dark:border-gray-700">
                         <CardContent className="px-4 flex items-center gap-4">
                             {/* Left Side: Styled Icon Container */}
                             <div className={`flex items-center justify-center h-14 w-14 rounded-2xl ${styles.bg} ${styles.text} shrink-0`}>
@@ -227,7 +227,7 @@ export default function OverviewCards() {
                         </CardContent>
 
                         {/* SparkLine flush at the bottom of the card */}
-                        <div className="absolute bottom-0 left-0 right-0 h-10 pointer-events-none">
+                        <div className="absolute bottom-0 left-0 right-0 h-8 pointer-events-none">
                             <SparkLine data={item.graphData} seriesName={item.title} color={styles.chartColor} />
                         </div>
                     </Card>
