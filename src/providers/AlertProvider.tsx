@@ -12,9 +12,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { AlertContext, type AlertOptions } from "../context/AlertContext";
-
 import { IoMdInformationCircleOutline } from "react-icons/io";
-
 import { Trash2, CircleX, Info, TriangleAlert, CircleCheck, type LucideIcon } from 'lucide-react'
 
 type AlertResult = {

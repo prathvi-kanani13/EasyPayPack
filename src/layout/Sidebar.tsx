@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from "react"
 import { Menu } from "lucide-react"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar"
 import { Link, useNavigate } from "react-router-dom"
-
 import {
 	LayoutDashboard,
 	Database,
@@ -22,7 +21,6 @@ import {
 	LogOut,
 	type LucideIcon
 } from "lucide-react";
-
 import logo from "../assets/WhiteLogo.png"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button";
@@ -104,7 +102,7 @@ export default function SidebarComponent() {
 		{ label: "Conveyance", icon: MapPin, href: "/conveyance" },
 		{ label: "Probation Management", icon: Clock, href: "/probation-management" },
 		{ label: "Resignation / Notice Period", icon: LogOut, href: "/notice-period/resignation" },
-		{ label: "Letter Management", icon: Mail, href: "/letter-management" },
+		{ label: "Letter Management", icon: Mail, href: "/letter-management", subRoutes: ["/letter/generate", "/letter/editor", "/letter/preview", "/signature/add", "/signature/master"] },
 	];
 
 	const renderSidebarItems = () => {
