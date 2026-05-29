@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from "react"
 import { Menu } from "lucide-react"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar"
 import { Link, useNavigate } from "react-router-dom"
-
 import {
   LayoutDashboard,
   Database,
@@ -22,7 +21,6 @@ import {
   LogOut,
   type LucideIcon
 } from "lucide-react";
-
 import logo from "../assets/WhiteLogo.png"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button";
@@ -88,24 +86,24 @@ export default function SidebarComponent() {
     };
   }, [open, openMobile]);
 
-  const sidebarItems: TSidebarItems[] = [
-    { label: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
-    { label: "Master", icon: Database, href: "/master" },
-    { label: "Transaction", icon: ArrowRightLeft, href: "/transaction" },
-    { label: "Report", icon: BarChart3, href: "/report" },
-    { label: "Other", icon: MoreHorizontal, href: "/other" },
-    { label: "Salary Process", icon: Wallet, href: "/salary-process" },
-    { label: "Leave Management", icon: Calendar, href: "/leave-management" },
-    { label: "DA Increment Process", icon: TrendingUp, href: "/da-increment" },
-    { label: "Bonus Process", icon: Gift, href: "/bonus-process" },
-    { label: "Closing Process", icon: Lock, href: "/closing-process" },
-    { label: "Income Tax", icon: Calculator, href: "/income-tax" },
-    { label: "Pre-onboarding", icon: UserPlus, href: "/pre-onboarding" },
-    { label: "Conveyance", icon: MapPin, href: "/conveyance" },
-    { label: "Probation Management", icon: Clock, href: "/probation-management" },
-    { label: "Resignation / Notice Period", icon: LogOut, href: "/notice-period/resignation" },
-    { label: "Letter Management", icon: Mail, href: "/letter-management" },
-  ];
+	const sidebarItems: TSidebarItems[] = [
+		{ label: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
+		{ label: "Master", icon: Database, href: "/master" },
+		{ label: "Transaction", icon: ArrowRightLeft, href: "/transaction" },
+		{ label: "Report", icon: BarChart3, href: "/report" },
+		{ label: "Other", icon: MoreHorizontal, href: "/other" },
+		{ label: "Salary Process", icon: Wallet, href: "/salary-process" },
+		{ label: "Leave Management", icon: Calendar, href: "/leave-management" },
+		{ label: "DA Increment Process", icon: TrendingUp, href: "/da-increment" },
+		{ label: "Bonus Process", icon: Gift, href: "/bonus-process" },
+		{ label: "Closing Process", icon: Lock, href: "/closing-process" },
+		{ label: "Income Tax", icon: Calculator, href: "/income-tax" },
+		{ label: "Pre-onboarding", icon: UserPlus, href: "/pre-onboarding" },
+		{ label: "Conveyance", icon: MapPin, href: "/conveyance" },
+		{ label: "Probation Management", icon: Clock, href: "/probation-management" },
+		{ label: "Resignation / Notice Period", icon: LogOut, href: "/notice-period/resignation" },
+		{ label: "Letter Management", icon: Mail, href: "/letter-management", subRoutes: ["/letter/generate", "/letter/editor", "/letter/preview", "/signature/add", "/signature/master"] },
+	];
 
   const renderSidebarItems = () => {
     return (

@@ -9,7 +9,7 @@ import otpAnimation from "@/animation/lottie/OTP.json";
 import forgotQAnimation from "@/animation/lottie/Forgot Password.json";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import LeftSection from "../auth/LeftSection";
+import LeftSection from "./LeftSection";
 
 type TPageContent = {
     title: string,

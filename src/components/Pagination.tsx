@@ -16,6 +16,7 @@ export default function Pagination({ pageIndex, setPageIndex, isNextDisabled }: 
                     variant="outline"
                     onClick={() => setPageIndex((p) => Math.max(p - 1, 0))}
                     disabled={pageIndex === 0}
+                    className="border-input"
                 >
                     Prev
                 </Button>
@@ -25,7 +26,7 @@ export default function Pagination({ pageIndex, setPageIndex, isNextDisabled }: 
                     variant="outline"
                     onClick={() => setPageIndex((p) => p + 1)}
                     disabled={isNextDisabled}
-                    className="ml-2"
+                    className="ml-2 border-input"
                 >
                     Next
                 </Button>

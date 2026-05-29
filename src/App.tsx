@@ -2,11 +2,18 @@ import "./App.css";
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useTheme } from "./providers/ThemeProvider";
 import { useEffect } from "react";
-import Auth from "./pages/auth/auth";
+import Auth from "./pages/Auth/auth";
 import Layout from "./layout/Layout";
 import Dashboard from "./pages/Dashboard/Dashboard";
-import Probation from "./pages/probation management/Probation";
-import NoticePeriod from "./pages/notice period/NoticePeriod";
+import Probation from "./pages/Probation Management/Probation";
+import NoticePeriod from "./pages/Notice Period/NoticePeriod";
+import LetterManagementDashboard from "./pages/LetterManagementDashboard";
+import LetterGenerator from "./pages/Letter Management/LetterGenerator";
+import LetterManagement from "./pages/Letter Management";
+import LetterPreview from "./pages/Letter Management/LetterPreview";
+import AddSignature from "./pages/Signature Master/AddSignature";
+import SignatureList from "./pages/Signature Master/SignatureList";
+import { Toaster } from "sonner";
 
 function ThemeController() {
   const location = useLocation()
@@ -29,10 +36,12 @@ function ThemeController() {
 }
 
 function App() {
+  const { theme } = useTheme();
 
   return (
     <Router>
       <ThemeController />
+      <Toaster theme={theme} richColors closeButton position="top-right" />
       <Routes>
         {/* Redirect base URL to login page or dashboard */}
         <Route path="/" element={<Navigate to="/login" replace />} />
@@ -47,6 +56,18 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/probation-management" element={<Probation />} />
           <Route path="/notice-period/resignation" element={<NoticePeriod />} />
+          <Route path="/letter-management" element={<LetterManagementDashboard />} />
+
+          <Route path="/letter">
+            <Route path="editor" element={<LetterManagement />} />
+            <Route path="generate" element={<LetterGenerator />} />
+            <Route path="preview" element={<LetterPreview />} />
+          </Route>
+
+          <Route path="/signature">
+            <Route path="add" element={<AddSignature />} />
+            <Route path="list" element={<SignatureList />} />
+          </Route>
         </Route>
 
         {/* Fallback route */}
