@@ -4,23 +4,23 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, Si
 import { Link, useNavigate } from "react-router-dom"
 
 import {
-	LayoutDashboard,
-	Database,
-	ArrowRightLeft,
-	BarChart3,
-	MoreHorizontal,
-	Wallet,
-	Calendar,
-	TrendingUp,
-	Gift,
-	Lock,
-	Calculator,
-	UserPlus,
-	MapPin,
-	Clock,
-	Mail,
-	LogOut,
-	type LucideIcon
+  LayoutDashboard,
+  Database,
+  ArrowRightLeft,
+  BarChart3,
+  MoreHorizontal,
+  Wallet,
+  Calendar,
+  TrendingUp,
+  Gift,
+  Lock,
+  Calculator,
+  UserPlus,
+  MapPin,
+  Clock,
+  Mail,
+  LogOut,
+  type LucideIcon
 } from "lucide-react";
 
 import logo from "../assets/WhiteLogo.png"
@@ -29,64 +29,64 @@ import { Button } from "@/components/ui/button";
 import RenderWithTooltip from "@/utils/RenderWithTooltip";
 
 type TSidebarItems = {
-	label: string,
-	href: string,
-	icon: LucideIcon
-	subRoutes?: string[]
+  label: string,
+  href: string,
+  icon: LucideIcon
+  subRoutes?: string[]
 }
 
 export default function SidebarComponent() {
-	const isMobile = window.innerWidth < 768;
+  const isMobile = window.innerWidth < 768;
 
-	const navigate = useNavigate();
-	const { open, setOpen, openMobile, setOpenMobile, toggleSidebar } = useSidebar()
+  const navigate = useNavigate();
+  const { open, setOpen, openMobile, setOpenMobile, toggleSidebar } = useSidebar()
 
-	useEffect(() => {
-		const handleResize = () => {
-			if (window.innerWidth >= 768) {
-				setOpenMobile(false);
-			} else {
-				setOpen(false);
-			}
-		};
-		handleResize();
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setOpenMobile(false);
+      } else {
+        setOpen(false);
+      }
+    };
+    handleResize();
 
-		window.addEventListener('resize', handleResize);
-		return () => window.removeEventListener('resize', handleResize);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-	const scrollAreaRef = useRef<HTMLDivElement>(null);
-	const [showTopShadow, setShowTopShadow] = useState(false);
-	const [showBottomShadow, setShowBottomShadow] = useState(false);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const [showTopShadow, setShowTopShadow] = useState(false);
+  const [showBottomShadow, setShowBottomShadow] = useState(false);
 
-	useEffect(() => {
-		const viewport = scrollAreaRef.current?.querySelector('[data-slot="scroll-area-viewport"]');
-		if (!viewport) return;
+  useEffect(() => {
+    const viewport = scrollAreaRef.current?.querySelector('[data-slot="scroll-area-viewport"]');
+    if (!viewport) return;
 
-		const handleScroll = () => {
-			const { scrollTop, scrollHeight, clientHeight } = viewport as HTMLElement;
-			setShowTopShadow(scrollTop > 10);
-			setShowBottomShadow(scrollTop + clientHeight < scrollHeight - 10);
-		};
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = viewport as HTMLElement;
+      setShowTopShadow(scrollTop > 10);
+      setShowBottomShadow(scrollTop + clientHeight < scrollHeight - 10);
+    };
 
-		viewport.addEventListener("scroll", handleScroll);
-		// Initial check
-		handleScroll();
+    viewport.addEventListener("scroll", handleScroll);
+    // Initial check
+    handleScroll();
 
-		const resizeObserver = new ResizeObserver(handleScroll);
-		resizeObserver.observe(viewport);
+    const resizeObserver = new ResizeObserver(handleScroll);
+    resizeObserver.observe(viewport);
 
-		const content = viewport.firstElementChild;
-		if (content) {
-			resizeObserver.observe(content);
-		}
+    const content = viewport.firstElementChild;
+    if (content) {
+      resizeObserver.observe(content);
+    }
 
-		return () => {
-			viewport.removeEventListener("scroll", handleScroll);
-			resizeObserver.disconnect();
-		};
-	}, [open, openMobile]);
+    return () => {
+      viewport.removeEventListener("scroll", handleScroll);
+      resizeObserver.disconnect();
+    };
+  }, [open, openMobile]);
 
 	const sidebarItems: TSidebarItems[] = [
 		{ label: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
@@ -107,122 +107,138 @@ export default function SidebarComponent() {
 		{ label: "Letter Management", icon: Mail, href: "/letter-management" },
 	];
 
-	const renderSidebarItems = () => {
-		return (
-			<SidebarGroup className="p-0">
-				<SidebarMenu className={open || openMobile ? 'gap-1' : 'gap-0'}>
-					{sidebarItems.map((item, subIdx) => {
-						const isActive = [item.href, ...(item?.subRoutes ?? [])].includes(location.pathname);
-						return (
-							<SidebarMenuItem key={subIdx}>
-								{
-									(open || openMobile) ? (
-										<SidebarMenuButton
-											className={`text-md font-medium h-auto py-0 text-white active:bg-black/20 active:text-white transition-all duration-200 ease-in-out cursor-pointer ${isActive
-												? "bg-white text-theme rounded-sm pointer-events-none active:bg-white active:text-theme"
-												: `my-0 ${(open || openMobile) ? '' : 'hover:my-1.5'} hover:bg-black/20 hover:text-white hover:rounded-sm`
-												}`}
-										>
-											<Link
-												key={item.href}
-												to={item.href}
-												className={`flex w-full items-center gap-3 text-sm font-medium py-1.5 ${open ? 'px-1' : ''} leading-relaxed transition-colors`}
-											>
-												{/* Indicator bar */}
-												<item.icon style={{ ...(open && { height: '20px', width: '20px' }) }} />
+  const renderSidebarItems = () => {
+    return (
+      <SidebarGroup className="p-0">
+        <SidebarMenu className={open || openMobile ? 'gap-1' : 'gap-0'}>
+          {sidebarItems.map((item, subIdx) => {
+            const isActive = [item.href, ...(item?.subRoutes ?? [])].includes(location.pathname);
+            return (
+              <SidebarMenuItem key={subIdx}>
+                {
+                  (open || openMobile) ? (
+                    <SidebarMenuButton
+                      className={`text-md font-medium h-auto py-0 text-white active:bg-black/20 active:text-white transition-all duration-200 ease-in-out cursor-pointer ${isActive
+                        ? "bg-white text-theme rounded-sm pointer-events-none active:bg-white active:text-theme"
+                        : `my-0 ${(open || openMobile) ? '' : 'hover:my-1.5'} hover:bg-black/20 hover:text-white hover:rounded-sm`
+                        }`}
+                    >
+                      <Link
+                        key={item.href}
+                        to={item.href}
+                        className={`flex w-full items-center gap-3 text-sm font-medium py-1.5 ${open ? 'px-1' : ''} leading-relaxed transition-colors`}
+                      >
+                        {/* Indicator bar */}
+                        <item.icon style={{ ...(open && { height: '20px', width: '20px' }) }} />
 
-												{item.label}
-											</Link>
-										</SidebarMenuButton>
-									) : (
-										<RenderWithTooltip
-											side="right"
-											onlyOnOverflow={false}
-											content={item.label}
-											trigger={
-												<SidebarMenuButton
-													className={`text-md font-medium text-white active:bg-black/20 active:text-white transition-all duration-200 ease-in-out cursor-pointer ${isActive
-														? "bg-white text-theme rounded-sm pointer-events-none active:bg-white active:text-theme my-1"
-														: `my-0 ${(open || openMobile) ? '' : 'hover:my-1.5'} hover:bg-black/20 hover:text-white hover:rounded-sm`
-														}`}
-												>
-													<Link
-														key={item.href}
-														to={item.href}
-														className="flex w-full items-center justify-center text-sm font-medium py-1.5 leading-relaxed transition-colors"
-													>
-														{/* Indicator bar */}
-														<item.icon />
-													</Link>
-												</SidebarMenuButton>
-											}
-										/>
-									)
-								}
-							</SidebarMenuItem>
-						)
-					})}
-				</SidebarMenu>
-			</SidebarGroup >
-		)
-	}
+                        {item.label}
+                      </Link>
+                    </SidebarMenuButton>
+                  ) : (
+                    <RenderWithTooltip
+                      side="right"
+                      onlyOnOverflow={false}
+                      content={item.label}
+                      trigger={
+                        <SidebarMenuButton
+                          className={`text-md font-medium text-white active:bg-black/20 active:text-white transition-all duration-200 ease-in-out cursor-pointer ${isActive
+                            ? "bg-white text-theme rounded-sm pointer-events-none active:bg-white active:text-theme my-1"
+                            : `my-0 ${(open || openMobile) ? '' : 'hover:my-1.5'} hover:bg-black/20 hover:text-white hover:rounded-sm`
+                            }`}
+                        >
+                          <Link
+                            key={item.href}
+                            to={item.href}
+                            className="flex w-full items-center justify-center text-sm font-medium py-1.5 leading-relaxed transition-colors"
+                          >
+                            {/* Indicator bar */}
+                            <item.icon />
+                          </Link>
+                        </SidebarMenuButton>
+                      }
+                    />
+                  )
+                }
+              </SidebarMenuItem>
+            )
+          })}
+        </SidebarMenu>
+      </SidebarGroup >
+    )
+  }
 
-	return (
-		<Sidebar collapsible="icon" className="cursor-pointer h-full flex shrink-0 border-r-0 z-41 selection:bg-white selection:text-theme">
-			<div className="flex flex-col h-full bg-linear-to-r from-theme to-theme-secondary">
-				<SidebarHeader className={`flex flex-row items-center ${isMobile ? 'justify-between' : 'justify-center'} p-2`}>
-					{(open || openMobile) ? (
-						<img
-							src={logo}
-							alt="EasyPayPack Logo"
-							className={`w-60 h-auto cursor-pointer -mt-8 -mb-10 ${isMobile ? '-ml-7' : '-ml-10'}`}
-							onClick={() => navigate("/dashboard")}
-						/>
-					) : (
-						<Button
-							variant="ghost"
-							size="icon-sm"
-							onClick={toggleSidebar}
-							className="rounded-sm cursor-pointer text-white hover:bg-white! hover:text-theme!"
-						>
-							<Menu />
-						</Button>
-					)}
-					{(isMobile && openMobile) && (
-						<Button
-							variant="ghost"
-							size="icon"
-							onClick={toggleSidebar}
-							className="rounded-sm cursor-pointer text-white hover:bg-white! hover:text-theme!"
-						>
-							<Menu />
-						</Button>
-					)}
-				</SidebarHeader>
-				<SidebarContent className={`pl-2 cursor-default transition-all ease-in-out duration-200 overflow-hidden relative`}>
-					{/* Top Shadow - shown when content is scrollable above */}
-					<div className={`absolute top-0 left-0 right-0 h-10 z-20 pointer-events-none transition-opacity duration-300 ${showTopShadow ? 'opacity-100' : 'opacity-0'} bg-linear-to-b from-black/15 to-transparent`} />
+  return (
+    <Sidebar collapsible="icon" className="cursor-pointer h-full flex shrink-0 border-r-0 z-41 selection:bg-white selection:text-theme">
+      <div className="flex flex-col h-full bg-linear-to-r from-theme to-theme-secondary">
+        <SidebarHeader className={`flex flex-row items-center ${isMobile ? 'justify-between' : 'justify-start'} p-2`}>
+          {(open || openMobile) ? (
+            <div className="w-114 h-18 cursor-pointer"
+              onClick={() => {
+                navigate('/dashboard')
+              }}
+            >
+              <div
+                className="bg-white w-full h-full"
+                style={{
+                  maskImage: `url(${logo})`,
+                  WebkitMaskImage: `url(${logo})`,
 
-					<ScrollArea ref={scrollAreaRef} className={`h-full flex ${open || openMobile ? 'pr-3' : ''}`}>
-						<div className={`flex flex-col ${open || openMobile ? 'gap-3' : 'gap-0'}`}>
-							{renderSidebarItems()}
-						</div>
-					</ScrollArea>
+                  maskSize: 'cover',
+                  WebkitMaskSize: 'cover',
 
-					{/* Bottom Shadow - shown when content is scrollable below */}
-					<div className={`absolute bottom-0 left-0 right-0 h-10 z-20 pointer-events-none transition-opacity duration-300 ${showBottomShadow ? 'opacity-100' : 'opacity-0'} bg-linear-to-t from-black/15 to-transparent`} />
-				</SidebarContent>
-				<SidebarFooter>
-					<SidebarMenu>
-						{/* This is what shows in icon-collapsed mode */}
-						<SidebarMenuItem className="flex flex-col gap-1">
-							<SidebarMenuButton tooltip="Log out" className="cursor-pointer text-md font-medium text-white hover:bg-black/20! hover:text-white! gap-3">
-								<LogOut /> Log out
-							</SidebarMenuButton>
-						</SidebarMenuItem>
-					</SidebarMenu>
-				</SidebarFooter>
-			</div>
-		</Sidebar>
-	)
+                  maskRepeat: 'no-repeat',
+                  WebkitMaskRepeat: 'no-repeat',
+
+                  maskPosition: 'center',
+                  WebkitMaskPosition: 'center',
+                }}
+              />
+            </div>
+          ) : (
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              onClick={toggleSidebar}
+              className="rounded-sm cursor-pointer text-white hover:bg-white! hover:text-theme!"
+            >
+              <Menu />
+            </Button>
+          )}
+          {(isMobile && openMobile) && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleSidebar}
+              className="rounded-sm cursor-pointer text-white hover:bg-white! hover:text-theme!"
+            >
+              <Menu />
+            </Button>
+          )}
+        </SidebarHeader>
+        <SidebarContent className={`pl-2 cursor-default transition-all ease-in-out duration-200 overflow-hidden relative`}>
+          {/* Top Shadow - shown when content is scrollable above */}
+          <div className={`absolute top-0 left-0 right-0 h-10 z-20 pointer-events-none transition-opacity duration-300 ${showTopShadow ? 'opacity-100' : 'opacity-0'} bg-linear-to-b from-black/15 to-transparent`} />
+
+          <ScrollArea ref={scrollAreaRef} className={`h-full flex ${open || openMobile ? 'pr-3' : ''}`}>
+            <div className={`flex flex-col ${open || openMobile ? 'gap-3' : 'gap-0'}`}>
+              {renderSidebarItems()}
+            </div>
+          </ScrollArea>
+
+          {/* Bottom Shadow - shown when content is scrollable below */}
+          <div className={`absolute bottom-0 left-0 right-0 h-10 z-20 pointer-events-none transition-opacity duration-300 ${showBottomShadow ? 'opacity-100' : 'opacity-0'} bg-linear-to-t from-black/15 to-transparent`} />
+        </SidebarContent>
+        <SidebarFooter>
+          <SidebarMenu>
+            {/* This is what shows in icon-collapsed mode */}
+            <SidebarMenuItem className="flex flex-col gap-1">
+              <SidebarMenuButton tooltip="Log out" className="cursor-pointer text-md font-medium text-white hover:bg-black/20! hover:text-white! gap-3">
+                <LogOut /> Log out
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarFooter>
+      </div>
+    </Sidebar>
+  )
 }

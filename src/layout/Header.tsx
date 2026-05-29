@@ -5,7 +5,6 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/in
 import { useEffect, useRef, useState, useMemo } from "react"
 import { useNavigate } from "react-router-dom"
 import logo from "../assets/logo.png"
-import lightLogo from "../assets/WhiteLogo.png"
 import { useSidebar } from "@/components/ui/sidebar"
 import RenderWithTooltip from "@/utils/RenderWithTooltip"
 import { CommonRoutes as searchRoutes } from "@/utils/textSearchRoutes";
@@ -85,12 +84,35 @@ export default function Header() {
         {/* logo */}
         {!(searchEl === 'field' && window.innerWidth < 640) && (
           <div>
-            <img
-              src={theme === 'light' ? logo : lightLogo}
-              alt="EasyPayPack"
-              className="w-30 h-auto cursor-pointer z-49"
-              onClick={() => navigate("/employee-dashboard")}
-            />
+            {
+              theme === 'light' ? <img
+                src={logo}
+                alt="EasyPayPack"
+                className="w-30 h-auto cursor-pointer z-49"
+                onClick={() => navigate("/employee-dashboard")}
+              /> : <div className="w-30 h-12 cursor-pointer"
+                onClick={() => {
+                  navigate('/dashboard')
+                }}
+              >
+                <div
+                  className="bg-white w-full h-full"
+                  style={{
+                    maskImage: `url(${logo})`,
+                    WebkitMaskImage: `url(${logo})`,
+
+                    maskSize: 'cover',
+                    WebkitMaskSize: 'cover',
+
+                    maskRepeat: 'no-repeat',
+                    WebkitMaskRepeat: 'no-repeat',
+
+                    maskPosition: 'center',
+                    WebkitMaskPosition: 'center',
+                  }}
+                />
+              </div>
+            }
           </div>
         )}
       </div>
@@ -107,13 +129,13 @@ export default function Header() {
         {/* search bar and suggestions */}
         {
           searchEl === 'field' && <div className="relative flex flex-1 min-w-0 max-w-100">
-            <ButtonGroup className={"bg-gray-50 dark:bg-muted rounded-md w-full z-50"}>
-              <InputGroup className="w-full h-full has-[[data-slot=input-group-control]:focus-visible]:border-border has-[[data-slot=input-group-control]:focus-visible]:ring-0">
+            <ButtonGroup className={"bg-gray-50 dark:bg-muted rounded-lg w-full z-50"}>
+              <InputGroup className="flex w-full h-full has-[[data-slot=input-group-control]:focus-visible]:border-border has-[[data-slot=input-group-control]:focus-visible]:ring-0">
                 <InputGroupInput
                   ref={inputRef}
                   name="Text Search"
                   id="Text Search"
-                  placeholder="Search in HRMS"
+                  placeholder="Search"
                   value={query}
                   onChange={(e) => {
                     setQuery(e.target.value);
@@ -135,14 +157,15 @@ export default function Header() {
                   <Kbd>Ctrl + k</Kbd>
                 </InputGroupAddon>
               </InputGroup>
-              {isMobile && <Button
-                aria-label="Search"
-                className="shrink-0"
-                onClick={closeSearch}
-                size={'icon'}
-              >
-                <X size={16} className="w-5 h-5 text-white" />
-              </Button>}
+              {isMobile &&
+                <Button
+                  aria-label="Search"
+                  className="shrink-0 border-0"
+                  onClick={closeSearch}
+                  size={'icon'}
+                >
+                  <X size={16} className="w-5 h-5 text-white" />
+                </Button>}
             </ButtonGroup>
 
             {showDropdown && filtered.length > 0 && searchRoutes && (

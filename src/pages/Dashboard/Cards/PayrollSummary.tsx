@@ -3,11 +3,16 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
-import RenderWithTooltip from '@/utils/RenderWithTooltip'
-import { CircleAlert } from 'lucide-react'
+import { ArrowUp, CircleAlert } from 'lucide-react'
 import moment from 'moment'
-// AttendanceChart is the custom donut chart displaying summary attendance rates.
-import AttendanceChart from './AttendanceChart'
+import { Badge } from '@/components/ui/badge'
+
+import LottieComponent from "lottie-react";
+import coins from "@/animation/lottie/coins.json";
+
+// Resolve CommonJS vs ESM default import mismatch for lottie-react
+const Lottie = (LottieComponent as unknown as { default?: typeof LottieComponent }).default || LottieComponent;
+
 
 interface AttendanceItem {
     name: string
@@ -77,9 +82,13 @@ const LoadingSkeleton = () => {
     )
 }
 
-export default function AttendanceOverview() {
+export default function PayrollSummary({ isLg, isXl }: { isLg: boolean, isXl: boolean }) {
     const { data, isLoading, isError } = { data: dummyData, isLoading: false, isError: false }
     // const { data, isLoading, isError } = useGetDashboardDetails({ fromDate, toDate })
+
+    const formatValue = (value: number) => {
+        return "₹" + value.toLocaleString("en-IN");
+    };
 
     const getStatusColor = (status: string) => {
         const colors: Record<string, string> = {
@@ -102,13 +111,18 @@ export default function AttendanceOverview() {
             : [];
     }, [data]);
 
-    const totalAttendance = attendanceData.reduce((acc, item) => acc + item.value, 0);
+    const subTotals = [
+        { title: 'Basic Pay', amount: formatValue(1545000) },
+        { title: 'Allowances', amount: formatValue(425300) },
+        { title: 'Deductions', amount: formatValue(185980) },
+        { title: 'Net Pay', amount: formatValue(2284320), isTotal: true },
+    ]
 
     return (
-        <Card className="w-full h-full dark:bg-background border dark:border-gray-700 rounded-md gap-0">
-            <CardHeader className="flex flex-row items-center justify-between border-b border-[#E5E7EB] dark:border-gray-700">
+        <Card className="w-full h-full dark:bg-background border dark:border-gray-700 rounded-md gap-0 py-0">
+            <CardHeader className="flex flex-row items-center justify-between border-b border-[#E5E7EB] dark:border-gray-700 p-4">
                 <CardTitle className="text-[#202C4B] dark:text-white text-lg font-semibold">
-                    Attendance Overview
+                    Payroll Summary
                 </CardTitle>
                 <Button
                     variant="outline"
@@ -133,47 +147,37 @@ export default function AttendanceOverview() {
                     </div>
                 ) : attendanceData.length === 0 ? (
                     <p className="text-md text-[#202C4B] dark:text-gray-100 text-center py-10">
-                        No attendance data available for this period.
+                        No Payroll data available for this period.
                     </p>
                 ) : (
-                    <div className="flex max-[450px]:flex-col flex-row gap-2 h-full">
-                        {/* Left Column: Chart */}
-                        <div className="flex flex-col items-center justify-center gap-2 min-w-[200px]">
-                            {/* AttendanceChart displays the attendance breakdown and overall rate */}
-                            <AttendanceChart data={attendanceData} />
-                        </div>
+                    <div className="grid grid-cols-12 gap-4 h-full">
+                        <div className={`flex flex-col ${isLg ? 'col-span-8' : isXl ? 'col-span-7' : 'col-span-7'} max-sm:col-span-12`}>
+                            <div className="text-xs font-semibold text-[#8f94ac] dark:text-gray-400">
+                                Total Payroll
+                            </div>
+                            <div className='flex gap-4 items-center mb-4'>
+                                <div className="text-2xl font-bold tracking-tight text-[#242664] dark:text-white mt-0.5">{formatValue(2458320)}</div>
+                                <Badge className='bg-green-600/30 text-green-600 text-sm'>
+                                    <ArrowUp size={14} /> 8.5%
+                                </Badge>
+                            </div>
 
-                        <Separator orientation="vertical" className="hidden lg:block h-64" variant="light" />
-
-                        {/* Details List (Right Column) */}
-                        <div className="flex-1 w-full overflow-y-auto custom-scrollbar">
-                            <div className="h-full grid grid-cols-1 gap-x-2 gap-y-1 justify-center">
-                                {attendanceData.map((item) => (
-                                    <div
-                                        key={item.name}
-                                        className="flex gap-1 flex-wrap items-center justify-between group transition-all duration-200 py-1.5 border-b border-gray-50 dark:border-gray-800 last:border-0"
-                                    >
-                                        <div className="flex flex-1 items-center gap-2.5">
-                                            <div
-                                                className="w-2 h-2 rounded-full shrink-0 shadow-sm"
-                                                style={{ backgroundColor: item.color }}
-                                            />
-                                            <RenderWithTooltip
-                                                content={item.label}
-                                                trigger={
-                                                    <span className="text-xs font-semibold text-gray-600 dark:text-gray-400 truncate group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors">
-                                                        {item.label}
-                                                    </span>
-                                                }
-                                            />
-                                        </div>
-                                        <div className="text-[11px] font-bold text-gray-500 dark:text-gray-400 px-2 py-0.5 rounded flex gap-1">
-                                            <span>{item.value}</span>
-                                            <span className="opacity-70">({((item.value / totalAttendance) * 100).toFixed(2)}%)</span>
-                                        </div>
+                            <div className='flex flex-col gap-2 w-full h-full justify-between'>
+                                {subTotals.map((item, index) => (
+                                    <div key={index} className='flex items-center justify-between'>
+                                        <div className={`text-sm font-semibold ${item.isTotal ? 'text-theme font-bold' : 'text-gray-700 dark:text-gray-400'}`}>{item.title}</div>
+                                        <div className='text-sm font-semibold text-gray-700 dark:text-gray-400'>{item.amount}</div>
                                     </div>
                                 ))}
                             </div>
+                        </div>
+
+                        <div className={`h-full flex items-end justify-center ${isLg ? 'col-span-4' : isXl ? 'col-span-5' : 'col-span-5'} max-sm:hidden`}>
+                            <Lottie
+                                animationData={coins}
+                                loop={false}
+                                className="w-52 h-full"
+                            />
                         </div>
                     </div>
                 )}

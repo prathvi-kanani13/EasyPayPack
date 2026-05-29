@@ -39,6 +39,8 @@ export default function AttendanceChart({ data }: AttendanceChartProps) {
         ? ((presentCount + (lateCount * 0.5) + (halfDayCount * 0.5)) / totalCount * 100).toFixed(2)
         : "0.00"
 
+    const dataString = JSON.stringify(data)
+
     useEffect(() => {
         if (!chartRef.current || data.length === 0) return
 
@@ -145,7 +147,7 @@ export default function AttendanceChart({ data }: AttendanceChartProps) {
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [data, averageAttendance])
+    }, [dataString, averageAttendance, theme])
 
     return (
         <div className="relative flex items-center justify-center w-[180px] h-[180px]">
