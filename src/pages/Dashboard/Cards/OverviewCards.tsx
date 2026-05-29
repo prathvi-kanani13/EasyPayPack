@@ -204,7 +204,7 @@ export default function OverviewCards() {
                 const styles = getCardStyles(item.color);
 
                 return (
-                    <Card key={idx} className="relative overflow-hidden pb-10 hover:shadow-md transition-all duration-300 border dark:border-gray-700">
+                    <Card key={idx} className="relative overflow-hidden pb-10 hover:shadow-md transition-all duration-300 border dark:border-gray-700 dark:bg-background">
                         <CardContent className="px-4 flex items-center gap-4">
                             {/* Left Side: Styled Icon Container */}
                             <div className={`flex items-center justify-center h-14 w-14 rounded-2xl ${styles.bg} ${styles.text} shrink-0`}>

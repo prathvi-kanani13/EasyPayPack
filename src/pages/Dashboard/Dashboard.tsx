@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react'
 import OverviewCards from './Cards/OverviewCards'
 import AttendanceOverview from './Cards/AttendanceOverview'
+import PayrollSummary from './Cards/PayrollSummary';
 
 // Dashboard is the main page component rendering the overview analytics.
 export default function Dashboard() {
@@ -31,8 +32,9 @@ export default function Dashboard() {
         }
     }, [])
 
-    const isMd = width >= breakpoints.md
-    const isLg = width >= breakpoints.lg
+    const isMd = width >= breakpoints.md;
+    const isLg = width >= breakpoints.lg;
+    const isXl = width >= breakpoints.xl;
 
     return (
         // dashboard container
@@ -45,7 +47,9 @@ export default function Dashboard() {
                         <div className={isLg ? 'col-span-6' : 'col-span-12'}>
                             <AttendanceOverview />
                         </div>
-                        <div className={isLg ? 'col-span-6' : 'col-span-12'}></div>
+                        <div className={isLg ? 'col-span-6' : 'col-span-12'}>
+                            <PayrollSummary isLg={isLg} isXl={isXl} />
+                        </div>
                     </div>
                     <div className='grid grid-cols-12 gap-4'>
                         <div className={isLg ? 'col-span-5' : 'col-span-12'}></div>
