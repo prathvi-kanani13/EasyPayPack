@@ -12,6 +12,7 @@ interface DataTableProps<TData> {
     emptyState?: React.ReactNode;
     className?: string;
     onRowClick?: (row: TData) => void;
+    showHeader?: boolean;
 }
 
 // A reusable and accessible table component with built-in loading and error states
@@ -23,21 +24,24 @@ export function DataTable<TData>({
     errorMessage = "Failed to load data.",
     emptyState = <EmptyState />,
     className,
+    showHeader = true,
 }: DataTableProps<TData>) {
     return (
         <div className={cn("overflow-x-auto", className)}>
             <table className="w-full table-auto border-collapse">
-                <thead className="text-left text-xs bg-gray-100 dark:bg-gray-800/50 text-gray-600 dark:text-gray-300 uppercase font-bold tracking-wider">
-                    {table.getHeaderGroups().map((hg) => (
-                        <tr key={hg.id}>
-                            {hg.headers.map((h) => (
-                                <th key={h.id} className="px-4 py-3 border-b dark:border-gray-700">
-                                    {flexRender(h.column.columnDef.header, h.getContext())}
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
-                </thead>
+                {showHeader && (
+                    <thead className="text-left text-xs bg-gray-100 dark:bg-gray-800/50 text-gray-600 dark:text-gray-300 uppercase font-bold tracking-wider">
+                        {table.getHeaderGroups().map((hg) => (
+                            <tr key={hg.id}>
+                                {hg.headers.map((h) => (
+                                    <th key={h.id} className="px-4 py-3 border-b dark:border-gray-700">
+                                        {flexRender(h.column.columnDef.header, h.getContext())}
+                                    </th>
+                                ))}
+                            </tr>
+                        ))}
+                    </thead>
+                )}
                 <tbody className="divide-y dark:divide-gray-800">
                     {isLoading ? (
                         Array.from({ length: 3 }).map((_, rowIndex) => (

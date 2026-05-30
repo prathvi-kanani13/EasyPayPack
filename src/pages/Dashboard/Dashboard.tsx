@@ -2,6 +2,10 @@ import React, { useRef, useState, useEffect } from 'react'
 import OverviewCards from './Cards/OverviewCards'
 import AttendanceOverview from './Cards/AttendanceOverview'
 import PayrollSummary from './Cards/PayrollSummary';
+import LeaveSummary from './Cards/LeaveSummary';
+import EmployeeJoinings from './Cards/EmployeeJoinings';
+import Announcements from './Cards/Announcements';
+import UpcomingBirthdays from './Cards/UpcomingBirthdays';
 
 // Dashboard is the main page component rendering the overview analytics.
 export default function Dashboard() {
@@ -52,14 +56,18 @@ export default function Dashboard() {
                         </div>
                     </div>
                     <div className='grid grid-cols-12 gap-4'>
-                        <div className={isLg ? 'col-span-5' : 'col-span-12'}></div>
-                        <div className={isLg ? 'col-span-7' : 'col-span-12'}></div>
+                        <div className={isLg ? 'col-span-5' : 'col-span-12'}>
+                            <LeaveSummary />
+                        </div>
+                        <div className={isLg ? 'col-span-7' : 'col-span-12'}>
+                            <EmployeeJoinings />
+                        </div>
                     </div>
                 </div>
                 <div className={isLg ? 'col-span-3' : isMd ? 'col-span-4' : 'col-span-12'}>
                     <div className='flex flex-col gap-4'>
-                        <div></div>
-                        <div></div>
+                        <div><Announcements /></div>
+                        <div><UpcomingBirthdays /></div>
                     </div>
                 </div>
             </div>
