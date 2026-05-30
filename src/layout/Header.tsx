@@ -5,13 +5,9 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/in
 import { useEffect, useRef, useState, useMemo } from "react"
 import { useNavigate } from "react-router-dom"
 import logo from "../assets/logo.png"
-
 import { useSidebar } from "@/components/ui/sidebar"
 import RenderWithTooltip from "@/utils/RenderWithTooltip"
-
-import {
-  CommonRoutes as searchRoutes
-} from "@/utils/textSearchRoutes";
+import { CommonRoutes as searchRoutes } from "@/utils/textSearchRoutes";
 import { Kbd } from "@/components/ui/kbd"
 import { useTheme } from "@/providers/ThemeProvider";
 import UserSettings from "@/components/layout/UserSettings"
@@ -120,7 +116,6 @@ export default function Header() {
           </div>
         )}
       </div>
-
 
       <div className={`flex items-center flex-1 gap-2 ${open ? 'pl-20' : ''}`}>
         {open && <Button

@@ -7,13 +7,16 @@ import Layout from "./layout/Layout";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Probation from "./pages/probation management/Probation";
 import NoticePeriod from "./pages/notice period/NoticePeriod";
-import LetterManagementDashboard from "./pages/LetterManagementDashboard";
+import LetterManagementDashboard from "./pages/Letter Management/LetterManagementDashboard";
 import LetterGenerator from "./pages/Letter Management/LetterGenerator";
 import LetterManagement from "./pages/Letter Management";
 import LetterPreview from "./pages/Letter Management/LetterPreview";
 import AddSignature from "./pages/Signature Master/AddSignature";
 import SignatureList from "./pages/Signature Master/SignatureList";
 import { Toaster } from "sonner";
+import MasterDashboard from "./pages/Master/MasterDashboard";
+import EmployeeMaster from "./pages/Master/Employee Master/EmployeeMaster";
+import AddEmployee from "./pages/Master/Employee Master/AddEmployee";
 
 function ThemeController() {
   const location = useLocation()
@@ -57,6 +60,7 @@ function App() {
           <Route path="/probation-management" element={<Probation />} />
           <Route path="/notice-period/resignation" element={<NoticePeriod />} />
           <Route path="/letter-management" element={<LetterManagementDashboard />} />
+          <Route path="/master" element={<MasterDashboard />} />
 
           <Route path="/letter">
             <Route path="editor" element={<LetterManagement />} />
@@ -67,6 +71,11 @@ function App() {
           <Route path="/signature">
             <Route path="add" element={<AddSignature />} />
             <Route path="list" element={<SignatureList />} />
+          </Route>
+
+          <Route path="/employee">
+            <Route path="master" element={<EmployeeMaster />} />
+            <Route path="add" element={<AddEmployee />} />
           </Route>
         </Route>
 
