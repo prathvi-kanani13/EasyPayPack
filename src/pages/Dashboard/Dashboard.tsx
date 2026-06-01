@@ -6,6 +6,30 @@ import LeaveSummary from './Cards/LeaveSummary';
 import EmployeeJoinings from './Cards/EmployeeJoinings';
 import Announcements from './Cards/Announcements';
 import UpcomingBirthdays from './Cards/UpcomingBirthdays';
+import { DatePickerInput } from '@/components/DatePickerInput';
+import moment from 'moment';
+
+const Welcome = ({ userName, date, setDate }: { userName: string, date: string, setDate: (date: string) => void }) => {
+    return (
+        <div className="w-full flex items-center justify-between gap-4 flex-wrap">
+            <div>
+                <h1 className="text-2xl font-bold">Welcome Back, {userName}! 👋</h1>
+                <p className="text-gray-500">Here's what happening in your organization today.</p>
+            </div>
+            <div className='flex flex-1 justify-end items-center'>
+                <DatePickerInput
+                    value={date}
+                    onChange={setDate}
+                    displayFormat='MMM dd, yyyy'
+                    className="w-40 h-10 border-gray-300 dark:border-gray-600 rounded-md text-md px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                />
+            </div>
+        </div>
+    )
+}
+
+type TCardFilter = 'thisWeek' | 'thisMonth' | 'thisYear';
+type TCardName = 'attendanceOverview' | 'payrollSummary' | 'leaveSummary';
 
 // Dashboard is the main page component rendering the overview analytics.
 export default function Dashboard() {
@@ -18,6 +42,23 @@ export default function Dashboard() {
         xl: 1280,
         '2xl': 1536,
     }
+
+    const [cardFilters, setCardFilters] = useState<{
+        attendanceOverview: TCardFilter,
+        payrollSummary: TCardFilter,
+        leaveSummary: TCardFilter,
+    }>({
+        attendanceOverview: 'thisMonth',
+        payrollSummary: 'thisMonth',
+        leaveSummary: 'thisMonth',
+    });
+
+    const handleCardFilter = (card: TCardName, filter: TCardFilter) => {
+        setCardFilters((prev) => ({
+            ...prev,
+            [card]: filter,
+        }));
+    };
 
     useEffect(() => {
         if (!containerRef.current) return
@@ -36,30 +77,36 @@ export default function Dashboard() {
         }
     }, [])
 
-
-
     const isMd = width >= breakpoints.md;
     const isLg = width >= breakpoints.lg;
     const isXl = width >= breakpoints.xl;
 
+    const [date, setDate] = useState<string>(moment().format('DD-MM-YYYY'))
+
     return (
         // dashboard container
         <div ref={containerRef} className="flex flex-col gap-4">
-            <OverviewCards />
+            <Welcome
+                userName="Admin"
+                date={date}
+                setDate={setDate}
+            />
+
+            <OverviewCards isLg={isLg} />
 
             <div className='grid grid-cols-12 gap-4'>
                 <div className={`flex flex-col gap-4 ${isLg ? 'col-span-9' : isMd ? 'col-span-8' : 'col-span-12'}`}>
                     <div className='grid grid-cols-12 gap-4'>
                         <div className={isLg ? 'col-span-6' : 'col-span-12'}>
-                            <AttendanceOverview />
+                            <AttendanceOverview cardFilter={cardFilters.attendanceOverview} handleCardFilter={handleCardFilter} />
                         </div>
                         <div className={isLg ? 'col-span-6' : 'col-span-12'}>
-                            <PayrollSummary isLg={isLg} isXl={isXl} />
+                            <PayrollSummary isLg={isLg} isXl={isXl} cardFilter={cardFilters.attendanceOverview} handleCardFilter={handleCardFilter} />
                         </div>
                     </div>
                     <div className='grid grid-cols-12 gap-4'>
                         <div className={isLg ? 'col-span-5' : 'col-span-12'}>
-                            <LeaveSummary />
+                            <LeaveSummary cardFilter={cardFilters.attendanceOverview} handleCardFilter={handleCardFilter} />
                         </div>
                         <div className={isLg ? 'col-span-7' : 'col-span-12'}>
                             <EmployeeJoinings />
@@ -69,8 +116,8 @@ export default function Dashboard() {
                 {/* Right column — absolute positioning prevents it from influencing grid row height */}
                 <div className={`${isLg ? 'col-span-3 relative' : isMd ? 'col-span-4 relative' : 'col-span-12'}`}>
                     <div className={`flex flex-col gap-4 ${isMd ? 'absolute inset-0' : ''}`}>
-                        <div className={isMd ? 'flex-55 min-h-0 overflow-hidden' : ''}><Announcements /></div>
-                        <div className={isMd ? 'flex-45 min-h-0 overflow-hidden' : ''}><UpcomingBirthdays /></div>
+                        <div className={isMd ? 'flex-55 min-h-0' : ''}><Announcements /></div>
+                        <div className={isMd ? 'flex-45 min-h-0' : ''}><UpcomingBirthdays /></div>
                     </div>
                 </div>
             </div>

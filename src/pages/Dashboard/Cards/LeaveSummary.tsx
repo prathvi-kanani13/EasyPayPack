@@ -1,10 +1,11 @@
 import { useRef, useState, useEffect } from 'react'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Progress } from '@/components/ui/progress'
 import { CircleAlert } from 'lucide-react'
-import moment from 'moment'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+
+type TCardFilter = 'thisWeek' | 'thisMonth' | 'thisYear';
 
 
 // getProgressBarColor maps a leave type name to its respective indicator background color
@@ -102,7 +103,7 @@ const dummyData = {
 }
 
 // LeaveSummary displays a list of different leave types with progress bars representing used vs total allowed leaves
-export default function LeaveSummary() {
+export default function LeaveSummary({ cardFilter, handleCardFilter }: { cardFilter: TCardFilter, handleCardFilter: (card: 'attendanceOverview' | 'payrollSummary' | 'leaveSummary', filter: TCardFilter) => void }) {
   const { data, isLoading, isError } = { data: dummyData, isLoading: false, isError: false }
   const containerRef = useRef<HTMLDivElement>(null)
   const [isCompact, setIsCompact] = useState(false)
@@ -134,12 +135,18 @@ export default function LeaveSummary() {
         <CardTitle className="text-[#202C4B] dark:text-white text-lg font-semibold">
           Leave Summary
         </CardTitle>
-        <Button
-          variant="outline"
-          className="text-[#202C4B] dark:text-white border-[#E5E7EB] dark:border-gray-600 text-md px-6 py-2 hover:bg-[#F5F7FA] dark:hover:bg-gray-700"
-        >
-          {moment().format('YYYY')}
-        </Button>
+        <Select value={cardFilter} onValueChange={(value: TCardFilter) => {
+          handleCardFilter('leaveSummary', value)
+        }}>
+          <SelectTrigger>
+            <SelectValue placeholder="Filter by" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="thisWeek">This Week</SelectItem>
+            <SelectItem value="thisMonth">This Month</SelectItem>
+            <SelectItem value="thisYear">This Year</SelectItem>
+          </SelectContent>
+        </Select>
       </CardHeader>
 
       <CardContent ref={containerRef} className="p-4 h-full flex flex-col justify-start">

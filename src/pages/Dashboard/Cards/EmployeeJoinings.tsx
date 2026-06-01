@@ -2,7 +2,6 @@ import { useMemo } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { CircleAlert } from 'lucide-react'
-import moment from 'moment'
 import { getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table'
 import { DataTable } from '@/components/DataTable'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -126,10 +125,10 @@ export default function EmployeeJoinings() {
           Employee Joinings
         </CardTitle>
         <Button
-          variant="outline"
-          className="text-[#202C4B] dark:text-white border-[#E5E7EB] dark:border-gray-600 text-md px-6 py-2 hover:bg-[#F5F7FA] dark:hover:bg-gray-700"
+          variant="link"
+          className='px-0 text-theme decoration-theme-secondary'
         >
-          {moment().format('YYYY')}
+          View All
         </Button>
       </CardHeader>
 

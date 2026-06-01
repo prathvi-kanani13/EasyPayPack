@@ -1,9 +1,8 @@
 import { useMemo } from 'react'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ArrowUp, CircleAlert } from 'lucide-react'
-import moment from 'moment'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 
 import LottieComponent from "lottie-react";
@@ -12,6 +11,8 @@ import coins from "@/animation/lottie/coins.json";
 // Resolve CommonJS vs ESM default import mismatch for lottie-react
 const Lottie = (LottieComponent as unknown as { default?: typeof LottieComponent }).default || LottieComponent;
 
+
+type TCardFilter = 'thisWeek' | 'thisMonth' | 'thisYear';
 
 interface AttendanceItem {
     name: string
@@ -76,7 +77,7 @@ const LoadingSkeleton = ({ isLg, isXl }: { isLg: boolean; isXl: boolean }) => {
 }
 
 // PayrollSummary displays the summary of total payroll including basic pay, allowances, deductions, net pay, and an animation visual
-export default function PayrollSummary({ isLg, isXl }: { isLg: boolean, isXl: boolean }) {
+export default function PayrollSummary({ isLg, isXl, cardFilter, handleCardFilter }: { isLg: boolean, isXl: boolean, cardFilter: TCardFilter, handleCardFilter: (card: 'attendanceOverview' | 'payrollSummary' | 'leaveSummary', filter: TCardFilter) => void }) {
     const { data, isLoading, isError } = { data: dummyData, isLoading: false, isError: false }
     // const { data, isLoading, isError } = useGetDashboardDetails({ fromDate, toDate })
 
@@ -118,12 +119,18 @@ export default function PayrollSummary({ isLg, isXl }: { isLg: boolean, isXl: bo
                 <CardTitle className="text-[#202C4B] dark:text-white text-lg font-semibold">
                     Payroll Summary
                 </CardTitle>
-                <Button
-                    variant="outline"
-                    className="text-[#202C4B] dark:text-white border-[#E5E7EB] dark:border-gray-600 text-md px-6 py-2 hover:bg-[#F5F7FA] dark:hover:bg-gray-700"
-                >
-                    {moment().format('YYYY')}
-                </Button>
+                <Select value={cardFilter} onValueChange={(value: TCardFilter) => {
+                    handleCardFilter('payrollSummary', value)
+                }}>
+                    <SelectTrigger>
+                        <SelectValue placeholder="Filter by" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="thisWeek">This Week</SelectItem>
+                        <SelectItem value="thisMonth">This Month</SelectItem>
+                        <SelectItem value="thisYear">This Year</SelectItem>
+                    </SelectContent>
+                </Select>
             </CardHeader>
 
             <CardContent className="p-4 h-full flex flex-col justify-center">

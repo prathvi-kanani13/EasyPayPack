@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { CircleAlert, ClipboardList, Megaphone, PartyPopper } from 'lucide-react'
-import moment from 'moment'
 
 // LoadingSkeleton renders a skeleton loader matching the Announcements list layout
 const LoadingSkeleton = () => {
@@ -86,16 +85,16 @@ export default function Announcements() {
 	const announcementsData: AnnouncementItem[] = data.announcementsDto ?? [];
 
 	return (
-		<Card className="w-full h-full min-h-70 dark:bg-background border dark:border-gray-700 rounded-md gap-0 py-0 flex flex-col overflow-hidden">
+		<Card className="w-full h-full dark:bg-background border dark:border-gray-700 rounded-md gap-0 py-0">
 			<CardHeader className="flex flex-row items-center justify-between border-b border-[#E5E7EB] dark:border-gray-700 p-4 shrink-0">
 				<CardTitle className="text-[#202C4B] dark:text-white text-lg font-semibold">
 					Announcements
 				</CardTitle>
 				<Button
-					variant="outline"
-					className="text-[#202C4B] dark:text-white border-[#E5E7EB] dark:border-gray-600 text-md px-6 py-2 hover:bg-[#F5F7FA] dark:hover:bg-gray-700"
+					variant="link"
+					className='px-0 text-theme decoration-theme-secondary'
 				>
-					{moment().format('YYYY')}
+					View All
 				</Button>
 			</CardHeader>
 
