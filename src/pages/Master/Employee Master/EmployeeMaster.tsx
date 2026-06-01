@@ -328,7 +328,12 @@ export default function EmployeeMaster() {
                     onClick={() => navigate(-1)}
                 >
                     <ArrowLeft className="w-6 h-6 text-[#202C4B] dark:text-white" />
-                    <h1 className="text-2xl font-bold text-[#202C4B] dark:text-white">Employee Master</h1>
+                    <div className="flex flex-col">
+                        <h1 className="text-2xl font-bold text-[#202C4B] dark:text-white">Employee Master</h1>
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                            Manage and maintain all employee records here.
+                        </span>
+                    </div>
                 </div>
 
                 <div className="flex flex-1 justify-end gap-2">
