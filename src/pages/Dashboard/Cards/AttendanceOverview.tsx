@@ -1,13 +1,12 @@
 import { useMemo } from 'react'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import RenderWithTooltip from '@/utils/RenderWithTooltip'
 import { CircleAlert } from 'lucide-react'
-import moment from 'moment'
 // AttendanceChart is the custom donut chart displaying summary attendance rates.
 import AttendanceChart from './AttendanceChart'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 interface AttendanceItem {
     name: string
@@ -16,6 +15,8 @@ interface AttendanceItem {
     label: string
     [key: string]: string | number
 }
+
+type TCardFilter = 'thisWeek' | 'thisMonth' | 'thisYear';
 
 const dummyData = {
     attendanceDashboardStatDto: [
@@ -77,7 +78,7 @@ const LoadingSkeleton = () => {
     )
 }
 
-export default function AttendanceOverview() {
+export default function AttendanceOverview({ cardFilter, handleCardFilter }: { cardFilter: TCardFilter, handleCardFilter: (card: 'attendanceOverview' | 'payrollSummary' | 'leaveSummary', filter: TCardFilter) => void }) {
     const { data, isLoading, isError } = { data: dummyData, isLoading: false, isError: false }
     // const { data, isLoading, isError } = useGetDashboardDetails({ fromDate, toDate })
 
@@ -110,12 +111,18 @@ export default function AttendanceOverview() {
                 <CardTitle className="text-[#202C4B] dark:text-white text-lg font-semibold">
                     Attendance Overview
                 </CardTitle>
-                <Button
-                    variant="outline"
-                    className="text-[#202C4B] dark:text-white border-[#E5E7EB] dark:border-gray-600 text-md px-6 py-2 hover:bg-[#F5F7FA] dark:hover:bg-gray-700"
-                >
-                    {moment().format('YYYY')}
-                </Button>
+                <Select value={cardFilter} onValueChange={(value: TCardFilter) => {
+                    handleCardFilter('attendanceOverview', value)
+                }}>
+                    <SelectTrigger>
+                        <SelectValue placeholder="Filter by" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="thisWeek">This Week</SelectItem>
+                        <SelectItem value="thisMonth">This Month</SelectItem>
+                        <SelectItem value="thisYear">This Year</SelectItem>
+                    </SelectContent>
+                </Select>
             </CardHeader>
 
             <CardContent className="p-4 h-full flex flex-col justify-center">

@@ -15,6 +15,8 @@ interface DatePickerInputProps {
     /** The format of the `value` string. Defaults to "dd-MM-yyyy" */
     valueFormat?: string;
     /** Placeholder text shown when no date is selected */
+    displayFormat?: string;
+    /** Placeholder text shown when no date is selected */
     placeholder?: string;
     /** Optional className overrides on the trigger button */
     className?: string;
@@ -26,12 +28,11 @@ interface DatePickerInputProps {
     disabled?: boolean;
 }
 
-const DISPLAY_FORMAT = "dd-MM-yyyy";
-
 export function DatePickerInput({
     value,
     onChange,
     valueFormat = "dd-MM-yyyy",
+    displayFormat = "dd-MM-yyyy",
     placeholder = "Select Date",
     className = "",
     align = "start",
@@ -50,7 +51,7 @@ export function DatePickerInput({
                     disabled={disabled}
                     className={`w-40 h-8 justify-start text-left font-normal border-input ${!value ? "text-muted-foreground" : ""} ${className}`}
                 >
-                    {value && parsed && !isNaN(parsed.getTime()) ? format(parsed, DISPLAY_FORMAT) : <span>{placeholder}</span>}
+                    {value && parsed && !isNaN(parsed.getTime()) ? format(parsed, displayFormat) : <span>{placeholder}</span>}
                     <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                 </Button>
             </PopoverTrigger>

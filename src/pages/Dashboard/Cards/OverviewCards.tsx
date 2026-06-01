@@ -187,7 +187,7 @@ const getCardStyles = (color: string) => {
 
 // OverviewCards renders the dashboard statistics cards grid.
 // Each card displays a key HR metric, its change trend, and a custom SVG spark-line showing historical data.
-export default function OverviewCards() {
+export default function OverviewCards({ isLg }: { isLg: boolean }) {
     const formatValue = (value: number, title: string) => {
         if (title.toLowerCase().includes("payroll")) {
             return "₹" + value.toLocaleString("en-IN");
@@ -196,7 +196,7 @@ export default function OverviewCards() {
     };
 
     return (
-        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+        <div className={`grid gap-4 grid-cols-1 sm:grid-cols-2 ${isLg ? 'lg:grid-cols-4' : ''}`}>
             {cardData.map((item, idx) => {
                 const Icon = item.icon;
                 const isCount = item.title.toLowerCase().includes("employees");
@@ -204,7 +204,7 @@ export default function OverviewCards() {
                 const styles = getCardStyles(item.color);
 
                 return (
-                    <Card key={idx} className="relative overflow-hidden pb-10 hover:shadow-md transition-all duration-300 border dark:border-gray-700 dark:bg-background">
+                    <Card key={idx} className="relative overflow-hidden pb-10 hover:shadow-md transition-all duration-300 border dark:border-gray-700 dark:bg-background rounded-md">
                         <CardContent className="px-4 flex items-center gap-4">
                             {/* Left Side: Styled Icon Container */}
                             <div className={`flex items-center justify-center h-14 w-14 rounded-2xl ${styles.bg} ${styles.text} shrink-0`}>

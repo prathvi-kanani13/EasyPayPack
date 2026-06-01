@@ -1,10 +1,8 @@
 import { useMemo } from 'react'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ArrowUp, CircleAlert } from 'lucide-react'
-import moment from 'moment'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 
 import LottieComponent from "lottie-react";
@@ -13,6 +11,8 @@ import coins from "@/animation/lottie/coins.json";
 // Resolve CommonJS vs ESM default import mismatch for lottie-react
 const Lottie = (LottieComponent as unknown as { default?: typeof LottieComponent }).default || LottieComponent;
 
+
+type TCardFilter = 'thisWeek' | 'thisMonth' | 'thisYear';
 
 interface AttendanceItem {
     name: string
@@ -23,7 +23,7 @@ interface AttendanceItem {
 }
 
 const dummyData = {
-    attendanceDashboardStatDto: [
+    PayrollSummaryDto: [
         {
             reasonCategory: "Present",
             count: 100,
@@ -43,46 +43,41 @@ const dummyData = {
     ]
 }
 
-const LoadingSkeleton = () => {
+// LoadingSkeleton renders a skeleton loader matching the Payroll Summary card content layout
+const LoadingSkeleton = ({ isLg, isXl }: { isLg: boolean; isXl: boolean }) => {
     return (
-        <div className="flex flex-col lg:flex-row gap-6 animate-pulse w-full overflow-hidden">
-            {/* Chart Skeleton */}
-            <div className="flex flex-col items-center gap-4 min-w-[200px]">
-                <div className="relative w-[170px] h-[170px]">
-                    <div className="absolute inset-0 rounded-full border-15 border-gray-300 dark:border-gray-700" />
-                    <div className="absolute inset-0 flex flex-col items-center justify-center">
-                        <Skeleton className="h-6 w-12 mb-1" />
-                        <Skeleton className="h-3 w-8" />
-                    </div>
+        <div className="grid grid-cols-12 gap-4 h-full animate-pulse w-full">
+            <div className={`flex flex-col ${isLg ? 'col-span-8' : isXl ? 'col-span-7' : 'col-span-8'} max-sm:col-span-12`}>
+                {/* Total Payroll Label Skeleton */}
+                <Skeleton className="h-3.5 w-24 mb-2" />
+
+                {/* Payroll Amount and Badge Skeleton */}
+                <div className="flex gap-4 items-center mb-4">
+                    <Skeleton className="h-8 w-32" />
+                    <Skeleton className="h-6 w-16 rounded-md" />
                 </div>
-                <div className="grid grid-cols-3 gap-2 w-full px-2">
-                    {[...Array(3)].map((_, i) => (
-                        <Skeleton key={i} className="h-14 w-full rounded-lg" />
+
+                {/* Sub-totals List Skeleton */}
+                <div className="flex flex-col gap-2 w-full h-full justify-between">
+                    {[...Array(4)].map((_, i) => (
+                        <div key={i} className="flex items-center justify-between">
+                            <Skeleton className="h-4 w-24" />
+                            <Skeleton className="h-4 w-20" />
+                        </div>
                     ))}
                 </div>
             </div>
 
-            <Separator orientation="vertical" className="hidden lg:block h-64 opacity-30" />
-
-            {/* List Skeleton */}
-            <div className="flex-1 w-full pt-2">
-                <div className="grid grid-cols-1 gap-x-6 gap-y-1">
-                    {[...Array(5)].map((_, i) => (
-                        <div key={i} className="flex items-center justify-between py-2 border-b border-gray-50 dark:border-gray-800">
-                            <div className="flex items-center gap-2.5">
-                                <Skeleton className="h-2 w-2 rounded-full shrink-0" />
-                                <Skeleton className="h-3 w-20" />
-                            </div>
-                            <Skeleton className="h-4 w-8 rounded bg-gray-100 dark:bg-gray-800" />
-                        </div>
-                    ))}
-                </div>
+            {/* Lottie Coins Animation Placeholder Skeleton */}
+            <div className={`h-full flex items-end justify-center ${isLg ? 'col-span-4' : isXl ? 'col-span-5' : 'col-span-4'} max-sm:hidden pb-4`}>
+                <Skeleton className="w-40 h-40 rounded-full" />
             </div>
         </div>
     )
 }
 
-export default function PayrollSummary({ isLg, isXl }: { isLg: boolean, isXl: boolean }) {
+// PayrollSummary displays the summary of total payroll including basic pay, allowances, deductions, net pay, and an animation visual
+export default function PayrollSummary({ isLg, isXl, cardFilter, handleCardFilter }: { isLg: boolean, isXl: boolean, cardFilter: TCardFilter, handleCardFilter: (card: 'attendanceOverview' | 'payrollSummary' | 'leaveSummary', filter: TCardFilter) => void }) {
     const { data, isLoading, isError } = { data: dummyData, isLoading: false, isError: false }
     // const { data, isLoading, isError } = useGetDashboardDetails({ fromDate, toDate })
 
@@ -100,9 +95,9 @@ export default function PayrollSummary({ isLg, isXl }: { isLg: boolean, isXl: bo
         return colors[status] || "var(--theme)";
     };
 
-    const attendanceData: AttendanceItem[] = useMemo(() => {
-        return data?.attendanceDashboardStatDto?.length
-            ? data.attendanceDashboardStatDto.map((item: { reasonCategory: string, count: number }) => ({
+    const payrollData: AttendanceItem[] = useMemo(() => {
+        return data?.PayrollSummaryDto?.length
+            ? data.PayrollSummaryDto.map((item: { reasonCategory: string, count: number }) => ({
                 name: item.reasonCategory,
                 value: Number(item.count) || 0,
                 label: item.reasonCategory,
@@ -124,17 +119,23 @@ export default function PayrollSummary({ isLg, isXl }: { isLg: boolean, isXl: bo
                 <CardTitle className="text-[#202C4B] dark:text-white text-lg font-semibold">
                     Payroll Summary
                 </CardTitle>
-                <Button
-                    variant="outline"
-                    className="text-[#202C4B] dark:text-white border-[#E5E7EB] dark:border-gray-600 text-md px-6 py-2 hover:bg-[#F5F7FA] dark:hover:bg-gray-700"
-                >
-                    {moment().format('YYYY')}
-                </Button>
+                <Select value={cardFilter} onValueChange={(value: TCardFilter) => {
+                    handleCardFilter('payrollSummary', value)
+                }}>
+                    <SelectTrigger>
+                        <SelectValue placeholder="Filter by" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="thisWeek">This Week</SelectItem>
+                        <SelectItem value="thisMonth">This Month</SelectItem>
+                        <SelectItem value="thisYear">This Year</SelectItem>
+                    </SelectContent>
+                </Select>
             </CardHeader>
 
             <CardContent className="p-4 h-full flex flex-col justify-center">
                 {isLoading ? (
-                    <LoadingSkeleton />
+                    <LoadingSkeleton isLg={isLg} isXl={isXl} />
                 ) : isError ? (
                     <div className="flex flex-col items-center justify-center py-10 gap-2">
                         <div className="w-10 h-10 rounded-full bg-red-50 dark:bg-red-900/20 flex items-center justify-center">
@@ -145,13 +146,13 @@ export default function PayrollSummary({ isLg, isXl }: { isLg: boolean, isXl: bo
                         <p className="text-sm font-semibold text-red-500">Error loading data</p>
                         <p className="text-xs text-muted-foreground">Please try again later</p>
                     </div>
-                ) : attendanceData.length === 0 ? (
+                ) : payrollData.length === 0 ? (
                     <p className="text-md text-[#202C4B] dark:text-gray-100 text-center py-10">
                         No Payroll data available for this period.
                     </p>
                 ) : (
                     <div className="grid grid-cols-12 gap-4 h-full">
-                        <div className={`flex flex-col ${isLg ? 'col-span-8' : isXl ? 'col-span-7' : 'col-span-7'} max-sm:col-span-12`}>
+                        <div className={`flex flex-col ${isLg ? 'col-span-8' : isXl ? 'col-span-7' : 'col-span-8'} max-sm:col-span-12`}>
                             <div className="text-xs font-semibold text-[#8f94ac] dark:text-gray-400">
                                 Total Payroll
                             </div>
@@ -172,11 +173,11 @@ export default function PayrollSummary({ isLg, isXl }: { isLg: boolean, isXl: bo
                             </div>
                         </div>
 
-                        <div className={`h-full flex items-end justify-center ${isLg ? 'col-span-4' : isXl ? 'col-span-5' : 'col-span-5'} max-sm:hidden`}>
+                        <div className={`h-full flex items-end justify-center ${isLg ? 'col-span-4' : isXl ? 'col-span-5' : 'col-span-4'} max-sm:hidden`}>
                             <Lottie
                                 animationData={coins}
                                 loop={false}
-                                className="w-52 h-full"
+                                className="w-52 h-auto"
                             />
                         </div>
                     </div>
