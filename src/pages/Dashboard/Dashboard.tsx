@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import OverviewCards from './Cards/OverviewCards'
 import AttendanceOverview from './Cards/AttendanceOverview'
 import PayrollSummary from './Cards/PayrollSummary';
@@ -36,6 +36,8 @@ export default function Dashboard() {
         }
     }, [])
 
+
+
     const isMd = width >= breakpoints.md;
     const isLg = width >= breakpoints.lg;
     const isXl = width >= breakpoints.xl;
@@ -64,10 +66,11 @@ export default function Dashboard() {
                         </div>
                     </div>
                 </div>
-                <div className={isLg ? 'col-span-3' : isMd ? 'col-span-4' : 'col-span-12'}>
-                    <div className='flex flex-col gap-4'>
-                        <div><Announcements /></div>
-                        <div><UpcomingBirthdays /></div>
+                {/* Right column — absolute positioning prevents it from influencing grid row height */}
+                <div className={`${isLg ? 'col-span-3 relative' : isMd ? 'col-span-4 relative' : 'col-span-12'}`}>
+                    <div className={`flex flex-col gap-4 ${isMd ? 'absolute inset-0' : ''}`}>
+                        <div className={isMd ? 'flex-55 min-h-0 overflow-hidden' : ''}><Announcements /></div>
+                        <div className={isMd ? 'flex-45 min-h-0 overflow-hidden' : ''}><UpcomingBirthdays /></div>
                     </div>
                 </div>
             </div>
