@@ -3,6 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft } from "lucide-react";
+import {
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+    CarouselNext,
+    CarouselPrevious,
+} from "@/components/ui/carousel";
 
 // Import modular tab components
 import GeneralTab from "./tabs/GeneralTab";
@@ -55,19 +62,29 @@ export default function AddEmployee() {
                 </div>
             </div>
 
-            <Tabs defaultValue="general" value={activeTab} onValueChange={setActiveTab} className="w-full flex flex-col gap-6">
+            <Tabs defaultValue="general" value={activeTab} onValueChange={setActiveTab} className="w-full flex flex-col gap-4">
 
-                {/* Pills container */}
-                <TabsList className="flex flex-wrap gap-2 bg-transparent p-0 justify-start h-auto w-full border-b shadow-none rounded-none">
-                    {tabsConfig.map((tab) => (
-                        <TabsTrigger
-                            key={tab.id}
-                            value={tab.id}
-                            className="px-5 py-2 text-xs font-bold rounded-t-lg rounded-b-none bg-gray-50 border border-gray-100 data-[state=active]:bg-theme data-[state=active]:text-white text-gray-600 dark:bg-zinc-900 dark:border-zinc-800/80 dark:text-zinc-400 dark:data-[state=active]:bg-theme dark:data-[state=active]:text-white dark:data-[state=active]:border-theme transition-all shadow-none cursor-pointer flex-none dark:bg-background hover:dark:bg-background bg-gray-200 hover:bg-gray-200 border-b-0"
-                        >
-                            {tab.label}
-                        </TabsTrigger>
-                    ))}
+                <TabsList className="w-full bg-transparent p-0 h-auto border-none shadow-none rounded-none flex items-center">
+                    <Carousel opts={{ align: "start", dragFree: true }} className="w-full">
+                        <div className="flex items-center gap-2 border-b border-border pb-px w-full">
+                            <CarouselPrevious className="static translate-y-0 h-8 w-8 md:hidden" variant="ghost" />
+
+                            <CarouselContent className="flex-1 -ml-2">
+                                {tabsConfig.map((tab) => (
+                                    <CarouselItem key={tab.id} className="pl-2 basis-auto flex-none">
+                                        <TabsTrigger
+                                            value={tab.id}
+                                            className="px-5 py-2 text-xs font-bold rounded-t-lg rounded-b-none bg-gray-50 border border-gray-100 data-[state=active]:bg-theme data-[state=active]:text-white text-gray-600 dark:bg-zinc-900 dark:border-zinc-800/80 dark:text-zinc-400 dark:data-[state=active]:bg-theme dark:data-[state=active]:text-white dark:data-[state=active]:border-theme transition-all shadow-none cursor-pointer flex-none hover:dark:bg-background hover:bg-gray-200 border-b-0"
+                                        >
+                                            {tab.label}
+                                        </TabsTrigger>
+                                    </CarouselItem>
+                                ))}
+                            </CarouselContent>
+
+                            <CarouselNext className="static translate-y-0 h-8 w-8 md:hidden" />
+                        </div>
+                    </Carousel>
                 </TabsList>
 
                 {/* Tab Content Areas */}
