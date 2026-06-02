@@ -44,8 +44,13 @@ export default function AddEmployee() {
                     className="flex items-center gap-3 cursor-pointer"
                     onClick={() => navigate(-1)}
                 >
-                    <ArrowLeft className="w-6 h-6 text-[#202C4B] dark:text-white" />
-                    <h1 className="text-2xl font-bold text-[#202C4B] dark:text-white">Employee Master</h1>
+                    <ArrowLeft className="w-6 h-6 text-[#202C4B] dark:text-white mt-0.5" />
+                    <div className="flex flex-col">
+                        <h1 className="text-xl font-bold text-[#202C4B] dark:text-white leading-tight">Add Employee</h1>
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                            Master Data {'>'} Employee Master {'>'} Add Employee
+                        </span>
+                    </div>
                 </div>
 
                 <div className="flex flex-1 justify-end gap-2">
