@@ -12,7 +12,7 @@ import coins from "@/animation/lottie/coins.json";
 const Lottie = (LottieComponent as unknown as { default?: typeof LottieComponent }).default || LottieComponent;
 
 
-type TCardFilter = 'thisWeek' | 'thisMonth' | 'thisYear';
+type TCardFilter = 'thisMonth' | 'thisYear';
 
 interface AttendanceItem {
     name: string
@@ -126,7 +126,6 @@ export default function PayrollSummary({ isLg, isXl, cardFilter, handleCardFilte
                         <SelectValue placeholder="Filter by" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="thisWeek">This Week</SelectItem>
                         <SelectItem value="thisMonth">This Month</SelectItem>
                         <SelectItem value="thisYear">This Year</SelectItem>
                     </SelectContent>

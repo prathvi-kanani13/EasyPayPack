@@ -28,7 +28,7 @@ const Welcome = ({ userName, date, setDate }: { userName: string, date: string, 
     )
 }
 
-type TCardFilter = 'thisWeek' | 'thisMonth' | 'thisYear';
+type TCardFilter = 'thisMonth' | 'thisYear';
 type TCardName = 'attendanceOverview' | 'payrollSummary' | 'leaveSummary';
 
 // Dashboard is the main page component rendering the overview analytics.

@@ -16,7 +16,7 @@ interface AttendanceItem {
     [key: string]: string | number
 }
 
-type TCardFilter = 'thisWeek' | 'thisMonth' | 'thisYear';
+type TCardFilter = 'thisMonth' | 'thisYear';
 
 const dummyData = {
     attendanceDashboardStatDto: [
@@ -118,7 +118,6 @@ export default function AttendanceOverview({ cardFilter, handleCardFilter }: { c
                         <SelectValue placeholder="Filter by" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="thisWeek">This Week</SelectItem>
                         <SelectItem value="thisMonth">This Month</SelectItem>
                         <SelectItem value="thisYear">This Year</SelectItem>
                     </SelectContent>

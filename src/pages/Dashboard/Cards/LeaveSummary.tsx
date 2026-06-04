@@ -5,7 +5,7 @@ import { Progress } from '@/components/ui/progress'
 import { CircleAlert } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
-type TCardFilter = 'thisWeek' | 'thisMonth' | 'thisYear';
+type TCardFilter = 'thisMonth' | 'thisYear';
 
 
 // getProgressBarColor maps a leave type name to its respective indicator background color
@@ -142,7 +142,6 @@ export default function LeaveSummary({ cardFilter, handleCardFilter }: { cardFil
             <SelectValue placeholder="Filter by" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="thisWeek">This Week</SelectItem>
             <SelectItem value="thisMonth">This Month</SelectItem>
             <SelectItem value="thisYear">This Year</SelectItem>
           </SelectContent>
