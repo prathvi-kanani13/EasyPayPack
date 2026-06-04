@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react"
-import { Menu } from "lucide-react"
+import { Home, Menu } from "lucide-react"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar"
 import { Link, useNavigate } from "react-router-dom"
 
@@ -89,6 +89,7 @@ export default function SidebarComponent() {
   }, [open, openMobile]);
 
 	const sidebarItems: TSidebarItems[] = [
+		{ label: "EasyPayPack", icon: Home, href: "/screens" },
 		{ label: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
 		{ label: "Master", icon: Database, href: "/master" },
 		{ label: "Transaction", icon: ArrowRightLeft, href: "/transaction" },
