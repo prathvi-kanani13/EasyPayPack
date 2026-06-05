@@ -1,10 +1,14 @@
 import { useRef, useState, useEffect } from 'react'
 import OverviewCards from './Cards/OverviewCards'
+import EmployeeMovement from './Cards/EmployeeMovement'
 import AttendanceOverview from './Cards/AttendanceOverview'
 import PayrollSummary from './Cards/PayrollSummary';
 import LeaveSummary from './Cards/LeaveSummary';
 import EmployeeJoinings from './Cards/EmployeeJoinings';
 import Announcements from './Cards/Announcements';
+import Notifications from './Cards/Notifications';
+// import Onboarding from './Cards/Onboarding';
+import Preboarding from './Cards/Preboarding';
 import UpcomingBirthdays from './Cards/UpcomingBirthdays';
 import { DatePickerInput } from '@/components/DatePickerInput';
 import moment from 'moment';
@@ -92,7 +96,11 @@ export default function Dashboard() {
                 setDate={setDate}
             />
 
+            <div className="bg-theme-secondary/40 py-2 px-4 rounded-md text-sm">Last login : 10 AM </div>
+
             <OverviewCards isLg={isLg} />
+
+            <EmployeeMovement />
 
             <div className='grid grid-cols-12 gap-4'>
                 <div className={`flex flex-col gap-4 ${isLg ? 'col-span-9' : isMd ? 'col-span-8' : 'col-span-12'}`}>
@@ -113,6 +121,7 @@ export default function Dashboard() {
                         </div>
                     </div>
                 </div>
+
                 {/* Right column — absolute positioning prevents it from influencing grid row height */}
                 <div className={`${isLg ? 'col-span-3 relative' : isMd ? 'col-span-4 relative' : 'col-span-12'}`}>
                     <div className={`flex flex-col gap-4 ${isMd ? 'absolute inset-0' : ''}`}>
@@ -120,6 +129,18 @@ export default function Dashboard() {
                         <div className={isMd ? 'flex-45 min-h-0' : ''}><UpcomingBirthdays /></div>
                     </div>
                 </div>
+
+                {/* Bottom Row: Notifications, Onboarding, Pre-boarding */}
+                <div className={`${isLg ? 'col-span-4' : isMd ? 'col-span-4' : 'col-span-12'} h-[380px]`}>
+                    <Preboarding />
+                </div>
+                {/* <div className={`${isLg ? 'col-span-4' : isMd ? 'col-span-4' : 'col-span-12'} h-[380px]`}>
+                    <Onboarding />
+                </div> */}
+                <div className={`${isLg ? 'col-span-4' : isMd ? 'col-span-4' : 'col-span-12'} h-[380px]`}>
+                    <Notifications />
+                </div>
+
             </div>
         </div>
     )
