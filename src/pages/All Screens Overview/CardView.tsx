@@ -1,7 +1,28 @@
-import React from 'react'
+import PageCards from './Components/PageCards';
+import { type RouteItem } from '@/utils/routes';
 
-export default function CardView() {
+interface CardViewProps {
+  items: RouteItem[];
+  disabledRoutes: Record<string, boolean>;
+  onToggleDisable: (route: string) => void;
+  isMd: boolean;
+  isLg: boolean;
+  isXl: boolean;
+}
+
+/**
+ * CardView renders the paginated set of screen cards.
+ * It acts as the card layout wrapper for AllScreens dashboard.
+ */
+export default function CardView({ items, disabledRoutes, onToggleDisable, isMd, isLg, isXl }: CardViewProps) {
   return (
-    <div>CardView</div>
-  )
+    <PageCards
+      items={items}
+      disabledRoutes={disabledRoutes}
+      onToggleDisable={onToggleDisable}
+      isMd={isMd}
+      isLg={isLg}
+      isXl={isXl}
+    />
+  );
 }
