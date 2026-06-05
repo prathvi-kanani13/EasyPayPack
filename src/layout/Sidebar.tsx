@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react"
-import { Menu } from "lucide-react"
+import { Home, Menu } from "lucide-react"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar"
 import { Link, useNavigate } from "react-router-dom"
 

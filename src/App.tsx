@@ -17,6 +17,7 @@ import { Toaster } from "sonner";
 import MasterDashboard from "./pages/Master/MasterDashboard";
 import EmployeeMaster from "./pages/Master/Employee Master/EmployeeMaster";
 import AddEmployee from "./pages/Master/Employee Master/AddEmployee";
+import AllScreens from "./pages/All Screens Overview/AllScreens";
 
 function ThemeController() {
   const location = useLocation()
@@ -56,6 +57,7 @@ function App() {
 
         {/* Protected Dashboard and Sidebar routes in Layout */}
         <Route element={<Layout />}>
+          <Route path="/screens" element={<AllScreens />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/probation-management" element={<Probation />} />
           <Route path="/notice-period/resignation" element={<NoticePeriod />} />
