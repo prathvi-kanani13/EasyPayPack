@@ -76,6 +76,7 @@ export default function OTPForm({
               }}
               pattern={REGEXP_ONLY_DIGITS}
               containerClassName="w-full"
+              autoFocus
             >
               <InputOTPGroup className="flex justify-center w-full gap-1.5 sm:gap-2.5">
                 {[0, 1, 2, 3, 4, 5].map((index) => (

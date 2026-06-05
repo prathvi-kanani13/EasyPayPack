@@ -92,6 +92,8 @@ export default function Dashboard() {
                 setDate={setDate}
             />
 
+            <div className="bg-theme-secondary/40 py-2 px-4 rounded-md text-sm">Last login : 10 AM </div>
+
             <OverviewCards isLg={isLg} />
 
             <div className='grid grid-cols-12 gap-4'>
