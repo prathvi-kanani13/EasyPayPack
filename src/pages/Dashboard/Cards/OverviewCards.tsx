@@ -1,4 +1,4 @@
-import { Calendar, Users, Wallet, TrendingUp } from "lucide-react"
+import { Calendar, Users, Wallet, TrendingUp, UserCheck } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { useEffect, useRef } from "react"
 import ApexCharts from "apexcharts"
@@ -50,7 +50,16 @@ const cardData = [
         icon: Calendar,
         graphData: getValues(500),
         color: 'orange'
-    }
+    },
+    {
+        title: 'Total Active Employees',
+        value: 484,
+        difference: 8,
+        timePeriod: 'this month',
+        icon: UserCheck,
+        graphData: getValues(500),
+        color: 'teal'
+    },
 ];
 
 // SparkLine renders a spark-line graph at the bottom of the card using ApexCharts.
@@ -176,6 +185,12 @@ const getCardStyles = (color: string) => {
                 bg: "bg-[#f60]/10 dark:bg-[#f60]/20",
                 chartColor: "#ff6600"
             };
+        case 'teal':
+            return {
+                text: "text-teal-600 dark:text-teal-400",
+                bg: "bg-teal-50 dark:bg-teal-950/20",
+                chartColor: "#0d9488"
+            };
         default:
             return {
                 text: "text-theme",
@@ -196,7 +211,7 @@ export default function OverviewCards({ isLg }: { isLg: boolean }) {
     };
 
     return (
-        <div className={`grid gap-4 grid-cols-1 sm:grid-cols-2 ${isLg ? 'lg:grid-cols-4' : ''}`}>
+        <div className={`grid gap-5 grid-cols-1 sm:grid-cols-2 ${isLg ? 'lg:grid-cols-5' : ''}`}>
             {cardData.map((item, idx) => {
                 const Icon = item.icon;
                 const isCount = item.title.toLowerCase().includes("employees");
