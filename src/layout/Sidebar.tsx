@@ -89,6 +89,7 @@ export default function SidebarComponent() {
   }, [open, openMobile]);
 
   const sidebarItems: TSidebarItems[] = [
+    { label: "EasyPayPack", icon: Home, href: "/screens" },
     { label: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
     { label: "Master", icon: Database, href: "/master" },
     { label: "Transaction", icon: ArrowRightLeft, href: "/transaction" },
