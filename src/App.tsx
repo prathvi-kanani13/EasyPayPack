@@ -18,6 +18,7 @@ import MasterDashboard from "./pages/Master/MasterDashboard";
 import EmployeeMaster from "./pages/Master/Employee Master/EmployeeMaster";
 import AddEmployee from "./pages/Master/Employee Master/AddEmployee";
 import AllScreens from "./pages/All Screens Overview/AllScreens";
+import GradeDesignationMaster from "./pages/Master/Grade&Designation Master/gradeDesignationMaster";
 
 function ThemeController() {
   const location = useLocation()
@@ -78,6 +79,10 @@ function App() {
           <Route path="/employee">
             <Route path="master" element={<EmployeeMaster />} />
             <Route path="add" element={<AddEmployee />} />
+          </Route>
+
+          <Route path="/grade-designation">
+            <Route path="master" element={<GradeDesignationMaster />} />
           </Route>
         </Route>
 

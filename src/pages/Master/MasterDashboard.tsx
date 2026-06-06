@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router-dom";
-import { UserCog, ArrowRight, LayoutGrid, List } from "lucide-react";
+import { UserCog, ArrowRight, LayoutGrid, List, Building } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface EmployeeScreenProps {
@@ -13,6 +13,7 @@ interface EmployeeScreenProps {
 
 const employeeScreens: EmployeeScreenProps[] = [
     { id: 1, title: "Employee Master", path: "/employee/master", icon: UserCog },
+    { id: 2, title: "Grade & Desigation Master", path: "/grade-designation/master", icon: Building },
 ];
 
 export default function MasterDashboard() {
