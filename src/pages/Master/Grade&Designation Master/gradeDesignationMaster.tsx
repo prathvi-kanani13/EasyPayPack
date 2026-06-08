@@ -120,11 +120,11 @@ export default function GradeDesignationMaster() {
         setData((prev) =>
             prev.map((item) => (item.id === id ? { ...item, active: checked } : item))
         );
-        showAlert({
-            title: "Updated",
-            description: "Status changed successfully.",
-            variant: "success",
-        });
+        // showAlert({
+        //     title: "Updated",
+        //     description: "Status changed successfully.",
+        //     variant: "success",
+        // });
     };
 
     const handleCheckboxChange = (id: string, field: "exempted" | "addInDaily", checked: boolean) => {
