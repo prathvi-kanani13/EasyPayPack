@@ -144,10 +144,10 @@ export default function GeneralTab() {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
 
       {/* LEFT CONTAINER (Spans 2 columns) */}
-      <div className="lg:col-span-2 flex flex-col gap-6">
+      <div className="lg:col-span-2 flex flex-col gap-4">
 
         {/* Card 1: Personal Information */}
         <Card className="p-4 rounded-sm shadow-sm bg-white dark:bg-background border dark:border-gray-700">
@@ -291,7 +291,7 @@ export default function GeneralTab() {
       </div>
 
       {/* RIGHT CONTAINER (Spans 1 column) */}
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-4">
 
         {/* Card 4: Current Address */}
         <Card className="p-4 rounded-sm shadow-sm bg-white dark:bg-background border dark:border-gray-700">

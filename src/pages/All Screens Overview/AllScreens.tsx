@@ -1,5 +1,5 @@
 import Pagination from '@/components/Pagination';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import ListView from './ListView';
 import CardView from './CardView';
 import OverviewCards from './Components/OverviewCards';
@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { routes } from '@/utils/routes';
 import { Separator } from '@/components/ui/separator';
+import { useLayoutWidth } from '@/layout/Layout';
 
 /**
  * AllScreens component acts as the dashboard dashboard for all screens in the system.
@@ -19,31 +20,13 @@ export default function AllScreens() {
   const [pageIndex, setPageIndex] = useState(0);
   const [disabledRoutes, setDisabledRoutes] = useState<Record<string, boolean>>({});
 
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [width, setWidth] = useState<number>(0);
+  const width = useLayoutWidth();
 
   const breakpoints = {
     md: 768,
     lg: 1024,
     xl: 1280
   }
-
-  useEffect(() => {
-    if (!containerRef.current) return
-
-    const observer = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        // get the bounding width of the content area
-        setWidth(entry.contentRect.width)
-      }
-    })
-
-    observer.observe(containerRef.current)
-
-    return () => {
-      observer.disconnect()
-    }
-  }, [])
 
   const isMd = width >= breakpoints.md;
   const isLg = width >= breakpoints.lg;
@@ -94,7 +77,7 @@ export default function AllScreens() {
   };
 
   return (
-    <div className="flex flex-col gap-4" ref={containerRef}>
+    <div className="flex flex-col gap-4">
       {/* Header section with view toggle and search bar */}
       <div className="gap-2 flex flex-wrap items-center justify-between">
         {/* Title and Icon */}

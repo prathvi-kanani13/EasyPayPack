@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react'
+import { useState } from 'react'
 import OverviewCards from './Cards/OverviewCards'
 import EmployeeMovement from './Cards/EmployeeMovement'
 import AttendanceOverview from './Cards/AttendanceOverview'
@@ -12,6 +12,7 @@ import Preboarding from './Cards/Preboarding';
 import UpcomingBirthdays from './Cards/UpcomingBirthdays';
 import { DatePickerInput } from '@/components/DatePickerInput';
 import moment from 'moment';
+import { useLayoutWidth } from '@/layout/Layout'
 
 const Welcome = ({ userName, date, setDate }: { userName: string, date: string, setDate: (date: string) => void }) => {
     return (
@@ -37,8 +38,7 @@ type TCardName = 'attendanceOverview' | 'payrollSummary' | 'leaveSummary';
 
 // Dashboard is the main page component rendering the overview analytics.
 export default function Dashboard() {
-    const containerRef = useRef<HTMLDivElement>(null)
-    const [width, setWidth] = useState<number>(0);
+    const width = useLayoutWidth();
 
     const breakpoints = {
         md: 768,
@@ -64,23 +64,6 @@ export default function Dashboard() {
         }));
     };
 
-    useEffect(() => {
-        if (!containerRef.current) return
-
-        const observer = new ResizeObserver((entries) => {
-            for (const entry of entries) {
-                // get the bounding width of the content area
-                setWidth(entry.contentRect.width)
-            }
-        })
-
-        observer.observe(containerRef.current)
-
-        return () => {
-            observer.disconnect()
-        }
-    }, [])
-
     const isMd = width >= breakpoints.md;
     const isLg = width >= breakpoints.lg;
     const isXl = width >= breakpoints.xl;
@@ -89,7 +72,7 @@ export default function Dashboard() {
 
     return (
         // dashboard container
-        <div ref={containerRef} className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4">
             <Welcome
                 userName="Admin"
                 date={date}
@@ -98,7 +81,7 @@ export default function Dashboard() {
 
             <div className="bg-theme-secondary/40 py-2 px-4 rounded-md text-sm">Last login : 10 AM </div>
 
-            <OverviewCards isLg={isLg} />
+            <OverviewCards isLg={isLg} isMd={isMd} isXl={isXl} />
 
             <EmployeeMovement />
 

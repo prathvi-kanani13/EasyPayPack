@@ -46,7 +46,7 @@ export default function EmployeeMovement() {
 	return (
 		<Card className="w-full dark:bg-background border dark:border-gray-700 rounded-md gap-0 py-0 overflow-hidden">
 			{/* Card Header */}
-			<CardHeader className="flex flex-row items-center justify-between p-5 pb-3">
+			<CardHeader className="flex flex-row items-center justify-between p-4 pb-0">
 				<div>
 					<h3 className="text-[#202C4B] dark:text-white text-base font-bold">
 						Employee Movement
@@ -58,13 +58,13 @@ export default function EmployeeMovement() {
 			</CardHeader>
 
 			{/* Card Content containing the mapped sections separated by custom Separator lines */}
-			<CardContent className="p-5 pt-2">
-				<div className="flex flex-col md:flex-row items-stretch justify-between gap-6 md:gap-0">
+			<CardContent className="p-4">
+				<div className="flex flex-col md:flex-row items-stretch justify-between gap-4">
 					{movementData.map((item, index) => {
 						const IconComponent = item.icon
 						return (
 							<Fragment key={index}>
-								<div className="flex-1 flex items-center justify-between md:px-8 first:pl-0 last:pr-0">
+								<div className="flex-1 flex items-center justify-between gap-2 flex-wrap">
 									<div className="flex items-center gap-3">
 										<div className={`h-12 w-12 rounded-full flex items-center justify-center shrink-0 ${item.iconBg}`}>
 											<IconComponent className={`h-5 w-5 ${item.iconColor}`} />
@@ -78,7 +78,7 @@ export default function EmployeeMovement() {
 											</span>
 										</div>
 									</div>
-									<div className="flex flex-col items-end shrink-0">
+									<div className="flex flex-1 justify-end flex-col items-end shrink-0">
 										<span className={`text-xs font-bold ${item.trend.color} flex items-center gap-0.5`}>
 											<span className="text-sm">{item.trend.direction === 'up' ? '↑' : '↓'}</span> {item.trend.value}
 										</span>
