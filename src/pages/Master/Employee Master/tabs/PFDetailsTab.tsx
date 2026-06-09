@@ -117,7 +117,6 @@ export default function PFDetailsTab() {
                                 value={dateValues[field.key] || ""}
                                 onChange={(val) => setDateValues((p) => ({ ...p, [field.key]: val }))}
                                 placeholder={field.placeholder}
-                                valueFormat="Select Date"
                                 className="w-full"
                             />
                         ) : (
@@ -134,10 +133,10 @@ export default function PFDetailsTab() {
     };
 
     return (
-        <div className="flex flex-col gap-6">
-            <Card className="p-6 rounded-sm shadow-sm bg-white dark:bg-background border dark:border-gray-700">
+        <div className="flex flex-col gap-4">
+            <Card className="p-4 rounded-sm shadow-sm bg-white dark:bg-background border dark:border-gray-700">
                 {/* Card Title & Icon */}
-                <div className="flex items-start gap-2.5 mb-4">
+                <div className="flex items-start gap-2.5">
                     <div className="p-1.5 bg-theme/10 rounded-lg mt-0.5">
                         <ShieldCheck className="w-5 h-5 text-theme" />
                     </div>

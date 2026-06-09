@@ -202,7 +202,7 @@ const getCardStyles = (color: string) => {
 
 // OverviewCards renders the dashboard statistics cards grid.
 // Each card displays a key HR metric, its change trend, and a custom SVG spark-line showing historical data.
-export default function OverviewCards({ isLg }: { isLg: boolean }) {
+export default function OverviewCards({ isMd, isXl }: { isLg: boolean, isMd: boolean, isXl: boolean }) {
     const formatValue = (value: number, title: string) => {
         if (title.toLowerCase().includes("payroll")) {
             return "₹" + value.toLocaleString("en-IN");
@@ -211,7 +211,7 @@ export default function OverviewCards({ isLg }: { isLg: boolean }) {
     };
 
     return (
-        <div className={`grid gap-5 grid-cols-1 sm:grid-cols-2 ${isLg ? 'lg:grid-cols-5' : ''}`}>
+        <div className={`grid gap-4 grid-cols-1 sm:grid-cols-2 ${isMd ? 'md:grid-cols-3' : ''} ${isXl ? 'xl:grid-cols-5' : ''}`}>
             {cardData.map((item, idx) => {
                 const Icon = item.icon;
                 const isCount = item.title.toLowerCase().includes("employees");
@@ -231,7 +231,7 @@ export default function OverviewCards({ isLg }: { isLg: boolean }) {
                                 <span className="text-xs font-semibold text-[#8f94ac] dark:text-gray-400">
                                     {item.title}
                                 </span>
-                                <span className="text-2xl font-bold tracking-tight text-[#242664] dark:text-white mt-0.5">
+                                <span className="text-2xl font-bold tracking-tight text-[#242664] dark:text-white mt-0.5 truncate">
                                     {formatValue(item.value, item.title)}
                                 </span>
                                 <div className="flex items-center gap-1 mt-1 text-xs font-semibold text-emerald-500 dark:text-emerald-400">

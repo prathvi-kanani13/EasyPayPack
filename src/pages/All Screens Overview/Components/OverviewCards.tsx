@@ -77,7 +77,7 @@ function OverviewCard({ item, setFilters, filters }: { item: typeof cards[number
   }
 
   return (
-    <Card className={cn("relative overflow-hidden hover:shadow-lg transition-all duration-300 border border-border rounded-2xl group cursor-pointer py-0", filters.category === item.category ? item.classNames : '')} onClick={handleClick}>
+    <Card className={cn("relative overflow-hidden hover:shadow-lg transition-all duration-300 border border-border rounded-2xl group cursor-pointer py-0 dark:bg-background", filters.category === item.category ? item.classNames : '')} onClick={handleClick}>
       <CardContent className="p-4 flex items-center gap-4 relative h-full">
         {/* Left Side: Icon Container */}
         <div className={cn("flex items-center justify-center h-14 w-14 rounded-2xl shrink-0 transition-transform duration-300 group-hover:scale-105", filters.category === item.category ? item.activeColor : item.color)}>

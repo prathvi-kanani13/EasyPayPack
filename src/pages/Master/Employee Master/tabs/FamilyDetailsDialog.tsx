@@ -145,8 +145,7 @@ export function FamilyDetailsDialog({ open, onOpenChange, members, onSave }: Fam
                         <DatePickerInput
                             value={row.original.dob}
                             onChange={(value) => updateField(row.original.id, "dob", value)}
-                            placeholder="12/06/1980"
-                            valueFormat="Select Date"
+                            placeholder="Select Date"
                             disabled={!isEditing}
                             className="w-full h-9 border-[#EAE6F3] dark:border-zinc-800 bg-white dark:bg-zinc-950 text-gray-900 dark:text-white rounded-lg disabled:opacity-100 disabled:bg-[#FAF9FC] dark:disabled:bg-zinc-900/50 disabled:text-gray-800 dark:disabled:text-gray-200 disabled:cursor-default min-w-[130px]"
                         />
@@ -332,7 +331,7 @@ export function FamilyDetailsDialog({ open, onOpenChange, members, onSave }: Fam
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-[95vw] md:max-w-6xl rounded-sm p-6 overflow-hidden flex flex-col max-h-[90vh] bg-white dark:bg-zinc-950 border border-gray-200 dark:border-zinc-800">
+            <DialogContent className="max-w-[95vw] md:max-w-6xl rounded-sm p-4 overflow-hidden flex flex-col max-h-[90vh] bg-white dark:bg-zinc-950 border border-gray-200 dark:border-zinc-800">
                 <DialogHeader className="flex flex-col gap-2 border-b border-gray-100 dark:border-zinc-800 pb-4 mb-4">
                     <div>
                         <DialogTitle className="text-xl font-bold text-gray-900 dark:text-white">Family Details</DialogTitle>

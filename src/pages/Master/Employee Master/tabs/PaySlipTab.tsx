@@ -190,10 +190,10 @@ export default function PaySlipTab() {
     ];
 
     return (
-        <div className="flex flex-col gap-6">
-            <Card className="p-6 rounded-sm shadow-sm bg-white dark:bg-background border dark:border-gray-700">
+        <div className="flex flex-col gap-4">
+            <Card className="p-4 rounded-sm shadow-sm bg-white dark:bg-background border dark:border-gray-700">
                 {/* Title and Icon */}
-                <div className="flex items-center gap-2.5 mb-6">
+                <div className="flex items-center gap-2.5">
                     <div className="p-1.5 bg-theme/10 rounded-lg">
                         <Receipt className="w-5 h-5 text-theme" />
                     </div>

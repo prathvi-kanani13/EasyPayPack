@@ -312,7 +312,6 @@ export default function LoanDetailTab() {
               value={row.original.insStartDate}
               onChange={(value) => updateField(row.original.id, "insStartDate", value)}
               placeholder="Select Date"
-              valueFormat="Select Date"
               disabled={!isEditing}
               className="w-full h-9 border-[#EAE6F3] dark:border-zinc-800 bg-white dark:bg-zinc-950 text-gray-900 dark:text-white rounded-lg disabled:opacity-100 disabled:bg-[#FAF9FC] dark:disabled:bg-zinc-900/55 disabled:text-gray-800 dark:disabled:text-gray-200 disabled:cursor-default min-w-[140px] text-sm"
             />
@@ -329,7 +328,6 @@ export default function LoanDetailTab() {
               value={row.original.dueDate}
               onChange={(value) => updateField(row.original.id, "dueDate", value)}
               placeholder="Select Date"
-              valueFormat="Select Date"
               disabled={!isEditing}
               className="w-full h-9 border-[#EAE6F3] dark:border-zinc-800 bg-white dark:bg-zinc-950 text-gray-900 dark:text-white rounded-lg disabled:opacity-100 disabled:bg-[#FAF9FC] dark:disabled:bg-zinc-900/55 disabled:text-gray-800 dark:disabled:text-gray-200 disabled:cursor-default min-w-[140px] text-sm"
             />
@@ -379,10 +377,10 @@ export default function LoanDetailTab() {
   });
 
   return (
-    <div className="flex flex-col gap-6">
-      <Card className="p-6 rounded-sm shadow-sm bg-white dark:bg-background border dark:border-gray-700 overflow-hidden">
+    <div className="flex flex-col gap-4">
+      <Card className="p-4 rounded-sm shadow-sm bg-white dark:bg-background border dark:border-gray-700 overflow-hidden">
         {/* Title and Icon */}
-        <div className="flex items-center gap-2.5 mb-6">
+        <div className="flex items-center gap-2.5">
           <div className="p-1.5 bg-theme/10 rounded-lg">
             <Wallet className="w-5 h-5 text-theme" />
           </div>

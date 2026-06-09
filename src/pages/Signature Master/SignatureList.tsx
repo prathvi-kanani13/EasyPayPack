@@ -567,7 +567,7 @@ export default function SignatureList() {
                                                     <Badge variant="outline" className="text-[11px] border-slate-300 text-slate-600 bg-slate-50 dark:bg-slate-800">+2 more</Badge>
                                                 </div>
                                             </div> */}
-                                            <div className="grid grid-cols-2 gap-6 pt-2">
+                                            <div className="grid grid-cols-2 gap-4 pt-2">
                                                 <div>
                                                     <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Created By</p>
                                                     <p className="text-xs font-bold text-slate-700 mt-1">Admin User</p>

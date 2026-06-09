@@ -6,11 +6,12 @@ import * as Yup from "yup";
 import EditorContentSettings from "./editor components/editorContentSettings";
 import EditorLayoutSettings from "./editor components/editorLayoutSettings";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { useEffect, useState, useRef } from "react";
+import { useState } from "react";
 import EditorCanvas from "./editor components/editorCanvas";
 import { EditorProvider, useEditor } from "./editor components/EditorContext";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import { useLayoutWidth } from "@/layout/Layout";
 
 const validationSchema = Yup.object().shape({
   templateName: Yup.string().required("Template Name is required"),
@@ -36,21 +37,8 @@ function LetterManagementInner({ initialValues }: { initialValues: FormValues })
   const [contentSettingsOpen, setContentSettingsOpen] = useState<boolean>(false);
   const [layoutSettingsOpen, setLayoutSettingsOpen] = useState<boolean>(false);
 
-  const [isMobile, setIsMobile] = useState<boolean>(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!containerRef.current) return;
-
-    const observer = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        setIsMobile(entry.contentRect.width <= 1050);
-      }
-    });
-
-    observer.observe(containerRef.current);
-    return () => observer.disconnect();
-  }, []);
+  const width = useLayoutWidth();
+  const isMobile = width <= 1050;
 
   const handleSubmit = (values: typeof initialValues) => {
     const html = generateHtml();
@@ -149,7 +137,7 @@ function LetterManagementInner({ initialValues }: { initialValues: FormValues })
             </Formik>
           </CardHeader>
 
-          <CardContent ref={containerRef} className="relative px-0 py-0 flex-1 overflow-hidden">
+          <CardContent className="relative px-0 py-0 flex-1 overflow-hidden">
             <SidebarProvider className="relative min-h-0 h-full" open={contentSettingsOpen} onOpenChange={setContentSettingsOpen} isMobileProp={isMobile}>
               <EditorContentSettings />
 

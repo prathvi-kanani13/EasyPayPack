@@ -18,10 +18,19 @@ import NomineesTab from "./tabs/NomineesTab";
 import LoanDetailTab from "./tabs/LoanDetailTab";
 import PFDetailsTab from "./tabs/PFDetailsTab";
 import PhotoScanTab from "./tabs/PhotoScanTab";
+import { useLayoutWidth } from "@/layout/Layout";
 
 export default function AddEmployee() {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState("general");
+
+    const width = useLayoutWidth();
+
+    const breakpoints = {
+        md: 768,
+    }
+
+    const isMd = width >= breakpoints.md;
 
     const tabsConfig = [
         { id: "general", label: "General", component: <GeneralTab /> },
@@ -72,7 +81,7 @@ export default function AddEmployee() {
                 <TabsList className="w-full bg-transparent p-0 h-auto border-none shadow-none rounded-none flex items-center">
                     <Carousel opts={{ align: "start", dragFree: true }} className="w-full">
                         <div className="flex items-center gap-2 border-b border-border pb-px w-full">
-                            <CarouselPrevious className="static translate-y-0 h-8 w-8 md:hidden" variant="ghost" />
+                            <CarouselPrevious className={`static translate-y-0 h-8 w-8 ${isMd ? 'hidden' : 'flex'}`} variant="ghost" />
 
                             <CarouselContent className="flex-1 -ml-2">
                                 {tabsConfig.map((tab) => (
@@ -87,7 +96,7 @@ export default function AddEmployee() {
                                 ))}
                             </CarouselContent>
 
-                            <CarouselNext className="static translate-y-0 h-8 w-8 md:hidden" />
+                            <CarouselNext className={`static translate-y-0 h-8 w-8 ${isMd ? 'hidden' : 'flex'}`} variant="ghost" />
                         </div>
                     </Carousel>
                 </TabsList>

@@ -8,6 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { type RouteItem } from '@/utils/routes';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
+import RenderWithTooltip from '@/utils/RenderWithTooltip';
 
 // Config for category icons and color classes from OverviewCards.tsx
 const categoryConfigs = {
@@ -57,7 +58,7 @@ function PageCard({ item, isDisabled, onToggleDisable }: PageCardProps) {
   return (
     <Card
       className={cn(
-        "relative overflow-hidden border border-border rounded-2xl transition-all duration-300 group py-0",
+        "relative overflow-hidden border border-border rounded-2xl transition-all duration-300 group py-0 dark:bg-background",
         isDisabled ? "opacity-60" : "hover:shadow-md hover:border-theme/30"
       )}
     >
@@ -75,9 +76,14 @@ function PageCard({ item, isDisabled, onToggleDisable }: PageCardProps) {
               <span className="text-xs font-bold text-gray-400 tracking-wider">
                 {item.code}
               </span>
-              <span className="text-[14px] font-semibold text-[#242664] dark:text-white mt-0.5 leading-snug line-clamp-2">
-                {item.name}
-              </span>
+              <RenderWithTooltip
+                trigger={
+                  <span className="text-[14px] font-semibold text-[#242664] dark:text-white mt-0.5 leading-snug line-clamp-1">
+                    {item.name}
+                  </span>
+                }
+                content={item.name}
+              />
               <div className="mt-1.5 flex items-center">
                 {isDisabled ? (
                   <Badge variant="secondary" className="bg-red-50 text-red-600 dark:bg-red-950/20 dark:text-red-400 font-semibold px-2 py-0.5 text-[10px] rounded-full uppercase tracking-wider">
