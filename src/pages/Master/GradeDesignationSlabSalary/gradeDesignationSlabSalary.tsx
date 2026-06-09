@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
-import { Layers, Plus, Copy, Save, Search, Trash2, Info, UserCog, Briefcase, Network, Coins, RefreshCw, ArrowLeft } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { Layers, Plus, Search, Trash2, Info, RefreshCw, ArrowLeft } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,23 +35,23 @@ const initialSlabs: SlabRow[] = [
 
 export default function GradeDesignationSlabSalary() {
     const navigate = useNavigate();
+    const location = useLocation();
     const { showAlert } = useAlert();
 
-    // Retrieval Filters
-    const [effectiveDate, setEffectiveDate] = useState("01-01-2026");
-    const [grade, setGrade] = useState("Officer");
-    const [designation, setDesignation] = useState("Software Developer");
-    const [status, setStatus] = useState("Active");
+    const stateData = location.state || {};
 
-    // Copy Previous Date
-    const [copyDate, setCopyDate] = useState("01-01-2025");
+    // Retrieval Filters
+    const [effectiveDate, setEffectiveDate] = useState(stateData.effectiveDate || "01-01-2026");
+    const [grade, setGrade] = useState(stateData.grade || "Officer");
+    const [designation, setDesignation] = useState(stateData.designation || "Software Developer");
+    const [status, setStatus] = useState(stateData.status || "Active");
 
     // Applied Filters for Notice Banner
     const [appliedFilters, setAppliedFilters] = useState({
-        effectiveDate: "01-01-2026",
-        grade: "Officer",
-        designation: "Software Developer",
-        status: "Active"
+        effectiveDate: stateData.effectiveDate || "01-01-2026",
+        grade: stateData.grade || "Officer",
+        designation: stateData.designation || "Software Developer",
+        status: stateData.status || "Active"
     });
 
     // List of slab rows (holding increments and other properties)
@@ -140,15 +140,6 @@ export default function GradeDesignationSlabSalary() {
         });
     };
 
-    // Save slab structure
-    const handleSave = () => {
-        showAlert({
-            title: "Success",
-            description: "Slab structure saved successfully.",
-            variant: "success"
-        });
-    };
-
     // New Slab initialization
     const handleNewSlab = () => {
         showAlert({
@@ -163,31 +154,6 @@ export default function GradeDesignationSlabSalary() {
                 showAlert({
                     title: "Success",
                     description: "New slab initialized.",
-                    variant: "success"
-                });
-            }
-        });
-    };
-
-    // Copy From Previous Date action
-    const handleCopyStructure = () => {
-        showAlert({
-            title: "Copy Structure",
-            description: `Do you want to copy slab structure from Date ${copyDate}? This will overwrite current rows.`,
-            variant: "info",
-            confirmation: true,
-            buttonText: "Copy"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                setSlabs([
-                    { id: "s0", year: 0, increment: "0.00", basicSalary: "18,500.00", basicSalaryAfterIncrement: "18,500.00", efficiencyBar: false, stagnationCounter: "" },
-                    { id: "s1", year: 1, increment: "2,500.00", basicSalary: "21,000.00", basicSalaryAfterIncrement: "23,850.00", efficiencyBar: false, stagnationCounter: "" },
-                    { id: "s2", year: 2, increment: "2,850.00", basicSalary: "23,850.00", basicSalaryAfterIncrement: "27,100.00", efficiencyBar: false, stagnationCounter: "" },
-                    { id: "s3", year: 3, increment: "3,250.00", basicSalary: "27,100.00", basicSalaryAfterIncrement: "30,350.00", efficiencyBar: false, stagnationCounter: "" }
-                ]);
-                showAlert({
-                    title: "Success",
-                    description: `Slab structure copied from Date ${copyDate} successfully.`,
                     variant: "success"
                 });
             }
@@ -334,7 +300,7 @@ export default function GradeDesignationSlabSalary() {
 
             {/* 1. Header Area */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate("/master")}>
+                <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate("/grade-designation/slab-list")}>
                     <ArrowLeft className="w-6 h-6 text-[#202C4B] dark:text-white" />
 
                     <div className="flex flex-col">
@@ -356,35 +322,6 @@ export default function GradeDesignationSlabSalary() {
                     >
                         <Plus className="w-3.5 h-3.5" />
                         New Slab
-                    </Button>
-
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleCopyStructure}
-                        className="h-9 border-theme text-theme hover:bg-theme hover:text-white gap-1.5 font-semibold text-xs rounded-sm cursor-pointer"
-                    >
-                        <Copy className="w-3.5 h-3.5" />
-                        Copy From Previous
-                    </Button>
-
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleRetrieve}
-                        className="h-9 border-theme text-theme hover:bg-theme hover:text-white gap-1.5 font-semibold text-xs rounded-sm cursor-pointer"
-                    >
-                        <RefreshCw className="w-3.5 h-3.5" />
-                        Retrieve
-                    </Button>
-
-                    <Button
-                        onClick={handleSave}
-                        size="sm"
-                        className="h-9 bg-theme hover:bg-theme/90 text-white gap-1.5 font-semibold text-xs rounded-sm shadow-sm cursor-pointer"
-                    >
-                        <Save className="w-3.5 h-3.5" />
-                        Save
                     </Button>
                 </div>
             </div>
@@ -494,9 +431,9 @@ export default function GradeDesignationSlabSalary() {
             </Card>
 
             {/* 3. Slab Details & Sidebar (Two column layout) */}
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
                 {/* Left Side: Slab Table (3 columns) */}
-                <div className="lg:col-span-3 flex flex-col gap-4">
+                <div className="lg:col-span-1 flex flex-col gap-4">
                     <Card className="bg-white dark:bg-background border border-gray-200 dark:border-gray-800 shadow-sm rounded-sm p-4 overflow-hidden flex flex-col gap-4">
                         <h3 className="text-sm font-bold text-theme">Slab Structure Details</h3>
 
@@ -505,16 +442,15 @@ export default function GradeDesignationSlabSalary() {
                             isLoading={false}
                             columnCount={columns.length}
                             showHeader={true}
-                            className="[&_td]:py-1 [&_td]:px-1 [&_th]:py-1.5 [&_th]:px-1 [&_td]:text-xs [&_th]:text-[11px] [&_td]:align-middle rounded-sm"
                         />
 
                         {/* Footer details of Slab table */}
                         <div className="flex items-center justify-between border-t dark:border-gray-800 pt-4 flex-wrap gap-3">
                             <Button
                                 onClick={handleAddRow}
-                                className="bg-theme hover:bg-theme/90 text-white h-9 px-4 font-semibold text-xs rounded-lg flex items-center gap-1.5 cursor-pointer animate-pulse hover:animate-none"
+                                className="bg-theme"
                             >
-                                <Plus className="w-3.5 h-3.5" />
+                                <Plus className="w-3.5 h-3.5 mr-2" />
                                 Add Row
                             </Button>
 
@@ -528,97 +464,6 @@ export default function GradeDesignationSlabSalary() {
                             <Info className="w-3.5 h-3.5 text-blue-500" />
                             <span>Note: Slab order is based on "Increment After Jan. Date (Year)" in ascending order.</span>
                         </div>
-                    </Card>
-                </div>
-
-                {/* Right Side: Stepper Guidance & Copy Form Date (1 column) */}
-                <div className="flex flex-col gap-6">
-                    {/* Guidance stepper Card */}
-                    <Card className="bg-white dark:bg-background border border-gray-200 dark:border-gray-800 shadow-sm rounded-xl p-5 flex flex-col gap-4">
-                        <h4 className="text-xs font-extrabold uppercase text-slate-400 tracking-wider">
-                            How to Create New Grade / Designation and Slab?
-                        </h4>
-
-                        <div className="relative flex flex-col gap-6 pl-1 pt-2">
-                            {/* Connector Line */}
-                            <div className="absolute left-4 top-2 bottom-6 w-0.5 bg-slate-100 dark:bg-gray-800" />
-
-                            {/* Step 1 */}
-                            <div className="flex gap-3 relative items-start">
-                                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 font-semibold text-sm shrink-0 shadow-xs">
-                                    <UserCog className="w-4 h-4" />
-                                </div>
-                                <div className="flex flex-col">
-                                    <span className="text-xs font-bold text-slate-800 dark:text-white">Create Grade</span>
-                                    <span className="text-[10px] text-slate-400 mt-0.5 leading-normal">
-                                        Master → Organization Setup → Grade Master
-                                    </span>
-                                </div>
-                            </div>
-
-                            {/* Step 2 */}
-                            <div className="flex gap-3 relative items-start">
-                                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 font-semibold text-sm shrink-0 shadow-xs">
-                                    <Briefcase className="w-4 h-4" />
-                                </div>
-                                <div className="flex flex-col">
-                                    <span className="text-xs font-bold text-slate-800 dark:text-white">Create Designation</span>
-                                    <span className="text-[10px] text-slate-400 mt-0.5 leading-normal">
-                                        Master → Organization Setup → Designation Master
-                                    </span>
-                                </div>
-                            </div>
-
-                            {/* Step 3 */}
-                            <div className="flex gap-3 relative items-start">
-                                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 font-semibold text-sm shrink-0 shadow-xs">
-                                    <Network className="w-4 h-4" />
-                                </div>
-                                <div className="flex flex-col">
-                                    <span className="text-xs font-bold text-slate-800 dark:text-white">Map Grade & Designation</span>
-                                    <span className="text-[10px] text-slate-400 mt-0.5 leading-normal">
-                                        Master → Salary Setup → Grade Designation Mapping
-                                    </span>
-                                </div>
-                            </div>
-
-                            {/* Step 4 */}
-                            <div className="flex gap-3 relative items-start">
-                                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-orange-50 dark:bg-orange-950/30 text-orange-600 dark:text-orange-400 font-semibold text-sm shrink-0 shadow-xs">
-                                    <Coins className="w-4 h-4" />
-                                </div>
-                                <div className="flex flex-col">
-                                    <span className="text-xs font-bold text-slate-800 dark:text-white">Create Slab Salary</span>
-                                    <span className="text-[10px] text-slate-400 mt-0.5 leading-normal">
-                                        Master → Salary Setup → Grade/Designation Slab Salary
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </Card>
-
-                    {/* Copy From Previous Date Card */}
-                    <Card className="bg-white dark:bg-background border border-gray-200 dark:border-gray-800 shadow-sm rounded-xl p-5 flex flex-col gap-4">
-                        <h4 className="text-xs font-bold text-theme">Copy From Previous Date</h4>
-
-                        <div className="flex flex-col gap-2">
-                            <label className="text-[11px] font-semibold text-slate-500">Copy Slab From Date</label>
-                            <DatePickerInput
-                                value={copyDate}
-                                onChange={setCopyDate}
-                                placeholder="Select Copy Date"
-                                className="w-full border-slate-200 dark:border-gray-800 h-9"
-                            />
-                        </div>
-
-                        <Button
-                            variant="outline"
-                            onClick={handleCopyStructure}
-                            className="border-theme text-theme hover:bg-theme hover:text-white h-9 font-semibold text-xs rounded-lg flex items-center justify-center gap-1.5 cursor-pointer mt-1"
-                        >
-                            <Copy className="w-3.5 h-3.5" />
-                            Copy Structure
-                        </Button>
                     </Card>
                 </div>
             </div>

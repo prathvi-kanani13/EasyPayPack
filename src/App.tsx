@@ -18,8 +18,9 @@ import MasterDashboard from "./pages/Master/MasterDashboard";
 import EmployeeMaster from "./pages/Master/Employee Master/EmployeeMaster";
 import AddEmployee from "./pages/Master/Employee Master/AddEmployee";
 import AllScreens from "./pages/All Screens Overview/AllScreens";
-import GradeDesignationMaster from "./pages/Master/Grade&Designation Master/gradeDesignationMaster";
-import GradeDesignationSlabSalary from "./pages/Master/GradeDesignationSlabSalary/gradeDesignationSlabSalary";
+import GradeDesignationMaster from "./pages/Master/Grade&Designation Master/GradeDesignationMaster";
+import GradeDesignationSlabList from "./pages/Master/GradeDesignationSlabSalary/GradeDesignationSlabList";
+import GradeDesignationSlabSalary from "./pages/Master/GradeDesignationSlabSalary/GradeDesignationSlabSalary";
 
 function ThemeController() {
   const location = useLocation()
@@ -84,9 +85,9 @@ function App() {
 
           <Route path="/grade-designation">
             <Route path="master" element={<GradeDesignationMaster />} />
+            <Route path="slab-list" element={<GradeDesignationSlabList />} />
+            <Route path="slab-salary" element={<GradeDesignationSlabSalary />} />
           </Route>
-
-          <Route path="/grade-designation-slab-salary" element={<GradeDesignationSlabSalary />} />
         </Route>
 
         {/* Fallback route */}

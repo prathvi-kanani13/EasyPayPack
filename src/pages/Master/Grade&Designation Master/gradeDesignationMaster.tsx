@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAlert } from "@/context/AlertContext";
-import GradeDesignationDialog from "./gradeDesignationDialog";
+import GradeDesignationDialog from "./GradeDesignationDialog";
 import { DataTable } from "@/components/DataTable";
 import { getCoreRowModel, useReactTable, type ColumnDef } from "@tanstack/react-table";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
