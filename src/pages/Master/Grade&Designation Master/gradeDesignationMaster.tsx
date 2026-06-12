@@ -259,7 +259,7 @@ export default function GradeDesignationMaster() {
                 header: "sr no.",
                 cell: ({ row }) => {
                     const originalIndex = sortedData.findIndex(d => d.id === row.original.id) + 1;
-                    return <span className="text-xs font-semibold text-slate-500">{originalIndex}</span>;
+                    return originalIndex;
                 },
             },
             {
@@ -267,14 +267,11 @@ export default function GradeDesignationMaster() {
                 header: "type",
                 cell: ({ getValue }) => {
                     const type = getValue() as string;
+                    const variant = type === "Grade"
+                        ? "bg-purple-100 text-purple-700 dark:bg-purple-500/20 dark:text-purple-400 border-purple-200 dark:border-purple-500/30"
+                        : "bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400 border-blue-200 dark:border-blue-500/30";
                     return (
-                        <Badge
-                            className={
-                                type === "Grade"
-                                    ? "bg-purple-50 text-purple-600 dark:bg-purple-950/30 dark:text-purple-400 font-bold border-none text-[10px] px-2 py-0.5"
-                                    : "bg-blue-50 text-blue-600 dark:bg-blue-950/30 dark:text-blue-400 font-bold border-none text-[10px] px-2 py-0.5"
-                            }
-                        >
+                        <Badge variant="outline" className={`${variant} border font-bold text-[10px]`}>
                             {type}
                         </Badge>
                     );
@@ -283,96 +280,64 @@ export default function GradeDesignationMaster() {
             {
                 accessorKey: "code",
                 header: "code",
-                cell: ({ getValue }) => <span className="text-xs font-bold text-slate-700 dark:text-white">{getValue() as string}</span>,
             },
             {
                 accessorKey: "shortName",
                 header: "short name",
-                cell: ({ getValue }) => <span className="text-xs text-slate-600 dark:text-slate-300">{getValue() as string}</span>,
             },
             {
                 accessorKey: "description",
                 header: "description",
-                cell: ({ getValue }) => (
-                    <span
-                        className="text-xs text-slate-500 max-w-[200px] truncate block"
-                        title={getValue() as string}
-                    >
-                        {getValue() as string}
-                    </span>
-                ),
             },
             {
                 accessorKey: "active",
-                header: () => <div className="text-center w-full">Active</div>,
-                cell: ({ row }) => (
-                    <div className="flex justify-center">
-                        <Switch
-                            checked={row.original.active}
-                            onCheckedChange={(checked) => handleActiveToggle(row.original.id, checked)}
-                            className="data-checked:bg-emerald-500 scale-90"
-                        />
-                    </div>
-                ),
+                header: "Active",
+                cell: ({ getValue }) => {
+                    const active = getValue() as boolean;
+                    const variant = active
+                        ? "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400 border-green-200 dark:border-green-500/30"
+                        : "bg-slate-100 text-slate-700 dark:bg-slate-500/20 dark:text-slate-400 border-slate-200 dark:border-slate-500/30";
+                    return (
+                        <Badge variant="outline" className={`${variant} border font-bold text-[10px]`}>
+                            {active ? "Active" : "Inactive"}
+                        </Badge>
+                    );
+                },
             },
             {
                 accessorKey: "sortOrder",
-                header: () => <div className="text-center w-full">Sort Order</div>,
-                cell: ({ row }) => (
-                    <div className="flex justify-center">
-                        <input
-                            type="number"
-                            value={row.original.sortOrder}
-                            onChange={(e) => handleSortOrderChange(row.original.id, e.target.value)}
-                            className="w-14 h-7 text-center rounded-md border border-slate-200 dark:border-slate-700 bg-transparent text-xs font-medium focus:outline-none focus:ring-1 focus:ring-theme"
-                        />
-                    </div>
-                ),
+                header: "Sort Order",
             },
             {
                 accessorKey: "exempted",
-                header: () => <div className="text-center w-full">Exempted</div>,
-                cell: ({ row }) => (
-                    <div className="flex justify-center">
-                        <Checkbox
-                            checked={row.original.exempted}
-                            onCheckedChange={(checked) => handleCheckboxChange(row.original.id, "exempted", !!checked)}
-                        />
-                    </div>
-                ),
+                header: "Exempted",
+                cell: ({ getValue }) => (getValue() as boolean ? "Yes" : "No"),
             },
             {
                 accessorKey: "addInDaily",
-                header: () => <div className="text-center w-full">Add in Daily</div>,
-                cell: ({ row }) => (
-                    <div className="flex justify-center">
-                        <Checkbox
-                            checked={row.original.addInDaily}
-                            onCheckedChange={(checked) => handleCheckboxChange(row.original.id, "addInDaily", !!checked)}
-                        />
-                    </div>
-                ),
+                header: "Add in Daily",
+                cell: ({ getValue }) => (getValue() as boolean ? "Yes" : "No"),
             },
             {
                 id: "actions",
-                header: () => <div className="text-center w-full">Actions</div>,
+                header: "Actions",
                 cell: ({ row }) => (
-                    <div className="flex items-center justify-center gap-1">
+                    <div className="flex items-center gap-2">
                         <Button
                             size="icon-sm"
                             variant="ghost"
                             onClick={() => handleEdit(row.original)}
-                            className="h-8 w-8 text-slate-400 hover:text-theme hover:bg-violet-50 dark:hover:bg-slate-800 rounded-md"
+                            className="h-8 w-8 text-slate-500 hover:text-theme dark:hover:bg-slate-800"
                         >
-                            <Edit2 className="w-3.5 h-3.5" />
+                            <Edit2 className="w-4 h-4" />
                         </Button>
                         <Button
                             size="icon-sm"
                             variant="ghost"
                             onClick={() => confirmDelete(row.original.id)}
-                            className="h-8 w-8 text-slate-400 hover:text-destructive hover:bg-red-50 dark:hover:bg-red-950/20 rounded-md"
+                            className="h-8 w-8 text-slate-400 hover:text-destructive hover:bg-red-50 dark:hover:bg-red-950/20"
                         >
-                            <Trash2 className="w-3.5 h-3.5" />
+                            <Trash2 className="w-4 h-4" />
                         </Button>
                     </div>
                 ),
