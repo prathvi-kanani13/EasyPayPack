@@ -306,7 +306,7 @@ export default function NomineesTab() {
                         <Button
                           variant="outline"
                           size="icon"
-                          className="h-8 w-8 border-purple-200 text-purple-600 hover:bg-accent hover:text-purple-700 dark:border-purple-900/50 dark:text-purple-400"
+                          className="h-8 w-8 text-yellow-600 hover:text-yellow-600"
                         >
                           <Pencil className="h-3.5 w-3.5" />
                         </Button>
@@ -315,7 +315,7 @@ export default function NomineesTab() {
                           variant="outline"
                           size="icon"
                           onClick={() => handleDeleteRow(nominee.id)}
-                          className="h-8 w-8 border-red-200 text-red-600 hover:bg-accent hover:text-red-700 dark:border-red-900/50 dark:text-red-400"
+                          className="h-8 w-8 text-red-700 hover:text-red-700"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                         </Button>

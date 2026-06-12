@@ -5,8 +5,8 @@ import { useEffect } from "react";
 import Auth from "./pages/Auth/auth";
 import Layout from "./layout/Layout";
 import Dashboard from "./pages/Dashboard/Dashboard";
-import Probation from "./pages/Probation Management/Probation";
-import NoticePeriod from "./pages/Notice Period/NoticePeriod";
+import Probation from "./pages/probation management/Probation";
+import NoticePeriod from "./pages/notice period/NoticePeriod";
 import LetterManagementDashboard from "./pages/Letter Management/LetterManagementDashboard";
 import LetterGenerator from "./pages/Letter Management/LetterGenerator";
 import LetterManagement from "./pages/Letter Management";
@@ -18,9 +18,9 @@ import MasterDashboard from "./pages/Master/MasterDashboard";
 import EmployeeMaster from "./pages/Master/Employee Master/EmployeeMaster";
 import AddEmployee from "./pages/Master/Employee Master/AddEmployee";
 import AllScreens from "./pages/All Screens Overview/AllScreens";
-import GradeDesignationMaster from "./pages/Master/Grade&Designation Master/GradeDesignationMaster";
+import GradeDesignationMaster from "./pages/Master/Grade&Designation Master/gradeDesignationMaster";
 import GradeDesignationSlabList from "./pages/Master/GradeDesignationSlabSalary/GradeDesignationSlabList";
-import GradeDesignationSlabSalary from "./pages/Master/GradeDesignationSlabSalary/GradeDesignationSlabSalary";
+import GradeDesignationSlabSalary from "./pages/Master/GradeDesignationSlabSalary/gradeDesignationSlabSalary";
 
 function ThemeController() {
   const location = useLocation()

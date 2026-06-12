@@ -149,13 +149,13 @@ export default function LetterGenerator() {
             header: 'Actions',
             cell: ({ row }) => (
                 <div className="flex items-center gap-2">
-                    <Button variant="ghost" size="sm" onClick={() => handleEdit(row.original)} className="h-8 px-2" title="Edit Template">
+                    <Button variant="ghost" size="sm" onClick={() => handleEdit(row.original)} className="h-8 px-2 text-yellow-600 hover:text-yellow-600" title="Edit Template">
                         <Edit2 size={16} />
                     </Button>
                     <Button variant="ghost" size="sm" onClick={() => handleGenerateClick(row.original)} className="h-8 px-2" title="Generate Letter">
                         <FileText size={16} />
                     </Button>
-                    <Button variant="ghost" size="sm" onClick={() => handleDelete(row.original.id)} className="h-8 px-2 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/50" title="Delete Template">
+                    <Button variant="ghost" size="sm" onClick={() => handleDelete(row.original.id)} className="h-8 px-2 text-red-700 hover:text-red-700" title="Delete Template">
                         <Trash2 size={16} />
                     </Button>
                 </div>

@@ -144,7 +144,7 @@ export default function NoticePeriod() {
                     <Button
                         variant="ghost"
                         size="icon"
-                        className="h-8 w-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                        className="h-8 w-8 text-yellow-600 hover:text-yellow-600"
                         onClick={() => {
                             setSelectedRecord(row.original);
                             setDialogOpen(true);

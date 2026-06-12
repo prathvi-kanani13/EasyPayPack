@@ -49,7 +49,7 @@ const NodeControls = ({ nodeId }: { nodeId: string }) => {
             </div>
             <button
                 onClick={(e) => { e.stopPropagation(); deleteNode(nodeId); }}
-                className="px-2 py-1.5 hover:bg-red-500 transition-colors"
+                className="px-2 py-1.5 text-red-700 hover:text-red-700 transition-colors"
                 title="Delete"
             >
                 <Trash2 size={14} />

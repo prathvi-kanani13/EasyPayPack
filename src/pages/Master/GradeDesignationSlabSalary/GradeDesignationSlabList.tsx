@@ -178,7 +178,7 @@ export default function GradeDesignationSlabList() {
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="h-7 w-7 text-slate-400 hover:text-theme hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md cursor-pointer"
+                            className="h-7 w-7 text-yellow-600 hover:text-yellow-600 rounded-md cursor-pointer"
                             onClick={() => {
                                 setSelectedRecord(row.original);
                                 setDialogOpen(true);

@@ -91,7 +91,7 @@ export default function SidebarComponent() {
   const sidebarItems: TSidebarItems[] = [
     { label: "EasyPayPack", icon: Home, href: "/screens" },
     { label: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
-    { label: "Master", icon: Database, href: "/master" },
+    { label: "Master", icon: Database, href: "/master", subRoutes: ['/employee/master', '/employee/add', '/grade-designation/master', '/grade-designation/slab-list'] },
     { label: "Transaction", icon: ArrowRightLeft, href: "/transaction" },
     { label: "Report", icon: BarChart3, href: "/report" },
     { label: "Other", icon: MoreHorizontal, href: "/other" },
@@ -105,7 +105,7 @@ export default function SidebarComponent() {
     { label: "Conveyance", icon: MapPin, href: "/conveyance" },
     { label: "Probation Management", icon: Clock, href: "/probation-management" },
     { label: "Resignation / Notice Period", icon: LogOut, href: "/notice-period/resignation" },
-    { label: "Letter Management", icon: Mail, href: "/letter-management" },
+    { label: "Letter Management", icon: Mail, href: "/letter-management", subRoutes: ['/letter/generate', '/letter/editor', '/signature/add', '/signature/list'] },
   ];
 
   const renderSidebarItems = () => {

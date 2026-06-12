@@ -301,7 +301,7 @@ export function FamilyDetailsDialog({ open, onOpenChange, members, onSave }: Fam
                                 onClick={() => toggleEdit(row.original.id)}
                                 className={`h-8 w-8 rounded-lg border transition-all ${isEditing
                                     ? "border-green-200 bg-green-50 text-green-600 hover:bg-green-100 dark:border-green-900 dark:bg-green-950/30 dark:text-green-400"
-                                    : "border-[#EAE6F3] text-theme hover:bg-theme/5 hover:text-theme dark:border-zinc-800 dark:text-purple-400"
+                                    : "text-yellow-600 hover:text-yellow-600"
                                     }`}
                             >
                                 {isEditing ? <Check className="h-4 w-4" /> : <Pencil className="h-4 w-4" />}
@@ -311,7 +311,7 @@ export function FamilyDetailsDialog({ open, onOpenChange, members, onSave }: Fam
                                 variant="outline"
                                 size="icon"
                                 onClick={() => deleteMember(row.original.id)}
-                                className="h-8 w-8 rounded-lg border border-red-100 text-red-500 hover:bg-red-50 hover:text-red-600 dark:border-red-950 dark:text-red-400 dark:hover:bg-red-950/30 transition-all"
+                                className="h-8 w-8 rounded-lg text-red-700 hover:text-red-700 transition-all"
                             >
                                 <Trash2 className="h-4 w-4" />
                             </Button>

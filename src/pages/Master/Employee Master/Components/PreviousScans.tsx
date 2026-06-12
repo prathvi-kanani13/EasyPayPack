@@ -168,21 +168,21 @@ export default function PreviousScans() {
 
           if (type === 'signature' && src) {
             return (
-              <div className="w-[80px] h-[48px] border dark:border-gray-800 rounded bg-white dark:bg-zinc-900 flex items-center justify-center p-1 overflow-hidden">
+              <div className="w-20 h-12 border dark:border-gray-800 rounded bg-white dark:bg-zinc-900 flex items-center justify-center p-1 overflow-hidden">
                 <img src={src} alt="Signature preview" className="max-w-full max-h-full object-contain" />
               </div>
             );
           }
           if (type === 'photo' && src) {
             return (
-              <div className="w-[48px] h-[48px] border dark:border-gray-800 rounded-full bg-white dark:bg-zinc-900 flex items-center justify-center overflow-hidden">
+              <div className="w-12 h-12 border dark:border-gray-800 rounded-full bg-white dark:bg-zinc-900 flex items-center justify-center overflow-hidden">
                 <img src={src} alt="Photo preview" className="w-full h-full object-cover" />
               </div>
             );
           }
           // Document PDF block representation
           return (
-            <div className="w-[48px] h-[52px] border dark:border-gray-800 rounded bg-gray-50 dark:bg-zinc-900 flex items-center justify-center relative shadow-xs">
+            <div className="w-12 h-13 border dark:border-gray-800 rounded bg-gray-50 dark:bg-zinc-900 flex items-center justify-center relative shadow-xs">
               <div className="bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow-sm">
                 PDF
               </div>
@@ -240,7 +240,7 @@ export default function PreviousScans() {
               variant="outline"
               size="icon"
               disabled
-              className="h-8 w-8 text-theme border-[#EAE6F3] dark:border-zinc-800 opacity-50 cursor-not-allowed"
+              className="h-8 w-8 text-yellow-600 hover:text-yellow-600 cursor-not-allowed"
               title="Edit (Disabled)"
             >
               <Pencil className="h-4 w-4" />
@@ -258,7 +258,7 @@ export default function PreviousScans() {
               variant="outline"
               size="icon"
               disabled
-              className="h-8 w-8 text-red-500 border-red-100 dark:border-red-950 opacity-50 cursor-not-allowed"
+              className="h-8 w-8 text-red-700 hover:text-red-700 opacity-50 cursor-not-allowed"
               title="Delete (Disabled)"
             >
               <Trash2 className="h-4 w-4" />
@@ -331,10 +331,10 @@ export default function PreviousScans() {
           </DialogHeader>
 
           {/* Dialog attachment content view */}
-          <div className="flex flex-col items-center justify-center p-4 border dark:border-gray-800 rounded bg-muted/20 min-h-[200px]">
+          <div className="flex flex-col items-center justify-center p-4 border dark:border-gray-800 rounded bg-muted/20 min-h-50">
             {selectedScan?.previewType === 'signature' && selectedScan.previewData && (
               <div className="bg-white dark:bg-zinc-900 border dark:border-gray-800 rounded p-4 flex items-center justify-center max-w-full shadow-xs">
-                <img src={selectedScan.previewData} alt="Signature full-view" className="max-h-[160px] object-contain" />
+                <img src={selectedScan.previewData} alt="Signature full-view" className="max-h-40 object-contain" />
               </div>
             )}
             {selectedScan?.previewType === 'photo' && selectedScan.previewData && (

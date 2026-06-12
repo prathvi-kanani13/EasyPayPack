@@ -362,7 +362,7 @@ export default function GradeDesignationMaster() {
                             size="icon-sm"
                             variant="ghost"
                             onClick={() => handleEdit(row.original)}
-                            className="h-8 w-8 text-slate-400 hover:text-theme hover:bg-violet-50 dark:hover:bg-slate-800 rounded-md"
+                            className="h-8 w-8 text-yellow-600 hover:text-yellow-600 rounded-md"
                         >
                             <Edit2 className="w-3.5 h-3.5" />
                         </Button>
@@ -370,7 +370,7 @@ export default function GradeDesignationMaster() {
                             size="icon-sm"
                             variant="ghost"
                             onClick={() => confirmDelete(row.original.id)}
-                            className="h-8 w-8 text-slate-400 hover:text-destructive hover:bg-red-50 dark:hover:bg-red-950/20 rounded-md"
+                            className="h-8 w-8 text-red-700 hover:text-red-700 rounded-md"
                         >
                             <Trash2 className="w-3.5 h-3.5" />
                         </Button>
@@ -408,18 +408,6 @@ export default function GradeDesignationMaster() {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2 md:self-end">
-                    <Button variant="outline" size="sm" className="h-9 px-4 text-slate-600 dark:text-slate-300 gap-1.5 border-slate-200 dark:border-gray-700">
-                        <SlidersHorizontal className="w-3.5 h-3.5" />
-                        Filters
-                        <span className="text-[10px] text-slate-400">▼</span>
-                    </Button>
-
-                    <Button variant="outline" size="sm" className="h-9 px-4 text-slate-600 dark:text-slate-300 gap-1.5 border-slate-200 dark:border-gray-700">
-                        <Upload className="w-3.5 h-3.5" />
-                        Import
-                        <span className="text-[10px] text-slate-400">▼</span>
-                    </Button>
-
                     <Button onClick={handleAddNew} size="sm" className="h-9 px-4 bg-theme hover:bg-theme/90 text-white gap-1.5 rounded-lg shadow-sm">
                         <Plus className="w-4 h-4" />
                         Add New
@@ -604,7 +592,7 @@ export default function GradeDesignationMaster() {
                                                 size="icon-sm"
                                                 variant="ghost"
                                                 onClick={() => handleEdit(item)}
-                                                className="h-7 w-7 text-slate-400 hover:text-theme hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md"
+                                                className="h-7 w-7 text-yellow-600 hover:text-yellow-600 rounded-md"
                                             >
                                                 <Edit2 className="w-3.5 h-3.5" />
                                             </Button>
@@ -612,7 +600,7 @@ export default function GradeDesignationMaster() {
                                                 size="icon-sm"
                                                 variant="ghost"
                                                 onClick={() => confirmDelete(item.id)}
-                                                className="h-7 w-7 text-slate-400 hover:text-destructive hover:bg-red-50 dark:hover:bg-red-950/20 rounded-md"
+                                                className="h-7 w-7 text-red-700 hover:text-red-700 rounded-md"
                                             >
                                                 <Trash2 className="w-3.5 h-3.5" />
                                             </Button>

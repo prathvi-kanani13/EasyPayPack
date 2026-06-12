@@ -232,7 +232,7 @@ export default function GradeDesignationSlabSalary() {
                                 size="icon"
                                 variant="ghost"
                                 onClick={() => handleDeleteRow(row.original.id, row.original.year)}
-                                className="h-7 w-7 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-md cursor-pointer"
+                                className="h-7 w-7 text-red-700 hover:text-red-700 rounded-md cursor-pointer"
                             >
                                 <Trash2 className="w-3.5 h-3.5" />
                             </Button>

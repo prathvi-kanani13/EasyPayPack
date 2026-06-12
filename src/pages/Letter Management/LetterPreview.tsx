@@ -104,7 +104,7 @@ export default function LetterPreview() {
                         className="gap-2"
                         onClick={handleEdit}
                     >
-                        <Pen className="w-4 h-4" /> Edit Template
+                        <Pen className="w-4 h-4 text-yellow-600" /> Edit Template
                     </Button>
                     <Button
                         className="bg-theme hover:bg-[#d9561c] text-white gap-2"

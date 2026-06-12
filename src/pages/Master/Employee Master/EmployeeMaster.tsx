@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/incompatible-library */
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
@@ -9,8 +10,13 @@ import { DatePickerInput } from "@/components/DatePickerInput";
 import { DataTable } from "@/components/DataTable";
 import Pagination from "@/components/Pagination";
 import { getCoreRowModel, getPaginationRowModel, useReactTable, type ColumnDef } from "@tanstack/react-table";
-import { ArrowLeft, Eye, FileText, Search, X, MoreVertical } from "lucide-react";
+import { ArrowLeft, Eye, FileText, Search, X, MoreVertical, Edit } from "lucide-react";
 import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { useLayoutWidth } from "@/layout/Layout";
+import { useAlert } from "@/context/AlertContext";
+import EmployeeCard from "./Components/EmployeeCard";
+
 
 interface Employee {
     id: string;
@@ -120,6 +126,14 @@ const employeeData: Employee[] = [
 
 export default function EmployeeMaster() {
     const navigate = useNavigate();
+    const { showAlert } = useAlert();
+    const width = useLayoutWidth();
+    const isMobile = width <= 768;
+
+    const [employees, setEmployees] = useState<Employee[]>(employeeData);
+    const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
     const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] = useState("");
     const [departmentFilter, setDepartmentFilter] = useState("");
@@ -136,7 +150,7 @@ export default function EmployeeMaster() {
     const [pageSize, setPageSize] = useState(10);
 
     const filteredData = useMemo(() => {
-        return employeeData.filter((item) => {
+        return employees.filter((item) => {
             const searchTerm = search.trim().toLowerCase();
             const matchesSearch =
                 !searchTerm ||
@@ -244,22 +258,34 @@ export default function EmployeeMaster() {
             {
                 accessorKey: "status",
                 header: "STATUS",
-                cell: ({ row }) => (
-                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                        {row.getValue("status")}
-                    </Badge>
-                ),
+                cell: ({ row }) => {
+                    const status = row.original.status;
+                    return (
+                        <Badge className={`${status === "Active"
+                            ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                            : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+                            }`}>
+                            {status}
+                        </Badge>
+                    );
+                },
             },
             {
                 id: "actions",
                 header: "ACTIONS",
-                cell: () => (
+                cell: ({ row }) => (
                     <div className="flex items-center">
-                        <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 p-0 text-slate-400 hover:text-theme"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedEmployee(row.original);
+                                setIsSidebarOpen(true);
+                            }}
+                        >
                             <Eye size={16} />
-                        </Button>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
-                            <MoreVertical size={16} />
                         </Button>
                     </div>
                 ),
@@ -320,6 +346,18 @@ export default function EmployeeMaster() {
         setWorkStatusFilter("");
     };
 
+    const handleUpdateEmployee = (updatedEmployee: Employee) => {
+        setEmployees((prev) =>
+            prev.map((emp) => (emp.id === updatedEmployee.id ? updatedEmployee : emp))
+        );
+        showAlert({
+            title: "Success",
+            description: "Employee details updated successfully.",
+            variant: "success",
+        });
+        setIsSidebarOpen(false);
+    };
+
     return (
         <div className="flex flex-col gap-4">
             <div className="flex items-center flex-wrap gap-4">
@@ -350,242 +388,268 @@ export default function EmployeeMaster() {
                 </div>
             </div>
 
-            <Card className="p-4 rounded-sm shadow-sm bg-white dark:bg-background border dark:border-gray-700">
-                <div className="flex flex-col gap-4">
+            <div className="flex flex-col lg:flex-row gap-4">
+                {/* Main Content Area */}
+                <div className={`flex-1 flex flex-col gap-4 transition-all duration-300 ${isSidebarOpen ? "lg:w-2/3" : "w-full"}`}>
+                    <Card className="p-4 rounded-sm shadow-sm bg-white dark:bg-background border dark:border-gray-700 gap-4">
+                        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
 
-                    <div className="grid grid-cols-1 md:grid-cols-5 gap-4 md:gap-8">
-                        <div>
-                            <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">
-                                Status
-                            </Label>
-                            <Select value={statusFilter} onValueChange={setStatusFilter}>
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select Status" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="All">All</SelectItem>
-                                    <SelectItem value="Active">Active</SelectItem>
-                                    <SelectItem value="Inactive">Inactive</SelectItem>
-                                </SelectContent>
-                            </Select>
+                            <div>
+                                <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">
+                                    Status
+                                </Label>
+                                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Select Status" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="All">All</SelectItem>
+                                        <SelectItem value="Active">Active</SelectItem>
+                                        <SelectItem value="Inactive">Inactive</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div>
+                                <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">
+                                    Department
+                                </Label>
+                                <Select value={departmentFilter} onValueChange={setDepartmentFilter}>
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Select Department" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="All">All</SelectItem>
+                                        <SelectItem value="Engineering">Engineering</SelectItem>
+                                        <SelectItem value="Human Resources">Human Resources</SelectItem>
+                                        <SelectItem value="Analytics">Analytics</SelectItem>
+                                        <SelectItem value="Design">Design</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div>
+                                <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">
+                                    Designation
+                                </Label>
+                                <Select value={designationFilter} onValueChange={setDesignationFilter}>
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Select Designation" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="All">All</SelectItem>
+                                        <SelectItem value="Senior Software Engineer">Senior Software Engineer</SelectItem>
+                                        <SelectItem value="HR Executive">HR Executive</SelectItem>
+                                        <SelectItem value="Data Analyst">Data Analyst</SelectItem>
+                                        <SelectItem value="UI/UX Designer">UI/UX Designer</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div>
+                                <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">
+                                    Location
+                                </Label>
+                                <Select value={locationFilter} onValueChange={setLocationFilter}>
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Select Location" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="All">All</SelectItem>
+                                        <SelectItem value="Noida">Noida</SelectItem>
+                                        <SelectItem value="Delhi">Delhi</SelectItem>
+                                        <SelectItem value="Bangalore">Bangalore</SelectItem>
+                                        <SelectItem value="Pune">Pune</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div>
+                                <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">
+                                    Employee Type
+                                </Label>
+                                <Select value={employeeTypeFilter} onValueChange={setEmployeeTypeFilter}>
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Select Employee Type" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="All">All</SelectItem>
+                                        <SelectItem value="Full Time">Full Time</SelectItem>
+                                        <SelectItem value="Part Time">Part Time</SelectItem>
+                                        <SelectItem value="Contract">Contract</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
+                            <div>
+                                <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">
+                                    Date of Joining
+                                </Label>
+                                <DatePickerInput
+                                    value={fromDate}
+                                    onChange={setFromDate}
+                                    placeholder="Select Date"
+                                    className="w-full"
+                                />
+                            </div>
+                            <div>
+                                <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">
+                                    Reporting Manager
+                                </Label>
+                                <Select value={reportingManagerFilter} onValueChange={setReportingManagerFilter}>
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Select Reporting Manager" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="All">All</SelectItem>
+                                        <SelectItem value="John Doe">John Doe</SelectItem>
+                                        <SelectItem value="Sarah Smith">Sarah Smith</SelectItem>
+                                        <SelectItem value="Mike Johnson">Mike Johnson</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div>
+                                <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">
+                                    Gender
+                                </Label>
+                                <Select value={genderFilter} onValueChange={setGenderFilter}>
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Select Gender" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="All">All</SelectItem>
+                                        <SelectItem value="Male">Male</SelectItem>
+                                        <SelectItem value="Female">Female</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div>
+                                <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">
+                                    Blood Group
+                                </Label>
+                                <Select value={bloodGroupFilter} onValueChange={setBloodGroupFilter}>
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Select Blood Group" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="All">All</SelectItem>
+                                        <SelectItem value="A+">A+</SelectItem>
+                                        <SelectItem value="A-">A-</SelectItem>
+                                        <SelectItem value="B+">B+</SelectItem>
+                                        <SelectItem value="O+">O+</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div>
+                                <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">
+                                    Work Status
+                                </Label>
+                                <Select value={workStatusFilter} onValueChange={setWorkStatusFilter}>
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Select Work Status" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="All">All</SelectItem>
+                                        <SelectItem value="Active">Active</SelectItem>
+                                        <SelectItem value="Inactive">Inactive</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
                         </div>
 
-                        <div>
-                            <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">
-                                Department
-                            </Label>
-                            <Select value={departmentFilter} onValueChange={setDepartmentFilter}>
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select Department" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="All">All</SelectItem>
-                                    <SelectItem value="Engineering">Engineering</SelectItem>
-                                    <SelectItem value="Human Resources">Human Resources</SelectItem>
-                                    <SelectItem value="Analytics">Analytics</SelectItem>
-                                    <SelectItem value="Design">Design</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div>
-                            <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">
-                                Designation
-                            </Label>
-                            <Select value={designationFilter} onValueChange={setDesignationFilter}>
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select Designation" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="All">All</SelectItem>
-                                    <SelectItem value="Senior Software Engineer">Senior Software Engineer</SelectItem>
-                                    <SelectItem value="HR Executive">HR Executive</SelectItem>
-                                    <SelectItem value="Data Analyst">Data Analyst</SelectItem>
-                                    <SelectItem value="UI/UX Designer">UI/UX Designer</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div>
-                            <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">
-                                Location
-                            </Label>
-                            <Select value={locationFilter} onValueChange={setLocationFilter}>
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select Location" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="All">All</SelectItem>
-                                    <SelectItem value="Noida">Noida</SelectItem>
-                                    <SelectItem value="Delhi">Delhi</SelectItem>
-                                    <SelectItem value="Bangalore">Bangalore</SelectItem>
-                                    <SelectItem value="Pune">Pune</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div>
-                            <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">
-                                Employee Type
-                            </Label>
-                            <Select value={employeeTypeFilter} onValueChange={setEmployeeTypeFilter}>
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select Employee Type" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="All">All</SelectItem>
-                                    <SelectItem value="Full Time">Full Time</SelectItem>
-                                    <SelectItem value="Part Time">Part Time</SelectItem>
-                                    <SelectItem value="Contract">Contract</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-5 gap-4 md:gap-8">
-                        <div>
-                            <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">
-                                Date of Joining
-                            </Label>
-                            <DatePickerInput
-                                value={fromDate}
-                                onChange={setFromDate}
-                                placeholder="Select Date"
-                                className="w-full"
-                            />
-                        </div>
-
-                        <div>
-                            <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">
-                                Reporting Manager
-                            </Label>
-                            <Select value={reportingManagerFilter} onValueChange={setReportingManagerFilter}>
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select Reporting Manager" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="All">All</SelectItem>
-                                    <SelectItem value="John Doe">John Doe</SelectItem>
-                                    <SelectItem value="Sarah Smith">Sarah Smith</SelectItem>
-                                    <SelectItem value="Mike Johnson">Mike Johnson</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div>
-                            <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">
-                                Gender
-                            </Label>
-                            <Select value={genderFilter} onValueChange={setGenderFilter}>
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select Gender" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="All">All</SelectItem>
-                                    <SelectItem value="Male">Male</SelectItem>
-                                    <SelectItem value="Female">Female</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div>
-                            <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">
-                                Blood Group
-                            </Label>
-                            <Select value={bloodGroupFilter} onValueChange={setBloodGroupFilter}>
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select Blood Group" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="All">All</SelectItem>
-                                    <SelectItem value="A+">A+</SelectItem>
-                                    <SelectItem value="A-">A-</SelectItem>
-                                    <SelectItem value="B+">B+</SelectItem>
-                                    <SelectItem value="O+">O+</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div>
-                            <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">
-                                Work Status
-                            </Label>
-                            <Select value={workStatusFilter} onValueChange={setWorkStatusFilter}>
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select Work Status" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="All">All</SelectItem>
-                                    <SelectItem value="Active">Active</SelectItem>
-                                    <SelectItem value="Inactive">Inactive</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                    </div>
-
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                        <div className="relative max-w-xl w-full">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4.5 h-4.5" />
-                            <Input
-                                placeholder="Search by Employee Code, Name, Email, Mobile..."
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                                className="pl-10 pr-10 w-full"
-                            />
-                            {search && (
-                                <button
-                                    type="button"
-                                    onClick={() => setSearch("")}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                                >
-                                    <X size={16} />
-                                </button>
-                            )}
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <Button className="gap-2 bg-theme text-white dark:bg-theme dark:text-white">
-                                Filters
-                            </Button>
-                            {hasActiveFilters && (
-                                <Button onClick={clearAll} variant="outline" className="gap-2">
-                                    Clear
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                            <div className="relative max-w-xl w-full">
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4.5 h-4.5" />
+                                <Input
+                                    placeholder="Search by Employee Code, Name, Email, Mobile..."
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    className="pl-10 pr-10 w-full"
+                                />
+                                {search && (
+                                    <button
+                                        type="button"
+                                        onClick={() => setSearch("")}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                    >
+                                        <X size={16} />
+                                    </button>
+                                )}
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Button className="gap-2 bg-theme text-white dark:bg-theme dark:text-white">
+                                    Filters
                                 </Button>
-                            )}
+                                {hasActiveFilters && (
+                                    <Button onClick={clearAll} variant="outline" className="gap-2">
+                                        Clear
+                                    </Button>
+                                )}
+                            </div>
                         </div>
-                    </div>
+                    </Card>
+
+                    <Card className="p-4 rounded-sm shadow-sm bg-white dark:bg-background border dark:border-gray-700">
+                        <div className="flex flex-col gap-4">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                                <div className="text-sm text-gray-600 dark:text-gray-400">
+                                    Total Employees: <span className="font-semibold text-theme">{filteredData.length}</span>
+                                </div>
+                                <div className="flex flex-1 items-center gap-2 justify-end">
+                                    <div className="text-sm text-gray-600">Row Per Page</div>
+                                    <Select onValueChange={(val) => table.setPageSize(Number(val))} defaultValue="5">
+                                        <SelectTrigger className="w-20">
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="5">5</SelectItem>
+                                            <SelectItem value="10">10</SelectItem>
+                                            <SelectItem value="20">20</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            </div>
+
+                            <DataTable
+                                table={table}
+                                isLoading={false}
+                                isError={false}
+                                columnCount={columns.length}
+                                errorMessage="No Data Found"
+                            />
+
+                            <Pagination
+                                pageIndex={pageIndex}
+                                setPageIndex={setPageIndex}
+                                isNextDisabled={!table.getCanNextPage()}
+                            />
+                        </div>
+                    </Card>
                 </div>
-            </Card>
 
-            <Card className="p-4 rounded-sm shadow-sm bg-white dark:bg-background border dark:border-gray-700">
-                <div className="flex flex-col gap-4">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                        <div className="text-sm text-gray-600 dark:text-gray-400">
-                            Total Employees: <span className="font-semibold text-theme">{filteredData.length}</span>
+                {/* Details Sidebar */}
+                {isSidebarOpen && selectedEmployee && (isMobile ?
+                    (
+                        <Dialog open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
+                            <DialogContent className="max-h-[90vh] overflow-auto p-0 gap-0">
+                                <EmployeeCard
+                                    selectedEmployee={selectedEmployee}
+                                    setIsSidebarOpen={setIsSidebarOpen}
+                                    onUpdate={handleUpdateEmployee}
+                                    isMobile={isMobile}
+                                />
+                            </DialogContent>
+                        </Dialog>
+                    ) :
+                    (
+                        <div className="w-full lg:w-100 animate-in slide-in-from-right duration-300 mb-2">
+                            <Card className="dark:bg-background rounded-lg border dark:border-gray-700 shadow-sm h-full flex flex-col">
+                                <EmployeeCard
+                                    selectedEmployee={selectedEmployee}
+                                    setIsSidebarOpen={setIsSidebarOpen}
+                                    onUpdate={handleUpdateEmployee}
+                                />
+                            </Card>
                         </div>
-                        <div className="flex flex-1 items-center gap-2 justify-end">
-                            <div className="text-sm text-gray-600">Row Per Page</div>
-                            <Select onValueChange={(val) => table.setPageSize(Number(val))} defaultValue="5">
-                                <SelectTrigger className="w-20">
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="5">5</SelectItem>
-                                    <SelectItem value="10">10</SelectItem>
-                                    <SelectItem value="20">20</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                    </div>
-
-                    <DataTable
-                        table={table}
-                        isLoading={false}
-                        isError={false}
-                        columnCount={columns.length}
-                        errorMessage="No Data Found"
-                    />
-
-                    <Pagination
-                        pageIndex={0}
-                        setPageIndex={() => { }}
-                        isNextDisabled={false}
-                    />
-                </div>
-            </Card>
+                    )
+                )}
+            </div>
         </div>
     );
 }

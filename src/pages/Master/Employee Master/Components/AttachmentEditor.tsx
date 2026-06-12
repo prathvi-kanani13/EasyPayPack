@@ -1,16 +1,12 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import React, { useState, useEffect, useRef } from 'react';
-import { ZoomIn, ZoomOut, RotateCcw, Crop, Maximize, Scan, Upload } from 'lucide-react';
+import { ZoomIn, ZoomOut, RotateCcw, Crop, Maximize, Scan, Upload, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-
-type TTabValues = 'signature' | 'photo' | 'document';
-
 interface AttachmentEditorProps {
-  type: TTabValues;
   onChange?: (dataUrl: string) => void;
 }
 
@@ -180,6 +176,8 @@ function ImagePreviewSection({
   dimensions,
   fileSize,
   confirmCrop,
+  attachmentType,
+  fileName,
 }: {
   imageSrc: string;
   zoom: number;
@@ -196,6 +194,8 @@ function ImagePreviewSection({
   dimensions: { w: number; h: number };
   fileSize: number;
   confirmCrop: () => void;
+  attachmentType: 'signature' | 'photo' | 'document';
+  fileName: string;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [displaySize, setDisplaySize] = useState({ w: 0, h: 0 });
@@ -336,7 +336,17 @@ function ImagePreviewSection({
             transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
           }}
         >
-          {imageSrc && (
+          {attachmentType === 'document' ? (
+            <div className="flex flex-col items-center gap-3 text-muted-foreground p-6 bg-slate-50 dark:bg-zinc-900 border dark:border-gray-800 rounded-lg shadow-sm max-w-[80%] select-none">
+              <FileText className="h-16 w-16 text-theme" />
+              <div className="text-sm font-semibold text-center truncate max-w-[220px]">
+                {fileName || "No Document Uploaded"}
+              </div>
+              <div className="text-xs text-muted-foreground">
+                Document File
+              </div>
+            </div>
+          ) : imageSrc ? (
             <img
               ref={imgRef}
               src={imageSrc}
@@ -350,7 +360,7 @@ function ImagePreviewSection({
                 filter: colorMode === 'grayscale' ? 'grayscale(100%)' : 'none',
               }}
             />
-          )}
+          ) : null}
         </div>
 
         {/* Cropping bounding box overlay */}
@@ -441,6 +451,8 @@ function EditorControlsPanel({
   fileType,
   setFileType,
   onImportClick,
+  attachmentType,
+  setAttachmentType,
 }: {
   quality: number;
   setQuality: (value: number) => void;
@@ -451,11 +463,29 @@ function EditorControlsPanel({
   fileType: string;
   setFileType: (value: string) => void;
   onImportClick: () => void;
+  attachmentType: 'signature' | 'photo' | 'document';
+  setAttachmentType: (value: 'signature' | 'photo' | 'document') => void;
 }) {
+  const isDocument = attachmentType === 'document';
   return (
     <div className="flex flex-col gap-4 w-full" id="editor-controls-panel">
+      {/* attachment type */}
+      <div className="flex items-center justify-between gap-4">
+        <Label htmlFor="attachment-type-select" className="text-sm font-medium">Attachment Type</Label>
+        <Select value={attachmentType} onValueChange={(val) => setAttachmentType(val as 'signature' | 'photo' | 'document')}>
+          <SelectTrigger id="attachment-type-select" className="w-[180px] cursor-pointer">
+            <SelectValue placeholder="Select Type" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="signature">Signature</SelectItem>
+            <SelectItem value="photo">Photo</SelectItem>
+            <SelectItem value="document">Document</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
       {/* Quality Adjustment Slider */}
-      <div className="flex flex-col gap-2">
+      <div className={`flex flex-col gap-2 ${isDocument ? 'opacity-40 pointer-events-none' : ''}`}>
         <div className="flex justify-between items-center text-sm font-medium">
           <Label htmlFor="quality-slider">Quality</Label>
           <div className="border dark:border-gray-800 rounded px-2.5 py-0.5 text-xs text-muted-foreground min-w-[32px] text-center">
@@ -474,7 +504,7 @@ function EditorControlsPanel({
       </div>
 
       {/* DPI Select Option */}
-      <div className="flex items-center justify-between gap-4">
+      <div className={`flex items-center justify-between gap-4 ${isDocument ? 'opacity-40 pointer-events-none' : ''}`}>
         <Label htmlFor="dpi-select" className="text-sm font-medium">DPI</Label>
         <Select value={dpi} onValueChange={setDpi}>
           <SelectTrigger id="dpi-select" className="w-[180px] cursor-pointer">
@@ -493,7 +523,7 @@ function EditorControlsPanel({
       </div>
 
       {/* Color Mode Radio Toggles */}
-      <div className="flex flex-col gap-2">
+      <div className={`flex flex-col gap-2 ${isDocument ? 'opacity-40 pointer-events-none' : ''}`}>
         <Label className="text-sm font-medium">Color Mode</Label>
         <RadioGroup
           value={colorMode}
@@ -512,7 +542,7 @@ function EditorControlsPanel({
       </div>
 
       {/* File Type Dropdown Select */}
-      <div className="flex items-center justify-between gap-4">
+      <div className={`flex items-center justify-between gap-4 ${isDocument ? 'opacity-40 pointer-events-none' : ''}`}>
         <Label htmlFor="filetype-select" className="text-sm font-medium">File Type</Label>
         <Select value={fileType} onValueChange={setFileType}>
           <SelectTrigger id="filetype-select" className="w-[180px] cursor-pointer">
@@ -553,6 +583,11 @@ function EditorControlsPanel({
  * Main AttachmentEditor component that coordinates layouts and states
  */
 export default function AttachmentEditor({ onChange }: AttachmentEditorProps) {
+  // Attachment type state
+  type TTabValues = 'signature' | 'photo' | 'document';
+  const [attachmentType, setAttachmentType] = useState<TTabValues>('signature');
+  const [fileName, setFileName] = useState<string>('');
+
   // Original untouched image data URL
   const [originalImageSrc, setOriginalImageSrc] = useState<string>('');
   // Current edited image data URL
@@ -582,12 +617,24 @@ export default function AttachmentEditor({ onChange }: AttachmentEditorProps) {
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [dragStart, setDragStart] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
-  // Load initial mock signature when component mounts
+  // Load initial mock signature or reset when switching types
   useEffect(() => {
-    const mockSig = generateMockSignature();
-    setOriginalImageSrc(mockSig);
-    setCurrentImageSrc(mockSig);
-  }, []);
+    if (attachmentType === 'signature') {
+      const mockSig = generateMockSignature();
+      setOriginalImageSrc(mockSig);
+      setCurrentImageSrc(mockSig);
+      setFileName('mock_signature.png');
+    } else {
+      setOriginalImageSrc('');
+      setCurrentImageSrc('');
+      setFileName('');
+      setDimensions({ w: 0, h: 0 });
+      setFileSize(0);
+    }
+    setZoom(1);
+    setPan({ x: 0, y: 0 });
+    setIsCropping(false);
+  }, [attachmentType]);
 
   // Recalculate estimated file size and dimensions when editor attributes change
   useEffect(() => {
@@ -731,6 +778,8 @@ export default function AttachmentEditor({ onChange }: AttachmentEditorProps) {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      setFileName(file.name);
+      setFileSize(file.size);
       const reader = new FileReader();
       reader.onload = (event) => {
         const dataUrl = event.target?.result as string;
@@ -744,6 +793,10 @@ export default function AttachmentEditor({ onChange }: AttachmentEditorProps) {
     }
   };
 
+  const fileAcceptType = (attachmentType === 'signature' || attachmentType === 'photo')
+    ? 'image/*'
+    : '.pdf,.doc,.docx,.xls,.xlsx,.txt';
+
   return (
     <div className="flex flex-col gap-4 w-full p-4 border dark:border-gray-800 rounded-md">
       {/* Hidden file input */}
@@ -751,19 +804,21 @@ export default function AttachmentEditor({ onChange }: AttachmentEditorProps) {
         type="file"
         ref={fileInputRef}
         onChange={handleFileChange}
-        accept="image/*"
+        accept={fileAcceptType}
         className="hidden"
       />
 
       {/* Zoom / Crop Top Bar Options */}
-      <ImageEditorToolbar
-        onZoomIn={handleZoomIn}
-        onZoomOut={handleZoomOut}
-        onResetChanges={handleResetChanges}
-        onToggleCrop={handleToggleCrop}
-        onResetZoom={handleResetZoom}
-        isCropping={isCropping}
-      />
+      {attachmentType !== 'document' && (
+        <ImageEditorToolbar
+          onZoomIn={handleZoomIn}
+          onZoomOut={handleZoomOut}
+          onResetChanges={handleResetChanges}
+          onToggleCrop={handleToggleCrop}
+          onResetZoom={handleResetZoom}
+          isCropping={isCropping}
+        />
+      )}
 
       {/* Grid split showing Preview on Left and Controls on Right */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -784,6 +839,8 @@ export default function AttachmentEditor({ onChange }: AttachmentEditorProps) {
           dimensions={dimensions}
           fileSize={fileSize}
           confirmCrop={handleConfirmCrop}
+          attachmentType={attachmentType}
+          fileName={fileName}
         />
 
         {/* Right Side: Custom Adjustments Controls Panel */}
@@ -797,6 +854,8 @@ export default function AttachmentEditor({ onChange }: AttachmentEditorProps) {
           fileType={fileType}
           setFileType={setFileType}
           onImportClick={handleImportClick}
+          attachmentType={attachmentType}
+          setAttachmentType={setAttachmentType}
         />
       </div>
     </div>
