@@ -21,6 +21,8 @@ import AllScreens from "./pages/All Screens Overview/AllScreens";
 import GradeDesignationMaster from "./pages/Master/Grade&Designation Master/gradeDesignationMaster";
 import GradeDesignationSlabList from "./pages/Master/GradeDesignationSlabSalary/GradeDesignationSlabList";
 import GradeDesignationSlabSalary from "./pages/Master/GradeDesignationSlabSalary/gradeDesignationSlabSalary";
+import SalaryHeadMaster from "./pages/Master/SalaryHeadMaster/SalaryHeadMaster";
+import SalaryHead from "./pages/Master/SalaryHeadMaster/SalaryHead";
 
 function ThemeController() {
   const location = useLocation()
@@ -87,6 +89,12 @@ function App() {
             <Route path="master" element={<GradeDesignationMaster />} />
             <Route path="slab-list" element={<GradeDesignationSlabList />} />
             <Route path="slab-salary" element={<GradeDesignationSlabSalary />} />
+          </Route>
+
+          <Route path="/salary-head">
+            <Route path="master" element={<SalaryHeadMaster />} />
+            <Route path="add" element={<SalaryHead />} />
+            <Route path="edit/:id" element={<SalaryHead />} />
           </Route>
         </Route>
 
