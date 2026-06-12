@@ -142,9 +142,9 @@ export default function SidebarComponent() {
                       content={item.label}
                       trigger={
                         <SidebarMenuButton
-                          className={`text-md font-medium text-white active:bg-black/20 active:text-white transition-all duration-200 ease-in-out cursor-pointer ${isActive
+                          className={`text-md font-medium text-white active:bg-black/20 active:text-white cursor-pointer ${isActive
                             ? "bg-white text-theme rounded-sm pointer-events-none active:bg-white active:text-theme my-1"
-                            : `my-0 ${(open || openMobile) ? '' : 'hover:my-1.5'} hover:bg-black/20 hover:text-white hover:rounded-sm`
+                            : `my-0 hover:bg-black/20 hover:text-white hover:rounded-sm`
                             }`}
                         >
                           <Link
@@ -220,7 +220,7 @@ export default function SidebarComponent() {
           {/* Top Shadow - shown when content is scrollable above */}
           <div className={`absolute top-0 left-0 right-0 h-10 z-20 pointer-events-none transition-opacity duration-300 ${showTopShadow ? 'opacity-100' : 'opacity-0'} bg-linear-to-b from-black/15 to-transparent`} />
 
-          <ScrollArea ref={scrollAreaRef} className={`h-full flex ${open || openMobile ? 'pr-3' : ''}`}>
+          <ScrollArea ref={scrollAreaRef} className={`h-full flex ${open || openMobile ? 'pr-3' : ''}`} showScrollbar={open || openMobile}>
             <div className={`flex flex-col ${open || openMobile ? 'gap-3' : 'gap-0'}`}>
               {renderSidebarItems()}
             </div>
