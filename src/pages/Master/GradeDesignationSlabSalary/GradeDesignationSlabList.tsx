@@ -70,13 +70,13 @@ export default function GradeDesignationSlabList() {
                 prev.map((row) =>
                     row.id === selectedRecord.id
                         ? {
-                              ...row,
-                              grade: formData.grade,
-                              designation: formData.designation,
-                              status: formData.status,
-                              effectiveDate: formData.effectiveDate || row.effectiveDate,
-                              totalSlabs: Number(formData.totalSlabs) || row.totalSlabs,
-                          }
+                            ...row,
+                            grade: formData.grade,
+                            designation: formData.designation,
+                            status: formData.status,
+                            effectiveDate: formData.effectiveDate || row.effectiveDate,
+                            totalSlabs: Number(formData.totalSlabs) || row.totalSlabs,
+                        }
                         : row
                 )
             );
@@ -169,23 +169,23 @@ export default function GradeDesignationSlabList() {
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                            className="h-7 w-7 text-slate-400 hover:text-theme hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md cursor-pointer"
                             onClick={() => navigate("/grade-designation/slab-salary", { state: { grade: row.original.grade, designation: row.original.designation, status: row.original.status, effectiveDate: row.original.effectiveDate, mode: "view" } })}
                             title="View Details"
                         >
-                            <Eye size={16} />
+                            <Eye className="w-3.5 h-3.5" />
                         </Button>
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                            className="h-7 w-7 text-slate-400 hover:text-theme hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md cursor-pointer"
                             onClick={() => {
                                 setSelectedRecord(row.original);
                                 setDialogOpen(true);
                             }}
                             title="Edit Master"
                         >
-                            <Edit2 size={16} />
+                            <Edit2 className="w-3.5 h-3.5" />
                         </Button>
                     </div>
                 )
@@ -233,14 +233,14 @@ export default function GradeDesignationSlabList() {
                     </div>
                 </div>
                 <div className="flex flex-1 justify-end gap-2 ml-2">
-                    <Button 
+                    <Button
                         className="px-4 py-2 rounded-sm text-white text-sm font-medium"
                         onClick={() => {
                             setSelectedRecord(null);
                             setDialogOpen(true);
                         }}
                     >
-                        <Plus size={16} className="mr-2" />Add New Slab
+                        <Plus className="w-3.5 h-3.5 mr-2" />Add New Slab
                     </Button>
                 </div>
             </div>

@@ -1,12 +1,10 @@
 import { useState, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Layers, Plus, Search, Trash2, Info, RefreshCw, ArrowLeft } from "lucide-react";
+import { Layers, Plus, Trash2, Info, ArrowLeft } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { DatePickerInput } from "@/components/DatePickerInput";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAlert } from "@/context/AlertContext";
 import { Separator } from "@/components/ui/separator";
 import { getCoreRowModel, useReactTable, type ColumnDef } from "@tanstack/react-table";
@@ -56,29 +54,6 @@ export default function GradeDesignationSlabSalary() {
 
     // List of slab rows (holding increments and other properties)
     const [slabs, setSlabs] = useState<SlabRow[]>(initialSlabs);
-
-    // Handle Retrieve
-    const handleRetrieve = () => {
-        setAppliedFilters({
-            effectiveDate,
-            grade,
-            designation,
-            status
-        });
-        showAlert({
-            title: "Success",
-            description: `Data successfully retrieved for Grade: ${grade}, Designation: ${designation}.`,
-            variant: "success"
-        });
-    };
-
-    // Handle Clear
-    const handleClear = () => {
-        setEffectiveDate("01-01-2026");
-        setGrade("Officer");
-        setDesignation("Software Developer");
-        setStatus("Active");
-    };
 
     // Update cell values
     const updateSlabCell = (id: string, field: keyof SlabRow, value: any) => {
@@ -134,26 +109,6 @@ export default function GradeDesignationSlabSalary() {
                 showAlert({
                     title: "Success",
                     description: "Slab row deleted successfully.",
-                    variant: "success"
-                });
-            }
-        });
-    };
-
-    // New Slab initialization
-    const handleNewSlab = () => {
-        showAlert({
-            title: "Confirm Reset",
-            description: "Are you sure you want to initialize a new slab? All current slab rows will be reset.",
-            variant: "warning",
-            confirmation: true,
-            buttonText: "Initialize"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                setSlabs([{ id: "s0", year: 0, increment: "0.00", basicSalary: "20,000.00", basicSalaryAfterIncrement: "20,000.00", efficiencyBar: false, stagnationCounter: "" }]);
-                showAlert({
-                    title: "Success",
-                    description: "New slab initialized.",
                     variant: "success"
                 });
             }
@@ -234,7 +189,7 @@ export default function GradeDesignationSlabSalary() {
                 header: () => <div className="text-center w-24 text-slate-500 font-bold uppercase tracking-wider text-xs">Efficiency Bar</div>,
                 cell: ({ row }) => {
                     return (
-                        <div className="flex items-center justify-center">
+                        <div className="flex items-center justify-start pl-8">
                             <Checkbox
                                 checked={row.original.efficiencyBar}
                                 onCheckedChange={(checked) => updateSlabCell(row.original.id, "efficiencyBar", !!checked)}
@@ -264,7 +219,7 @@ export default function GradeDesignationSlabSalary() {
                 header: () => <div className="text-center w-20 text-slate-500 font-bold uppercase tracking-wider text-xs">Actions</div>,
                 cell: ({ row }) => {
                     return (
-                        <div className="flex items-center justify-center gap-1.5 font-sans">
+                        <div className="flex items-center justify-left pl-2 gap-1.5 font-sans">
                             <Button
                                 size="icon"
                                 variant="ghost"
@@ -312,23 +267,11 @@ export default function GradeDesignationSlabSalary() {
                         </span>
                     </div>
                 </div>
-
-                <div className="flex flex-wrap items-center gap-2 self-start md:self-center">
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleNewSlab}
-                        className="h-9 border-theme text-theme hover:bg-theme hover:text-white gap-1.5 font-semibold text-xs rounded-sm cursor-pointer"
-                    >
-                        <Plus className="w-3.5 h-3.5" />
-                        New Slab
-                    </Button>
-                </div>
             </div>
 
             {/* 2. Retrieval / Filter Options Card */}
             <Card className="bg-white dark:bg-background border border-gray-200 dark:border-gray-800 shadow-sm rounded-sm p-4 flex flex-col gap-4">
-                <h3 className="text-sm font-bold text-theme">Retrieval / Filter Options</h3>
+                <h3 className="text-sm font-bold text-theme">Slab Information</h3>
 
                 <Separator variant="light" />
 
@@ -338,86 +281,39 @@ export default function GradeDesignationSlabSalary() {
                         <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                             Effective Date <span className="text-red-500">*</span>
                         </label>
-                        <DatePickerInput
-                            value={effectiveDate}
-                            onChange={setEffectiveDate}
-                            placeholder="Select Effective Date"
-                            className="w-full border-slate-200 dark:border-gray-800 h-9"
-                        />
+                        <div className="h-9 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-gray-800 rounded-md px-3 flex items-center">
+                            <span className="text-xs text-slate-800 dark:text-slate-200 font-medium">{effectiveDate}</span>
+                        </div>
                     </div>
 
-                    {/* Grade */}
+                    {/* Grade - Display Only */}
                     <div className="flex flex-col gap-1.5 flex-1 min-w-[140px]">
                         <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                            Grade <span className="text-red-500">*</span>
+                            Grade
                         </label>
-                        <Select value={grade} onValueChange={setGrade}>
-                            <SelectTrigger className="w-full border-slate-200 dark:border-gray-800 h-9">
-                                <SelectValue placeholder="Select Grade" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="Officer" className="cursor-pointer">Officer</SelectItem>
-                                <SelectItem value="Manager" className="cursor-pointer">Manager</SelectItem>
-                                <SelectItem value="Executive" className="cursor-pointer">Executive</SelectItem>
-                                <SelectItem value="Staff" className="cursor-pointer">Staff</SelectItem>
-                                <SelectItem value="Trainee" className="cursor-pointer">Trainee</SelectItem>
-                            </SelectContent>
-                        </Select>
+                        <div className="h-9 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-gray-800 rounded-md px-3 flex items-center">
+                            <span className="text-xs text-slate-800 dark:text-slate-200 font-medium">{grade}</span>
+                        </div>
                     </div>
 
-                    {/* Designation */}
+                    {/* Designation - Display Only */}
                     <div className="flex flex-col gap-1.5 flex-1 min-w-[180px]">
                         <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                            Designation <span className="text-red-500">*</span>
+                            Designation
                         </label>
-                        <Select value={designation} onValueChange={setDesignation}>
-                            <SelectTrigger className="w-full border-slate-200 dark:border-gray-800 h-9">
-                                <SelectValue placeholder="Select Designation" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="Software Developer" className="cursor-pointer">Software Developer</SelectItem>
-                                <SelectItem value="Quality Analyst" className="cursor-pointer">Quality Analyst</SelectItem>
-                                <SelectItem value="HR Executive" className="cursor-pointer">HR Executive</SelectItem>
-                                <SelectItem value="Accountant" className="cursor-pointer">Accountant</SelectItem>
-                                <SelectItem value="System Administrator" className="cursor-pointer">System Administrator</SelectItem>
-                            </SelectContent>
-                        </Select>
+                        <div className="h-9 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-gray-800 rounded-md px-3 flex items-center">
+                            <span className="text-xs text-slate-800 dark:text-slate-200 font-medium">{designation}</span>
+                        </div>
                     </div>
 
-                    {/* Status */}
+                    {/* Status - Display Only */}
                     <div className="flex flex-col gap-1.5 flex-1 min-w-[120px]">
                         <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                            Status <span className="text-red-500">*</span>
+                            Status
                         </label>
-                        <Select value={status} onValueChange={setStatus}>
-                            <SelectTrigger className="w-full border-slate-200 dark:border-gray-800 h-9">
-                                <SelectValue placeholder="Select Status" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="Active" className="cursor-pointer">Active</SelectItem>
-                                <SelectItem value="Inactive" className="cursor-pointer">Inactive</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-
-                    {/* Buttons */}
-                    <div className="flex items-center gap-2 shrink-0">
-                        <Button
-                            onClick={handleRetrieve}
-                            className="bg-theme hover:bg-theme/90 text-white h-9 px-4 font-semibold text-xs rounded-lg flex items-center gap-1.5 cursor-pointer"
-                        >
-                            <Search className="w-3.5 h-3.5" />
-                            Retrieve Data
-                        </Button>
-
-                        <Button
-                            variant="outline"
-                            onClick={handleClear}
-                            className="border-slate-200 dark:border-gray-800 text-slate-600 dark:text-slate-300 h-9 px-4 font-semibold text-xs rounded-lg flex items-center gap-1.5 cursor-pointer"
-                        >
-                            <RefreshCw className="w-3.5 h-3.5" />
-                            Clear
-                        </Button>
+                        <div className="h-9 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-gray-800 rounded-md px-3 flex items-center">
+                            <span className="text-xs text-slate-800 dark:text-slate-200 font-medium">{status}</span>
+                        </div>
                     </div>
                 </div>
 
