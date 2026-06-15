@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { DataTable } from "@/components/DataTable";
+import { createColumnHelper, getCoreRowModel, useReactTable, type ColumnDef } from "@tanstack/react-table";
 import { ArrowLeft, Plus, Trash2 } from "lucide-react";
 
 interface MappingRow {
@@ -23,14 +25,14 @@ export default function SalaryHead() {
     const navigate = useNavigate();
 
     // Card 1 States
-    const [shortName, setShortName] = useState("BE ESIC");
-    const [description, setDescription] = useState("BANK ESIC");
+    const [shortName, setShortName] = useState("");
+    const [description, setDescription] = useState("");
     const [active, setActive] = useState(true);
-    const [financialAccCode, setFinancialAccCode] = useState("1");
-    const [roundingBaseAmount, setRoundingBaseAmount] = useState("2222222222.22");
-    const [crDr, setCrDr] = useState("Credit");
-    const [displayOrder, setDisplayOrder] = useState("31");
-    const [groupOn, setGroupOn] = useState("be esic");
+    const [financialAccCode, setFinancialAccCode] = useState("");
+    const [roundingBaseAmount, setRoundingBaseAmount] = useState("");
+    const [crDr, setCrDr] = useState("");
+    const [displayOrder, setDisplayOrder] = useState("");
+    const [groupOn, setGroupOn] = useState("");
 
     // Card 2 States
     const [earningDeduction, setEarningDeduction] = useState("Earning");
@@ -51,7 +53,7 @@ export default function SalaryHead() {
         { id: 4, bank: "801", branch: "9999", type: "GL", code: "000111", code1: "801", code2: "9999" },
     ]);
 
-    const addRow = () => {
+    const addRow = useCallback(() => {
         setRows(prev => [
             ...prev,
             {
@@ -64,15 +66,15 @@ export default function SalaryHead() {
                 code2: ""
             }
         ]);
-    };
+    }, []);
 
-    const updateRow = (id: number, key: keyof MappingRow, value: string) => {
+    const updateRow = useCallback((id: number, key: keyof MappingRow, value: string) => {
         setRows(prev => prev.map(row => row.id === id ? { ...row, [key]: value } : row));
-    };
+    }, []);
 
-    const deleteRow = (id: number) => {
+    const deleteRow = useCallback((id: number) => {
         setRows(prev => prev.filter(row => row.id !== id));
-    };
+    }, []);
 
     const handlePopulate = () => {
         setRows([
@@ -82,6 +84,121 @@ export default function SalaryHead() {
             { id: Date.now() + 4, bank: "801", branch: "9999", type: "GL", code: "000111", code1: "801", code2: "9999" }
         ]);
     };
+
+    const payrollTypeOptions = [
+        { id: "earning", value: "Earning", label: "Earning" },
+        { id: "deduction", value: "Deduction", label: "Deduction" },
+    ];
+
+    const payrollCheckboxItems = [
+        { id: "otherIntegration", label: "Other Integration", checked: otherIntegration, setChecked: setOtherIntegration },
+        { id: "roundOff", label: "Round Off", checked: roundOff, setChecked: setRoundOff, required: true },
+        { id: "considerItax", label: "Consider ITAX", checked: considerItax, setChecked: setConsiderItax },
+        { id: "loanHead", label: "Loan Head", checked: loanHead, setChecked: setLoanHead },
+        { id: "componentCalculation", label: "Component Calculation", checked: componentCalculation, setChecked: setComponentCalculation },
+        { id: "statutoryDeduction", label: "Statutory Deduction", checked: statutoryDeduction, setChecked: setStatutoryDeduction },
+        { id: "ctcHead", label: "CTC Head", checked: ctcHead, setChecked: setCtcHead },
+        { id: "displayInPayslip", label: "Display In Payslip", checked: displayInPayslip, setChecked: setDisplayInPayslip },
+    ];
+
+    const columnHelper = createColumnHelper<MappingRow>();
+    const columns = useMemo<ColumnDef<MappingRow, any>[]>(
+        () => [
+            columnHelper.display({
+                id: "index",
+                header: "#",
+                cell: (info) => (
+                    <span className="font-bold text-red-500">{info.row.index + 1}.</span>
+                ),
+            }),
+            columnHelper.accessor("bank", {
+                header: "Bank",
+                cell: (info) => (
+                    <Input
+                        value={String(info.getValue())}
+                        onChange={(e) => updateRow(info.row.original.id, "bank", e.target.value)}
+                        className="h-9 text-xs border-slate-200 dark:border-slate-800 bg-transparent dark:text-white"
+                    />
+                ),
+            }),
+            columnHelper.accessor("branch", {
+                header: "Branch",
+                cell: (info) => (
+                    <Input
+                        value={String(info.getValue())}
+                        onChange={(e) => updateRow(info.row.original.id, "branch", e.target.value)}
+                        className="h-9 text-xs border-slate-200 dark:border-slate-800 bg-transparent dark:text-white"
+                    />
+                ),
+            }),
+            columnHelper.accessor("type", {
+                header: "Type",
+                cell: (info) => (
+                    <Select
+                        value={String(info.getValue())}
+                        onValueChange={(val) => updateRow(info.row.original.id, "type", val)}
+                    >
+                        <SelectTrigger className="h-9 text-xs border-slate-200 dark:border-slate-800 bg-transparent dark:text-white">
+                            <SelectValue placeholder="Select" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="GL" className="cursor-pointer">GL</SelectItem>
+                            <SelectItem value="SL" className="cursor-pointer">SL</SelectItem>
+                        </SelectContent>
+                    </Select>
+                ),
+            }),
+            columnHelper.accessor("code", {
+                header: "Code",
+                cell: (info) => (
+                    <Input
+                        value={String(info.getValue())}
+                        onChange={(e) => updateRow(info.row.original.id, "code", e.target.value)}
+                        className="h-9 text-xs border-slate-200 dark:border-slate-800 bg-transparent dark:text-white"
+                    />
+                ),
+            }),
+            columnHelper.display({
+                id: "mappingCodes",
+                header: "Mapping Codes",
+                cell: (info) => (
+                    <div className="flex gap-2">
+                        <Input
+                            value={info.row.original.code1}
+                            onChange={(e) => updateRow(info.row.original.id, "code1", e.target.value)}
+                            className="h-9 text-xs border-slate-200 dark:border-slate-800 bg-transparent dark:text-white w-1/2"
+                        />
+                        <Input
+                            value={info.row.original.code2}
+                            onChange={(e) => updateRow(info.row.original.id, "code2", e.target.value)}
+                            className="h-9 text-xs border-slate-200 dark:border-slate-800 bg-transparent dark:text-white w-1/2"
+                        />
+                    </div>
+                ),
+            }),
+            columnHelper.display({
+                id: "actions",
+                header: "Action",
+                cell: (info) => (
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-rose-500 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/20 cursor-pointer"
+                        onClick={() => deleteRow(info.row.original.id)}
+                    >
+                        <Trash2 className="w-4 h-4" />
+                    </Button>
+                ),
+            }),
+        ],
+        [deleteRow, updateRow]
+    );
+
+    const table = useReactTable({
+        data: rows,
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+    });
 
     const handleSave = () => {
         navigate("/salary-head/master");
@@ -141,7 +258,7 @@ export default function SalaryHead() {
                                     value={shortName}
                                     onChange={(e) => setShortName(e.target.value)}
                                     className="h-10 border-slate-200 dark:border-slate-800 text-xs dark:text-white"
-                                    placeholder="e.g. BE ESIC"
+                                    placeholder="Enter short name"
                                 />
                             </div>
 
@@ -153,7 +270,7 @@ export default function SalaryHead() {
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
                                     className="h-10 border-slate-200 dark:border-slate-800 text-xs dark:text-white"
-                                    placeholder="e.g. BANK ESIC"
+                                    placeholder="Enter description"
                                 />
                             </div>
 
@@ -186,8 +303,8 @@ export default function SalaryHead() {
                                     Cr./Dr.<span className="text-red-500 ml-0.5">*</span>
                                 </Label>
                                 <Select value={crDr} onValueChange={setCrDr}>
-                                    <SelectTrigger className="w-full">
-                                        <SelectValue placeholder="Select" />
+                                    <SelectTrigger className="w-full" size="lg">
+                                        <SelectValue placeholder="Select Cr./Dr." />
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="Credit" className="cursor-pointer">Credit</SelectItem>
@@ -204,6 +321,7 @@ export default function SalaryHead() {
                                     type="number"
                                     value={displayOrder}
                                     onChange={(e) => setDisplayOrder(e.target.value)}
+                                    placeholder="0"
                                     className="h-10 border-slate-200 dark:border-slate-800 text-xs dark:text-white"
                                 />
                             </div>
@@ -213,8 +331,8 @@ export default function SalaryHead() {
                                     Group On<span className="text-red-500 ml-0.5">*</span>
                                 </Label>
                                 <Select value={groupOn} onValueChange={setGroupOn}>
-                                    <SelectTrigger className="w-full">
-                                        <SelectValue placeholder="Select" />
+                                    <SelectTrigger className="w-full" size="lg">
+                                        <SelectValue placeholder="Select Group" />
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="be esic" className="cursor-pointer">be esic</SelectItem>
@@ -255,108 +373,32 @@ export default function SalaryHead() {
                                     onValueChange={setEarningDeduction}
                                     className="flex gap-4"
                                 >
-                                    <div className="flex items-center gap-2 cursor-pointer">
-                                        <RadioGroupItem value="Earning" id="earning" />
-                                        <Label htmlFor="earning" className="text-xs font-semibold text-slate-700 dark:text-slate-300 cursor-pointer select-none">
-                                            Earning
-                                        </Label>
-                                    </div>
-                                    <div className="flex items-center gap-2 cursor-pointer">
-                                        <RadioGroupItem value="Deduction" id="deduction" />
-                                        <Label htmlFor="deduction" className="text-xs font-semibold text-slate-700 dark:text-slate-300 cursor-pointer select-none">
-                                            Deduction
-                                        </Label>
-                                    </div>
+                                    {payrollTypeOptions.map((option) => (
+                                        <div key={option.id} className="flex items-center gap-2 cursor-pointer">
+                                            <RadioGroupItem value={option.value} id={option.id} />
+                                            <Label htmlFor={option.id} className="text-xs font-semibold text-slate-700 dark:text-slate-300 cursor-pointer select-none">
+                                                {option.label}
+                                            </Label>
+                                        </div>
+                                    ))}
                                 </RadioGroup>
                             </div>
 
-                            <div className="flex items-center gap-2.5 md:pt-6">
-                                <Checkbox
-                                    id="otherIntegration"
-                                    checked={otherIntegration}
-                                    onCheckedChange={(checked) => setOtherIntegration(!!checked)}
-                                />
-                                <Label htmlFor="otherIntegration" className="text-xs font-semibold text-slate-700 dark:text-slate-300 cursor-pointer select-none">
-                                    Other Integration
-                                </Label>
-                            </div>
-
-                            <div className="flex items-center gap-2.5 md:pt-6">
-                                <Checkbox
-                                    id="roundOff"
-                                    checked={roundOff}
-                                    onCheckedChange={(checked) => setRoundOff(!!checked)}
-                                />
-                                <Label htmlFor="roundOff" className="text-xs font-semibold text-slate-700 dark:text-slate-300 cursor-pointer select-none">
-                                    Round Off<span className="text-red-500 ml-0.5">*</span>
-                                </Label>
-                            </div>
-
-                            <div className="flex items-center gap-2.5">
-                                <Checkbox
-                                    id="considerItax"
-                                    checked={considerItax}
-                                    onCheckedChange={(checked) => setConsiderItax(!!checked)}
-                                />
-                                <Label htmlFor="considerItax" className="text-xs font-semibold text-slate-700 dark:text-slate-300 cursor-pointer select-none">
-                                    Consider ITAX
-                                </Label>
-                            </div>
-
-                            <div className="flex items-center gap-2.5">
-                                <Checkbox
-                                    id="loanHead"
-                                    checked={loanHead}
-                                    onCheckedChange={(checked) => setLoanHead(!!checked)}
-                                />
-                                <Label htmlFor="loanHead" className="text-xs font-semibold text-slate-700 dark:text-slate-300 cursor-pointer select-none">
-                                    Loan Head
-                                </Label>
-                            </div>
-
-                            <div className="flex items-center gap-2.5">
-                                <Checkbox
-                                    id="componentCalculation"
-                                    checked={componentCalculation}
-                                    onCheckedChange={(checked) => setComponentCalculation(!!checked)}
-                                />
-                                <Label htmlFor="componentCalculation" className="text-xs font-semibold text-slate-700 dark:text-slate-300 cursor-pointer select-none">
-                                    Component Calculation
-                                </Label>
-                            </div>
-
-                            <div className="flex items-center gap-2.5">
-                                <Checkbox
-                                    id="statutoryDeduction"
-                                    checked={statutoryDeduction}
-                                    onCheckedChange={(checked) => setStatutoryDeduction(!!checked)}
-                                />
-                                <Label htmlFor="statutoryDeduction" className="text-xs font-semibold text-slate-700 dark:text-slate-300 cursor-pointer select-none">
-                                    Statutory Deduction
-                                </Label>
-                            </div>
-
-                            <div className="flex items-center gap-2.5">
-                                <Checkbox
-                                    id="ctcHead"
-                                    checked={ctcHead}
-                                    onCheckedChange={(checked) => setCtcHead(!!checked)}
-                                />
-                                <Label htmlFor="ctcHead" className="text-xs font-semibold text-slate-700 dark:text-slate-300 cursor-pointer select-none">
-                                    CTC Head
-                                </Label>
-                            </div>
-
-                            <div className="flex items-center gap-2.5">
-                                <Checkbox
-                                    id="displayInPayslip"
-                                    checked={displayInPayslip}
-                                    onCheckedChange={(checked) => setDisplayInPayslip(!!checked)}
-                                />
-                                <Label htmlFor="displayInPayslip" className="text-xs font-semibold text-slate-700 dark:text-slate-300 cursor-pointer select-none">
-                                    Display In Payslip
-                                </Label>
-                            </div>
+                            {payrollCheckboxItems.map((item) => (
+                                <div
+                                    key={item.id}
+                                    className={`flex items-center gap-2.5 ${item.id === "otherIntegration" || item.id === "roundOff" ? "md:pt-6" : ""}`}
+                                >
+                                    <Checkbox
+                                        id={item.id}
+                                        checked={item.checked}
+                                        onCheckedChange={(checked) => item.setChecked(!!checked)}
+                                    />
+                                    <Label htmlFor={item.id} className="text-xs font-semibold text-slate-700 dark:text-slate-300 cursor-pointer select-none">
+                                        {item.label}{item.required ? <span className="text-red-500 ml-0.5">*</span> : null}
+                                    </Label>
+                                </div>
+                            ))}
                         </div>
                     </CardContent>
                 </Card>
@@ -380,86 +422,14 @@ export default function SalaryHead() {
                                 </Button>
                             </div>
 
-                            <div className="overflow-x-auto w-full border dark:border-slate-800 rounded-lg">
-                                <table className="w-full text-left border-collapse text-xs">
-                                    <thead>
-                                        <tr className="bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-800 text-slate-500 font-bold uppercase tracking-wider">
-                                            <th className="p-3 w-12 text-center">#</th>
-                                            <th className="p-3 min-w-[120px]">Bank</th>
-                                            <th className="p-3 min-w-[120px]">Branch</th>
-                                            <th className="p-3 min-w-[100px]">Type</th>
-                                            <th className="p-3 min-w-[120px]">Code</th>
-                                            <th className="p-3 min-w-[180px]">Mapping Codes</th>
-                                            <th className="p-3 w-16 text-center">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                                        {rows.map((row, index) => (
-                                            <tr key={row.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/50">
-                                                <td className="p-3 text-center font-bold text-red-500">{index + 1}.</td>
-                                                <td className="p-3">
-                                                    <Input
-                                                        value={row.bank}
-                                                        onChange={(e) => updateRow(row.id, "bank", e.target.value)}
-                                                        className="h-9 text-xs border-slate-200 dark:border-slate-800 bg-transparent dark:text-white"
-                                                    />
-                                                </td>
-                                                <td className="p-3">
-                                                    <Input
-                                                        value={row.branch}
-                                                        onChange={(e) => updateRow(row.id, "branch", e.target.value)}
-                                                        className="h-9 text-xs border-slate-200 dark:border-slate-800 bg-transparent dark:text-white"
-                                                    />
-                                                </td>
-                                                <td className="p-3">
-                                                    <Select
-                                                        value={row.type}
-                                                        onValueChange={(val) => updateRow(row.id, "type", val)}
-                                                    >
-                                                        <SelectTrigger className="h-9 text-xs border-slate-200 dark:border-slate-800 bg-transparent dark:text-white">
-                                                            <SelectValue placeholder="Select" />
-                                                        </SelectTrigger>
-                                                        <SelectContent>
-                                                            <SelectItem value="GL" className="cursor-pointer">GL</SelectItem>
-                                                            <SelectItem value="SL" className="cursor-pointer">SL</SelectItem>
-                                                        </SelectContent>
-                                                    </Select>
-                                                </td>
-                                                <td className="p-3">
-                                                    <Input
-                                                        value={row.code}
-                                                        onChange={(e) => updateRow(row.id, "code", e.target.value)}
-                                                        className="h-9 text-xs border-slate-200 dark:border-slate-800 bg-transparent dark:text-white"
-                                                    />
-                                                </td>
-                                                <td className="p-3">
-                                                    <div className="flex gap-2">
-                                                        <Input
-                                                            value={row.code1}
-                                                            onChange={(e) => updateRow(row.id, "code1", e.target.value)}
-                                                            className="h-9 text-xs border-slate-200 dark:border-slate-800 bg-transparent dark:text-white w-1/2"
-                                                        />
-                                                        <Input
-                                                            value={row.code2}
-                                                            onChange={(e) => updateRow(row.id, "code2", e.target.value)}
-                                                            className="h-9 text-xs border-slate-200 dark:border-slate-800 bg-transparent dark:text-white w-1/2"
-                                                        />
-                                                    </div>
-                                                </td>
-                                                <td className="p-3 text-center">
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        className="h-8 w-8 text-rose-500 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/20 cursor-pointer"
-                                                        onClick={() => deleteRow(row.id)}
-                                                    >
-                                                        <Trash2 className="w-4 h-4" />
-                                                    </Button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                            <div className="rounded-lg border dark:border-slate-800">
+                                <DataTable
+                                    table={table}
+                                    isLoading={false}
+                                    isError={false}
+                                    columnCount={columns.length}
+                                    errorMessage="No mapping rows found."
+                                />
                             </div>
 
                             <div className="flex justify-start">
