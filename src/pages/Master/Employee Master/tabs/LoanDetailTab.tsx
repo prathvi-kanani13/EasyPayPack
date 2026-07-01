@@ -378,7 +378,7 @@ export default function LoanDetailTab() {
 
   return (
     <div className="flex flex-col gap-4">
-      <Card className="p-4 rounded-sm shadow-sm bg-white dark:bg-background border dark:border-gray-700 overflow-hidden">
+      <Card className="p-4 gap-4 rounded-sm shadow-sm bg-white dark:bg-background border dark:border-gray-700 overflow-hidden">
         {/* Title and Icon */}
         <div className="flex items-center gap-2.5">
           <div className="p-1.5 bg-theme/10 rounded-lg">

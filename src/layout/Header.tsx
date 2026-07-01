@@ -71,7 +71,6 @@ export default function Header() {
 
   return (
     <header className="fixed top-0 flex items-center justify-between w-full h-14 bg-white dark:bg-background dark:border-b dark:border-border gap-2 px-2 md:pl-14 shadow-sm z-40">
-      {/* logo */}
       <div className="flex items-center gap-2 lg:gap-4">
         {isMobile && <Button
           size='icon'
@@ -118,7 +117,7 @@ export default function Header() {
       </div>
 
       <div className={`flex items-center flex-1 gap-2 ${open ? 'pl-20' : ''}`}>
-        {open && <Button
+        {(open && !isMobile) && <Button
           size='icon'
           variant='ghost'
           onClick={toggleSidebar}

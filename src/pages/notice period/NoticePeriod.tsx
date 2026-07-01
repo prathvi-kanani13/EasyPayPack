@@ -273,7 +273,7 @@ export default function NoticePeriod() {
                 </div>
             </div>
 
-            <Card className="p-4 rounded-sm shadow-sm bg-white dark:bg-background border dark:border-gray-700">
+            <Card className="p-4 gap-4 rounded-sm shadow-sm bg-white dark:bg-background border dark:border-gray-700">
                 <div className="flex items-center justify-between flex-wrap border-b dark:border-gray-700 gap-4 pb-4">
                     <div className="text-lg font-semibold">Employee List</div>
                 </div>

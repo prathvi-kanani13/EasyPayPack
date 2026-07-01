@@ -78,9 +78,9 @@ export default function AddEmployee() {
 
             <Tabs defaultValue="general" value={activeTab} onValueChange={setActiveTab} className="w-full flex flex-col gap-4">
 
-                <TabsList className="w-full bg-transparent p-0 h-auto border-none shadow-none rounded-none flex items-center">
+                <TabsList className="w-full bg-transparent p-0 border-none shadow-none rounded-none flex items-center">
                     <Carousel opts={{ align: "start", dragFree: true }} className="w-full">
-                        <div className="flex items-center gap-2 border-b border-border pb-px w-full">
+                        <div className="flex items-center gap-2 border-b border-border w-full">
                             <CarouselPrevious className={`static translate-y-0 h-8 w-8 ${isMd ? 'hidden' : 'flex'}`} variant="ghost" />
 
                             <CarouselContent className="flex-1 -ml-2">

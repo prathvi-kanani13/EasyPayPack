@@ -123,6 +123,9 @@ export default function SidebarComponent() {
                         ? "bg-white text-theme rounded-sm pointer-events-none active:bg-white active:text-theme"
                         : `my-0 ${(open || openMobile) ? '' : 'hover:my-1.5'} hover:bg-black/20 hover:text-white hover:rounded-sm`
                         }`}
+                      onClick={() => {
+                        setOpenMobile(false)
+                      }}
                     >
                       <Link
                         key={item.href}

@@ -16,6 +16,7 @@ const employeeScreens: EmployeeScreenProps[] = [
     { id: 2, title: "Grade & Desigation Master", path: "/grade-designation/master", icon: Briefcase },
     { id: 3, title: "Grade / Designation wise slab salary", path: "/grade-designation/slab-list", icon: BadgeIndianRupee },
     { id: 4, title: "Salary Head Master", path: "/salary-head/master", icon: WalletCards },
+    { id: 5, title: "PTAX Master", path: "/ptax/master", icon: WalletCards },
 ];
 
 export default function MasterDashboard() {
@@ -38,8 +39,7 @@ export default function MasterDashboard() {
                             ${viewMode === "grid"
                                 ? "bg-theme text-white hover:bg-theme"
                                 : "bg-white text-gray-500 hover:bg-white hover:text-gray-700"
-                            }
-        `}
+                            }`}
                     >
                         <LayoutGrid size={16} />
                     </Button>

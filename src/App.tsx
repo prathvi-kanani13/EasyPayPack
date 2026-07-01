@@ -23,6 +23,9 @@ import GradeDesignationSlabList from "./pages/Master/GradeDesignationSlabSalary/
 import GradeDesignationSlabSalary from "./pages/Master/GradeDesignationSlabSalary/gradeDesignationSlabSalary";
 import SalaryHeadMaster from "./pages/Master/SalaryHeadMaster/SalaryHeadMaster";
 import SalaryHead from "./pages/Master/SalaryHeadMaster/SalaryHead";
+import ConfigList from "./pages/Master/PTAX Master/ConfigList";
+import ConfigForm from "./pages/Master/PTAX Master/ConfigForm";
+import ViewConfig from "./pages/Master/PTAX Master/ViewConfig";
 
 function ThemeController() {
   const location = useLocation()
@@ -95,6 +98,13 @@ function App() {
             <Route path="master" element={<SalaryHeadMaster />} />
             <Route path="add" element={<SalaryHead />} />
             <Route path="edit/:id" element={<SalaryHead />} />
+          </Route>
+
+          <Route path="/ptax">
+            <Route path="master" element={<ConfigList />} />
+            <Route path="add" element={<ConfigForm />} />
+            <Route path="edit/:id" element={<ConfigForm />} />
+            <Route path="view/:id" element={<ViewConfig />} />
           </Route>
         </Route>
 

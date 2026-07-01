@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { ChevronUp } from "lucide-react"
 import { useRef, useState, useEffect, createContext, useContext } from "react"
 import RenderWithTooltip from "../utils/RenderWithTooltip"
+import { cn } from "@/lib/utils"
 
 // Context to share the main content layout width globally
 const LayoutWidthContext = createContext<number>(0);
@@ -77,17 +78,16 @@ export default function Layout() {
                   <Outlet />
                 </main>
 
-                <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-49">
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 z-49">
                   <RenderWithTooltip content={"Back to top"} onlyOnOverflow={false} side={"top"} trigger={
                     <Button
                       onClick={scrollToTop}
-                      className={`
-                      rounded-full p-2 h-10 w-10
-                      transition-opacity duration-300
-                      ${showScrollTop ? "opacity-100" : "opacity-0 pointer-events-none"}
-                    `}
+                      className={cn(
+                        "fixed bottom-0 p-2 pt-1! h-10 w-10 rounded-t-[20px] rounded-b-none translate-y-5 hover:translate-y-0.5 hover:pt-2! transition-all duration-200 shadow-md items-start",
+                        showScrollTop ? "opacity-100" : "opacity-0 pointer-events-none"
+                      )}
                     >
-                      <ChevronUp className="h-8 w-8" />
+                      <ChevronUp className="h-6 w-6" />
                     </Button>
                   } />
                 </div>

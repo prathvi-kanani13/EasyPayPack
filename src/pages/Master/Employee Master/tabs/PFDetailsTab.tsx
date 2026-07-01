@@ -134,7 +134,7 @@ export default function PFDetailsTab() {
 
     return (
         <div className="flex flex-col gap-4">
-            <Card className="p-4 rounded-sm shadow-sm bg-white dark:bg-background border dark:border-gray-700">
+            <Card className="p-4 gap-4 rounded-sm shadow-sm bg-white dark:bg-background border dark:border-gray-700">
                 {/* Card Title & Icon */}
                 <div className="flex items-start gap-2.5">
                     <div className="p-1.5 bg-theme/10 rounded-lg mt-0.5">
